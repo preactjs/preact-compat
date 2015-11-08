@@ -1,0 +1,7 @@
+{
+  "loose": "all",
+  "sourceMaps": true,
+  "nonStandard": true,
+  "compact": true,
+  "comments": false
+}
