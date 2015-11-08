@@ -1,7 +1,7 @@
 {
   "name": "preact-compat",
   "version": "0.1.0",
-  "description": "Preact compatibility layer for React",
+  "description": "A React compatibility layer for Preact",
   "main": "preact-compat.js",
   "scripts": {
     "build": "babel -f $npm_package_main -s -o $npm_package_main < src/index.js",

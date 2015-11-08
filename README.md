@@ -4,7 +4,7 @@
 [![travis-ci](https://travis-ci.org/developit/preact-compat.svg)](https://travis-ci.org/developit/preact-compat)
 
 
-This module is a compatibility layer that makes react-based modules work with [preact], without any code changes.
+This module is a compatibility layer that makes React-based modules work with [preact], without any code changes.
 
 It provides the same exports as `react` and `react-dom`, meaning you can use your build tool of choice to drop it in where React is being depended on.
 
