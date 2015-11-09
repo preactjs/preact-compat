@@ -9,6 +9,12 @@ This module is a compatibility layer that makes React-based modules work with [p
 It provides the same exports as `react` and `react-dom`, meaning you can use your build tool of choice to drop it in where React is being depended on.
 
 
+> Interested? Here's an example project that uses `preact-compat` to work with an existing React library unmodified,
+> achieving more than 95% reduction in size:
+>
+> **[preact-compat-example](https://github.com/developit/preact-compat-example)**
+
+
 ---
 
 
