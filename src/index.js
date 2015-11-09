@@ -2,6 +2,9 @@ import PropTypes from 'proptypes';
 import { render, h, Component as PreactComponent, hooks } from 'preact';
 
 
+const DEV = !process || !process.env || process.env.NODE_ENV!=='production';
+
+
 let createElement = (...args) => {
 	let vnode = h(...args);
 	applyClassName(vnode);
@@ -59,12 +62,14 @@ class Component extends PreactComponent {
 		}
 
 		// add proptype checking
-		let propTypes = this.propTypes || this.constructor.propTypes;
-		if (propTypes) {
-			for (let prop in propTypes) {
-				if (propTypes.hasOwnProperty(prop)) {
-					let err = propTypes[prop](props, prop, this.constructor.name, 'prop');
-					if (err) throw err;
+		if (DEV) {
+			let propTypes = this.propTypes || this.constructor.propTypes;
+			if (propTypes) {
+				for (let prop in propTypes) {
+					if (propTypes.hasOwnProperty(prop)) {
+						let err = propTypes[prop](props, prop, this.constructor.name, 'prop');
+						if (err) throw err;
+					}
 				}
 			}
 		}
