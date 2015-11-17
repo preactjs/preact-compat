@@ -55,7 +55,7 @@ class Component extends PreactComponent {
 		}
 	}
 
-	setProps(props, opts) {
+	componentWillReceiveProps(props) {
 		let defaultProps = this.defaultProps || this.constructor.defaultProps;
 		if (defaultProps) {
 			props = extend({}, defaultProps, props);
@@ -73,8 +73,6 @@ class Component extends PreactComponent {
 				}
 			}
 		}
-
-		return super.setProps(props, opts);
 	}
 
 	_render(...args) {
