@@ -1,6 +1,6 @@
 {
   "name": "preact-compat",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "description": "A React compatibility layer for Preact",
   "main": "preact-compat.js",
   "scripts": {
@@ -33,11 +33,11 @@
     "preact-render-to-string": "^1.2.0"
   },
   "peerDependencies": {
-    "preact": "^1.5.2",
+    "preact": "^1.5.2 || ^2.0.0",
     "proptypes": "^0.14.0"
   },
   "optionalDependencies": {
-    "preact": "^1.5.2",
+    "preact": "^2.0.1",
     "proptypes": "^0.14.1"
   }
 }
