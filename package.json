@@ -1,6 +1,6 @@
 {
   "name": "preact-compat",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "A React compatibility layer for Preact",
   "main": "preact-compat.js",
   "scripts": {
@@ -30,7 +30,9 @@
     "chai": "^3.4.1",
     "eslint": "^1.9.0",
     "mocha": "^2.3.3",
-    "preact-render-to-string": "^1.2.0"
+    "preact-render-to-string": "^1.2.0",
+    "sinon": "^1.17.3",
+    "sinon-chai": "^2.8.0"
   },
   "peerDependencies": {
     "preact": "^1.5.2 || ^2.0.0",
