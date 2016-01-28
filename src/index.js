@@ -37,6 +37,30 @@ let extend = (base, ...objs) => {
 let findDOMNode = component => component.base || component;
 
 
+function F(){}
+
+let createClass = obj => {
+	let cl = function() {
+		Component.call(this);
+		extend(this, obj);
+		bindAll(this);
+	};
+	F.prototype = Component.prototype;
+	cl.prototype = new F();
+	cl.prototype.constructor = cl;
+	return cl;
+};
+
+let bindAll = ctx => {
+	for (let i in ctx) {
+		let v = ctx[i];
+		if (typeof v==='function' && !v.__bound) {
+			(ctx[i] = v.bind(ctx)).__bound = true;
+		}
+	}
+};
+
+
 class Component extends PreactComponent {
 	constructor(...args) {
 		super(...args);
@@ -100,5 +124,5 @@ class Component extends PreactComponent {
 }
 
 
-export { PropTypes, render, createElement, findDOMNode, Component };
-export default { PropTypes, render, createElement, findDOMNode, Component };
+export { PropTypes, render, createClass, createElement, findDOMNode, Component };
+export default { PropTypes, render, createClass, createElement, findDOMNode, Component };

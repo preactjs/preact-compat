@@ -1,5 +1,8 @@
-import { expect } from 'chai';
-import React, { render, createElement, Component, PropTypes } from '../src';
+import chai, { expect } from 'chai';
+import { spy } from 'sinon';
+import sinonChai from 'sinon-chai';
+import React, { render, createClass, createElement, Component, PropTypes } from '../src';
+chai.use(sinonChai);
 
 describe('pReact-compat', () => {
 	describe('render()', () => {
@@ -8,6 +11,34 @@ describe('pReact-compat', () => {
 				.to.have.property('render')
 				.that.is.a('function')
 				.that.equals(render);
+		});
+	});
+
+	describe('createClass()', () => {
+		it('should be exported', () => {
+			expect(React)
+				.to.have.property('createClass')
+				.that.is.a('function')
+				.that.equals(createClass);
+		});
+
+		it('should create a Component', () => {
+			let spec = {
+				foo: 'bar',
+				state: { something:1 },
+				method: spy()
+			};
+			const C = createClass(spec);
+			let inst = new C();
+			expect(inst).to.have.property('foo', 'bar');
+			expect(inst).to.have.property('state', spec.state);
+			expect(inst).to.have.property('method').that.is.a('function');
+			expect(inst).to.be.an.instanceof(Component);
+			inst.method('a','b');
+			expect(spec.method)
+				.to.have.been.calledOnce
+				.and.calledOn(inst)
+				.and.calledWithExactly('a', 'b');
 		});
 	});
 
