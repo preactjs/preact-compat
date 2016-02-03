@@ -1,6 +1,6 @@
 {
   "name": "preact-compat",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "A React compatibility layer for Preact",
   "main": "preact-compat.js",
   "scripts": {
