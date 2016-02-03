@@ -35,11 +35,11 @@
     "sinon-chai": "^2.8.0"
   },
   "peerDependencies": {
-    "preact": "^1.5.2 || ^2.0.0",
+    "preact": "^1.5.2 || ^2 || ^3",
     "proptypes": "^0.14.0"
   },
   "optionalDependencies": {
-    "preact": "^2.0.1",
+    "preact": "^2.8.3",
     "proptypes": "^0.14.1"
   }
 }
