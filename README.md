@@ -1,7 +1,7 @@
 # preact-compat
 
 [![NPM](http://img.shields.io/npm/v/preact-compat.svg?style=flat)](https://www.npmjs.org/package/preact-compat)
-[![travis-ci](https://travis-ci.org/developit/preact-compat.svg)](https://travis-ci.org/developit/preact-compat)
+[![travis-ci](https://travis-ci.org/developit/preact-compat.svg?branch=master)](https://travis-ci.org/developit/preact-compat)
 
 
 This module is a compatibility layer that makes React-based modules work with [preact], without any code changes.
@@ -32,6 +32,7 @@ There are better long-term ways to solve the coupling issue, like using factory 
 as [suggested by Eric Elliot][2]. However, since the React community has already authored so many modules in a more explicitly coupled manner, it's worth
 having a simple short-term solution for those who would like to liberate themselves from library lock-in.
 
+
 ---
 
 
@@ -57,18 +58,44 @@ All you have to do is add an alias for `react` and `react-dom`:
 ... with that in place, existing React modules should work nicely:
 
 ```js
-import React, { Component } from 'react';
-import { render } from 'react-dom';
+import React from 'react';
+import ReactDOM from 'react-dom';
 
-class Foo extends Component {
+class Foo extends React.Component {
+	propTypes = {
+		a: React.PropTypes.string.isRequired
+	};
 	render() {
 		let { a, b, children } = this.props;
 		return <div {...{a,b}}>{ children }</div>;
 	}
 }
 
-render(<Foo a="a" b="b">test</Foo>, document.body);
+ReactDOM.render((
+	<Foo a="a">test</Foo>
+), document.body);
 ```
+
+
+---
+
+
+## Use Without Webpack/Browserify
+
+`preact-compat` and its single dependency [`proptypes`](https://git.io/proptypes) are both published as UMD modules as of `preact-compat` version `0.6`. This means you can use them via a `<script>` tag without issue:
+
+```html
+<script src="//npmcdn.com/preact"></script>
+<script src="//npmcdn.com/proptypes"></script>
+<script src="//npmcdn.com/preact-compat"></script>
+<script>
+	var React = preactCompat,
+		ReactDOM = preactCompat;
+	ReactDOM.render(<h1>Hello!</h1>, document.body);
+</script>
+```
+
+You can see the above in action with this [JSFiddle Example](https://jsfiddle.net/developit/61cqu193/).
 
 
 ---
