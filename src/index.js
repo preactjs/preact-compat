@@ -2,7 +2,13 @@ import PropTypes from 'proptypes';
 import { render, h, Component as PreactComponent, hooks } from 'preact';
 
 
-const DEV = !process || !process.env || process.env.NODE_ENV!=='production';
+const DEV = !isProd();
+
+function isProd() {
+	let prod;
+	try { prod = process.env.NODE_ENV==='production'; } catch(e) {}
+	return !!prod;
+}
 
 
 let createElement = (...args) => {
@@ -90,7 +96,7 @@ class Component extends PreactComponent {
 			let propTypes = this.propTypes || this.constructor.propTypes;
 			if (propTypes) {
 				for (let prop in propTypes) {
-					if (propTypes.hasOwnProperty(prop)) {
+					if (propTypes.hasOwnProperty(prop) && typeof propTypes[prop]==='function') {
 						let err = propTypes[prop](props, prop, this.constructor.name, 'prop');
 						if (err) throw err;
 					}
