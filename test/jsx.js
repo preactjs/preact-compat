@@ -3,7 +3,7 @@ import renderToString from 'preact-render-to-string';
 import React from '../src';
 
 describe('jsx', () => {
-	it('should render preact-style', () => {
+	it('should render react-style', () => {
 		let jsx = (
 			<div className="foo bar" data-foo="bar">
 				<span id="some_id">inner!</span>
