@@ -4,7 +4,7 @@
 [![travis-ci](https://travis-ci.org/developit/preact-compat.svg?branch=master)](https://travis-ci.org/developit/preact-compat)
 
 
-This module is a compatibility layer that makes React-based modules work with [preact], without any code changes.
+This module is a compatibility layer that makes React-based modules work with [Preact], without any code changes.
 
 It provides the same exports as `react` and `react-dom`, meaning you can use your build tool of choice to drop it in where React is being depended on.
 
@@ -99,6 +99,14 @@ You can see the above in action with this [JSFiddle Example](https://jsfiddle.ne
 
 
 ---
+
+
+### PropTypes
+
+`preact-compat` adds support for validating PropTypes out of the box. This can be disabled the same way it is when using React, by defining a global `process.env.NODE_ENV='production'`.  PropType errors should work the same as in React - the [`proptypes`](https://git.io/proptypes) module used here is extracted verbatim from the React source into a standalone module.
+
+<img src="http://i.imgur.com/tGT7Dvw.png" width="650" alt="PropType validation example output" />
+
 
 
 ## License
