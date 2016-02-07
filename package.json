@@ -1,6 +1,6 @@
 {
   "name": "preact-compat",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "description": "A React compatibility layer for Preact",
   "main": "preact-compat.js",
   "scripts": {
@@ -39,7 +39,7 @@
     "proptypes": "^0.14.0"
   },
   "optionalDependencies": {
-    "preact": "^2.8.3",
+    "preact": "^3.x.x",
     "proptypes": "^0.14.1"
   },
   "dependencies": {
