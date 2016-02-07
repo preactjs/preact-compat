@@ -1,5 +1,5 @@
 import PropTypes from 'proptypes';
-import { render, h, Component as PreactComponent, hooks } from 'preact';
+import { render as preactRender, h, Component as PreactComponent, hooks } from 'preact';
 
 
 const DEV = !isProd();
@@ -9,6 +9,37 @@ function isProd() {
 	try { prod = process.env.NODE_ENV==='production'; } catch(e) {}
 	return !!prod;
 }
+
+
+// proxy render() since React returns a Component reference.
+function render(vnode, parent, callback) {
+	let out = preactRender(vnode, parent);
+	if (typeof callback==='function') callback();
+	return out && out._component;
+}
+
+
+// This API is completely unnecessary for Preact, so it's basically passthrough.
+let Children = {
+	map(children, fn, ctx) {
+		if (ctx && ctx!==children) fn = fn.bind(ctx);
+		return children.map(fn);
+	},
+	forEach(children, fn, ctx) {
+		if (ctx && ctx!==children) fn = fn.bind(ctx);
+		children.forEach(fn);
+	},
+	count(children) {
+		return children.length;
+	},
+	only(children) {
+		if (children.length!==1) throw new Error('Children.only() expects only one child.');
+		return children[0];
+	},
+	toArray(children) {
+		return children;
+	}
+};
 
 
 let createElement = (...args) => {
@@ -130,5 +161,5 @@ class Component extends PreactComponent {
 }
 
 
-export { PropTypes, render, createClass, createElement, findDOMNode, Component };
-export default { PropTypes, render, createClass, createElement, findDOMNode, Component };
+export { PropTypes, Children, render, createClass, createElement, findDOMNode, Component };
+export default { PropTypes, Children, render, createClass, createElement, findDOMNode, Component };
