@@ -39,7 +39,7 @@
     "proptypes": "^0.14.0"
   },
   "optionalDependencies": {
-    "preact": "^3.x.x",
+    "preact": "^3.2.0",
     "proptypes": "^0.14.1"
   },
   "dependencies": {
