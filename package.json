@@ -25,7 +25,7 @@
   },
   "homepage": "https://github.com/developit/preact-compat",
   "devDependencies": {
-    "babel": "^5.8.35",
+    "babel": "^6.5.1",
     "babel-eslint": "^4.1.8",
     "chai": "^3.5.0",
     "eslint": "^1.10.3",
