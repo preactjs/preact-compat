@@ -45,7 +45,7 @@ All you have to do is add an alias for `react` and `react-dom`:
 ```js
 {
 	// ...
-	modules: {
+	resolve: {
 		alias: {
 			'react': 'preact-compat',
 			'react-dom': 'preact-compat'
