@@ -35,7 +35,7 @@
     "sinon-chai": "^2.8.0"
   },
   "peerDependencies": {
-    "preact": "^1.5.2 || ^2 || ^3",
+    "preact": "^3.3.0",
     "proptypes": "^0.14.0"
   },
   "optionalDependencies": {
