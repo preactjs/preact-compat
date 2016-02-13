@@ -30,7 +30,7 @@
     "chai": "^3.5.0",
     "eslint": "^1.10.3",
     "mocha": "^2.4.5",
-    "preact-render-to-string": "^1.4.2",
+    "preact-render-to-string": "^2.0.0",
     "sinon": "^1.17.3",
     "sinon-chai": "^2.8.0"
   },
