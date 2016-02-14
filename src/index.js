@@ -91,7 +91,7 @@ let createClass = obj => {
 let bindAll = ctx => {
 	for (let i in ctx) {
 		let v = ctx[i];
-		if (typeof v==='function' && !v.__bound) {
+		if (i!=='constructor' && typeof v==='function' && !v.__bound) {
 			(ctx[i] = v.bind(ctx)).__bound = true;
 		}
 	}
