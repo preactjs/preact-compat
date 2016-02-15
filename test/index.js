@@ -40,6 +40,18 @@ describe('pReact-compat', () => {
 				.and.calledOn(inst)
 				.and.calledWithExactly('a', 'b');
 		});
+
+		it('should not bind blacklisted methods', () => {
+			let constructor = () => {};
+			let render = () => null;
+			const C = createClass({
+				constructor,
+				render
+			});
+			let c = new C();
+			expect(c).to.have.property('constructor').that.equals(constructor);
+			expect(c).to.have.property('render').that.equals(render);
+		});
 	});
 
 	describe('createElement()', () => {
