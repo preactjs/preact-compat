@@ -2,6 +2,21 @@ import PropTypes from 'proptypes';
 import { render as preactRender, h, Component as PreactComponent, hooks } from 'preact';
 
 
+// don't autobind these methods since they already have guaranteed context.
+const AUTOBIND_BLACKLIST = {
+	constructor: 1,
+	render: 1,
+	shouldComponentUpdate: 1,
+	componentWillRecieveProps: 1,
+	componentWillUpdate: 1,
+	componentDidUpdate: 1,
+	componentWillMount: 1,
+	componentDidMount: 1,
+	componentWillUnmount: 1,
+	componentDidUnmount: 1
+};
+
+
 const DEV = !isProd();
 
 function isProd() {
@@ -91,7 +106,7 @@ let createClass = obj => {
 let bindAll = ctx => {
 	for (let i in ctx) {
 		let v = ctx[i];
-		if (i!=='constructor' && typeof v==='function' && !v.__bound) {
+		if (typeof v==='function' && !v.__bound && !AUTOBIND_BLACKLIST.hasOwnProperty(i)) {
 			(ctx[i] = v.bind(ctx)).__bound = true;
 		}
 	}
