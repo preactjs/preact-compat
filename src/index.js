@@ -123,14 +123,6 @@ class Component extends PreactComponent {
 		return this.base;
 	}
 
-	setState(state, callback) {
-		super.setState(state);
-		if (typeof callback==='function') {
-			this._stateUpdateCallbacks.push(callback);
-			callback();
-		}
-	}
-
 	componentWillReceiveProps(props) {
 		let defaultProps = this.defaultProps || this.constructor.defaultProps;
 		if (defaultProps) {
@@ -151,9 +143,7 @@ class Component extends PreactComponent {
 		}
 	}
 
-	_render(...args) {
-		let ret = super._render(...args);
-
+	componentDidUpdate() {
 		if (this.props.ref && this.base.getAttribute('ref')!==this.props.ref) {
 			this.base.setAttribute('ref', this.props.ref);
 		}
@@ -163,12 +153,6 @@ class Component extends PreactComponent {
 		this.refs = {};
 		for (let i=refs.length; i--; ) {
 			this.refs[refs[i].getAttribute('ref')] = refs[i]._component || refs[i];
-		}
-
-		let cb = this._stateUpdateCallbacks;
-		if (cb) {
-			this._stateUpdateCallbacks = [];
-			for (let i=0; i<cb.length; i++) cb[i]();
 		}
 
 		return ret;
