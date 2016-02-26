@@ -30,6 +30,9 @@ function isProd() {
 }
 
 
+const EmptyComponent = () => null;
+
+
 // proxy render() since React returns a Component reference.
 function render(vnode, parent, callback) {
 	let prev = parent._preactCompatRendered;
@@ -38,6 +41,16 @@ function render(vnode, parent, callback) {
 	parent._preactCompatRendered = out;
 	if (typeof callback==='function') callback();
 	return out && out._component;
+}
+
+
+function unmountComponentAtNode(container) {
+	let existing = container._preactCompatRendered;
+	if (existing && existing.parentNode===container) {
+		preactRender(<EmptyComponent />, container, existing);
+		return true;
+	}
+	return false;
 }
 
 
@@ -241,5 +254,5 @@ class Component extends PreactComponent {
 
 
 
-export { PropTypes, Children, render, createClass, createElement, findDOMNode, Component };
-export default { PropTypes, Children, render, createClass, createElement, findDOMNode, Component };
+export { PropTypes, Children, render, createClass, createElement, findDOMNode, unmountComponentAtNode, Component };
+export default { PropTypes, Children, render, createClass, createElement, findDOMNode, unmountComponentAtNode, Component };
