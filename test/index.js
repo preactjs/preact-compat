@@ -48,7 +48,7 @@ describe('preact-compat', () => {
 			});
 			let c = new C();
 			expect(c).to.have.property('constructor').that.equals(constructor);
-			expect(c).to.have.property('render').that.equals(render);
+			expect(c).to.have.property('render').not.with.property('__bound');
 		});
 	});
 
