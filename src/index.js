@@ -54,7 +54,7 @@ function render(vnode, parent, callback) {
 function unmountComponentAtNode(container) {
 	let existing = container._preactCompatRendered;
 	if (existing && existing.parentNode===container) {
-		preactRender(<EmptyComponent />, container, existing);
+		preactRender(h(EmptyComponent), container, existing);
 		return true;
 	}
 	return false;
@@ -94,8 +94,7 @@ function createElement(...args) {
 
 	let ref = vnode.attributes && vnode.attributes.ref;
 	if (currentComponent && ref && typeof ref==='string') {
-		let fn = createStringRefProxy(ref, currentComponent);
-		vnode.attributes.ref = fn;
+		vnode.attributes.ref = createStringRefProxy(ref, currentComponent);
 	}
 
 	return vnode;
