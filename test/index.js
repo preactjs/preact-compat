@@ -1,10 +1,8 @@
-import chai, { expect } from 'chai';
-import { spy } from 'sinon';
-import sinonChai from 'sinon-chai';
 import React, { render, createClass, createElement, Component, PropTypes } from '../src';
-chai.use(sinonChai);
 
-describe('pReact-compat', () => {
+/*global sinon,expect*/
+
+describe('preact-compat', () => {
 	describe('render()', () => {
 		it('should be exported', () => {
 			expect(React)
@@ -26,7 +24,7 @@ describe('pReact-compat', () => {
 			let spec = {
 				foo: 'bar',
 				state: { something:1 },
-				method: spy()
+				method: sinon.spy()
 			};
 			const C = createClass(spec);
 			let inst = new C();

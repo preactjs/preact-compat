@@ -1,6 +1,7 @@
-import { expect } from 'chai';
 import renderToString from 'preact-render-to-string';
 import React from '../src';
+
+/*global sinon,expect*/
 
 describe('components', () => {
 	it('should be exported', () => {
