@@ -129,12 +129,11 @@ describe('components', () => {
 			expect(componentRef).to.have.been.calledOnce.and.calledWith(innerInst);
 
 			React.render(<Foo empty />, scratch);
+			// React.unmountComponentAtNode(scratch);
 
 			expect(ref1).to.have.have.been.calledTwice.and.calledWith(null);
 			expect(ref2).to.have.have.been.calledTwice.and.calledWith(null);
-
-			// @BUG: component unmount not nulling ref?
-			//expect(componentRef).to.have.been.calledTwice.and.calledWith(null);
+			expect(componentRef).to.have.been.calledTwice.and.calledWith(null);
 		});
 	});
 });
