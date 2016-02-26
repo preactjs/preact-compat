@@ -2,6 +2,13 @@ import PropTypes from 'proptypes';
 import { render as preactRender, h, Component as PreactComponent, hooks } from 'preact';
 
 
+const REACT_ELEMENT_TYPE = (typeof Symbol === 'function' && Symbol.for && Symbol.for('react.element')) || 0xeac7;
+
+// make react think we're react.
+let VNode = h('').constructor;
+VNode.prototype.$$typeof = REACT_ELEMENT_TYPE;
+
+
 // don't autobind these methods since they already have guaranteed context.
 const AUTOBIND_BLACKLIST = {
 	constructor: 1,

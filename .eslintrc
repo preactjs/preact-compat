@@ -3,11 +3,14 @@
   "extends": "eslint:recommended",
   "env": {
     "browser": true,
-    "mocha": true
+    "mocha": true,
+    "es6": true
   },
-  "ecmaFeatures": {
-    "modules": true,
-    "jsx": true
+  "parserOptions": {
+    "ecmaFeatures": {
+      "modules": true,
+      "jsx": true
+    }
   },
   "rules": {
     "no-empty": 0,
