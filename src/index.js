@@ -97,7 +97,7 @@ function createFactory(type) {
 
 let DOM = {};
 for (let i=ELEMENTS.length; i--; ) {
-	DOM[i] = createFactory(i);
+	DOM[ELEMENTS[i]] = createFactory(ELEMENTS[i]);
 }
 
 
