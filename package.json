@@ -81,6 +81,7 @@
     "proptypes": "^0.14.3"
   },
   "dependencies": {
+    "preact-render-to-string": "^2.0.1",
     "proptypes": "^0.14.3"
   }
 }
