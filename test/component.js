@@ -38,7 +38,7 @@ describe('components', () => {
 		expect(props).to.exist.and.deep.equal({
 			a: 'b',
 			c: 'd',
-			children: ['inner']
+			children: 'inner'
 		});
 
 		expect(html).to.equal('<div id="demo">inner</div>');

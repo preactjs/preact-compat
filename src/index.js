@@ -63,25 +63,32 @@ function unmountComponentAtNode(container) {
 }
 
 
+
+const ARR = [];
+
 // This API is completely unnecessary for Preact, so it's basically passthrough.
 let Children = {
 	map(children, fn, ctx) {
+		children = Children.toArray(children);
 		if (ctx && ctx!==children) fn = fn.bind(ctx);
 		return children.map(fn);
 	},
 	forEach(children, fn, ctx) {
+		children = Children.toArray(children);
 		if (ctx && ctx!==children) fn = fn.bind(ctx);
 		children.forEach(fn);
 	},
 	count(children) {
+		children = Children.toArray(children);
 		return children.length;
 	},
 	only(children) {
+		children = Children.toArray(children);
 		if (children.length!==1) throw new Error('Children.only() expects only one child.');
 		return children[0];
 	},
 	toArray(children) {
-		return children;
+		return Array.isArray && Array.isArray(children) ? children : ARR.concat(children);
 	}
 };
 
@@ -234,10 +241,17 @@ function newComponentHook(props, context) {
 
 
 function propsHook(props) {
+	if (!props) return;
 	// let defaultProps = this.defaultProps || this.constructor.defaultProps;
 	// if (defaultProps) {
 	// 	props = extend({}, defaultProps, props);
 	// }
+
+	// React annoyingly special-cases single children, and some react components are ridiculously strict about this.
+	let c = props.children;
+	if (c && c.length===1) {
+		props.children = c[0];
+	}
 
 	// add proptype checking
 	if (DEV) {
