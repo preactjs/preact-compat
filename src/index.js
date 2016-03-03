@@ -260,15 +260,17 @@ function newComponentHook(props, context) {
 
 function propsHook(props) {
 	if (!props) return;
-	// let defaultProps = this.defaultProps || this.constructor.defaultProps;
-	// if (defaultProps) {
-	// 	props = extend({}, defaultProps, props);
-	// }
 
 	// React annoyingly special-cases single children, and some react components are ridiculously strict about this.
 	let c = props.children;
 	if (c && c.length===1) {
 		props.children = c[0];
+
+		// but its totally still going to be an Array.
+		if (props.children && typeof props.children==='object') {
+			props.children.length = 1;
+			props.children[0] = props.children;
+		}
 	}
 
 	// add proptype checking
@@ -282,10 +284,6 @@ function propsHook(props) {
 				}
 			}
 		}
-	}
-
-	if (c) {
-		props.children = c;
 	}
 }
 

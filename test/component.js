@@ -20,7 +20,7 @@ describe('components', () => {
 		scratch = null;
 	});
 
-	it('should be exported', () => {
+	it('should be sane', () => {
 		let props;
 
 		class Demo extends React.Component {
