@@ -7,21 +7,6 @@ const ELEMENTS = 'a abbr address area article aside audio b base bdi bdo big blo
 
 const REACT_ELEMENT_TYPE = (typeof Symbol === 'function' && Symbol.for && Symbol.for('react.element')) || 0xeac7;
 
-// make react think we're react.
-let VNode = h('').constructor;
-VNode.prototype.$$typeof = REACT_ELEMENT_TYPE;
-
-Object.defineProperty(VNode.prototype, 'type', {
-	get() { return this.nodeName; },
-	set(v) { this.nodeName = v; }
-});
-
-Object.defineProperty(VNode.prototype, 'props', {
-	get() { return this.attributes; },
-	set(v) { this.attributes = v; }
-});
-
-
 // don't autobind these methods since they already have guaranteed context.
 const AUTOBIND_BLACKLIST = {
 	constructor: 1,
@@ -39,18 +24,28 @@ const AUTOBIND_BLACKLIST = {
 
 const BYPASS_HOOK = {};
 
+/*global process*/
+const DEV = typeof process!=='undefined' && process.env && process.env.NODE_ENV!=='production';
 
-const DEV = !isProd();
-
-function isProd() {
-	let prod;
-	/*global process*/
-	try { prod = process.env.NODE_ENV==='production'; } catch (e) {}
-	return !!prod;
-}
-
-
+// a component that renders nothing. Used to replace components for unmountComponentAtNode.
 const EmptyComponent = () => null;
+
+
+
+// make react think we're react.
+let VNode = h('').constructor;
+VNode.prototype.$$typeof = REACT_ELEMENT_TYPE;
+
+Object.defineProperty(VNode.prototype, 'type', {
+	get() { return this.nodeName; },
+	set(v) { this.nodeName = v; }
+});
+
+Object.defineProperty(VNode.prototype, 'props', {
+	get() { return this.attributes; },
+	set(v) { this.attributes = v; }
+});
+
 
 
 // proxy render() since React returns a Component reference.
