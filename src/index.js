@@ -283,6 +283,10 @@ function propsHook(props) {
 			}
 		}
 	}
+
+	if (c) {
+		props.children = c;
+	}
 }
 
 
