@@ -5,6 +5,7 @@
   "description": "A React compatibility layer for Preact",
   "main": "dist/preact-compat.js",
   "minified:main": "dist/preact-compat.min.js",
+  "jsnext:main": "src/index.js",
   "scripts": {
     "build": "npm-run-all transpile minify size",
     "transpile": "rollup -c rollup.config.js",
