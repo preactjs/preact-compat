@@ -153,10 +153,12 @@ function isValidElement(element) {
 
 function createStringRefProxy(name, component) {
 	return component._refProxies[name] || (component._refProxies[name] = resolved => {
-		component.refs[name] = resolved;
-		if (resolved===null) {
-			delete component._refProxies[name];
-			component = null;
+		if (component && component.refs) {
+			component.refs[name] = resolved;
+			if (resolved===null) {
+				delete component._refProxies[name];
+				component = null;
+			}
 		}
 	});
 }
