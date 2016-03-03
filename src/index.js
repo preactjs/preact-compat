@@ -11,6 +11,16 @@ const REACT_ELEMENT_TYPE = (typeof Symbol === 'function' && Symbol.for && Symbol
 let VNode = h('').constructor;
 VNode.prototype.$$typeof = REACT_ELEMENT_TYPE;
 
+Object.defineProperty(VNode.prototype, 'type', {
+	get() { return this.nodeName; },
+	set(v) { this.nodeName = v; }
+});
+
+Object.defineProperty(VNode.prototype, 'props', {
+	get() { return this.attributes; },
+	set(v) { this.attributes = v; }
+});
+
 
 // don't autobind these methods since they already have guaranteed context.
 const AUTOBIND_BLACKLIST = {
