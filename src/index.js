@@ -1,4 +1,5 @@
 import PropTypes from 'proptypes';
+import SVG from 'preact-svg';
 import { render as preactRender, h, Component as PreactComponent, hooks } from 'preact';
 
 
@@ -110,6 +111,11 @@ for (let i=ELEMENTS.length; i--; ) {
 
 function createElement(...args) {
 	let vnode = h(...args);
+
+	if (vnode.nodeName==='svg') {
+		vnode.nodeName = SVG;
+	}
+
 	applyClassName(vnode);
 
 	let ref = vnode.attributes && vnode.attributes.ref;

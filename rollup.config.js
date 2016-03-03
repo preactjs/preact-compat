@@ -15,6 +15,9 @@ export default {
 	moduleName: pkg.amdName,
 	format: 'umd',
 	external,
+	globals: {
+		'preact-svg': 'preactSvg'
+	},
 	plugins: [
 		babel({
 			babelrc: false,

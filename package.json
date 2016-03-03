@@ -82,6 +82,7 @@
   },
   "dependencies": {
     "preact-render-to-string": "^2.0.1",
+    "preact-svg": "^1.4.3",
     "proptypes": "^0.14.3"
   }
 }
