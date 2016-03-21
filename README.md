@@ -44,35 +44,60 @@ All you have to do is add an alias for `react` and `react-dom`:
 
 ```js
 {
-	// ...
-	resolve: {
-		alias: {
-			'react': 'preact-compat',
-			'react-dom': 'preact-compat'
-		}
-	}
-	// ...
+    // ...
+    resolve: {
+        alias: {
+            'react': 'preact-compat',
+            'react-dom': 'preact-compat'
+        }
+    }
+    // ...
 }
 ```
 
-... with that in place, existing React modules should work nicely:
+
+## Usage with Browserify
+
+Using `preact-compat` with Browserify is as simple as installing and configuring [aliasify](http://npm.im/aliasify).
+
+First, install it: `npm install --save-dev aliasify`
+
+... then in your `package.json`, configure aliasify to alias `react` and `react-dom`:
+
+```js
+{
+    // ...
+    "aliasify": {
+        "aliases": {
+            "react": "preact-compat",
+            "react-dom": "preact-compat"
+        }
+    }
+    // ...
+}
+```
+
+
+## Once Aliased
+
+With the above Webpack or Browserify aliases in place, existing React modules should work nicely:
 
 ```js
 import React from 'react';
 import ReactDOM from 'react-dom';
 
 class Foo extends React.Component {
-	propTypes = {
-		a: React.PropTypes.string.isRequired
-	};
-	render() {
-		let { a, b, children } = this.props;
-		return <div {...{a,b}}>{ children }</div>;
-	}
+    propTypes = {
+        a: React.PropTypes.string.isRequired
+    };
+    render() {
+        let { a, b, children } = this.props;
+        return <div {...{a,b}}>{ children }</div>;
+    }
 }
 
 ReactDOM.render((
-	<Foo a="a">test</Foo>
+    <Foo a="a">test</Foo>
 ), document.body);
 ```
 
@@ -89,9 +114,9 @@ ReactDOM.render((
 <script src="//npmcdn.com/proptypes"></script>
 <script src="//npmcdn.com/preact-compat"></script>
 <script>
-	var React = preactCompat,
-		ReactDOM = preactCompat;
-	ReactDOM.render(<h1>Hello!</h1>, document.body);
+    var React = preactCompat,
+        ReactDOM = preactCompat;
+    ReactDOM.render(<h1>Hello!</h1>, document.body);
 </script>
 ```
 
