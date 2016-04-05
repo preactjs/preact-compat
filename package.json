@@ -46,7 +46,7 @@
     "babel-preset-react": "^6.5.0",
     "babel-preset-stage-0": "^6.5.0",
     "chai": "^3.5.0",
-    "eslint": "~2.2.0",
+    "eslint": "~2.7.0",
     "gzip-size-cli": "^1.0.0",
     "karma": "^0.13.22",
     "karma-chai": "^0.1.0",
