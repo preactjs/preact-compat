@@ -8,6 +8,7 @@ module.exports = function(config) {
 		browsers: ['PhantomJS'],
 
 		files: [
+			require.resolve('es5-shim'),
 			'test/**/*.js'
 		],
 
