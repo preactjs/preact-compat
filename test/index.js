@@ -21,15 +21,18 @@ describe('preact-compat', () => {
 		});
 
 		it('should create a Component', () => {
+			let specState = { something: 1 };
 			let spec = {
 				foo: 'bar',
-				state: { something:1 },
+				getInitialState() {
+					return specState;
+				},
 				method: sinon.spy()
 			};
 			const C = createClass(spec);
 			let inst = new C();
 			expect(inst).to.have.property('foo', 'bar');
-			expect(inst).to.have.property('state', spec.state);
+			expect(inst).to.have.property('state', specState);
 			expect(inst).to.have.property('method').that.is.a('function');
 			expect(inst).to.be.an.instanceof(Component);
 			inst.method('a','b');
