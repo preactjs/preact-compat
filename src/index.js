@@ -188,8 +188,8 @@ function F(){}
 
 function createClass(obj) {
 	let cl = function(props, context) {
-		Component.call(this, props, context, BYPASS_HOOK);
 		extend(this, obj);
+		Component.call(this, props, context, BYPASS_HOOK);
 		bindAll(this);
 		newComponentHook.call(this, props, context);
 	};
