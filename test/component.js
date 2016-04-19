@@ -131,9 +131,9 @@ describe('components', () => {
 			React.render(<Foo empty />, scratch);
 			// React.unmountComponentAtNode(scratch);
 
-			expect(ref1).to.have.have.been.calledTwice.and.calledWith(null);
-			expect(ref2).to.have.have.been.calledTwice.and.calledWith(null);
-			expect(componentRef).to.have.been.calledTwice.and.calledWith(null);
+			expect(ref1, 'ref1').to.have.have.been.calledTwice.and.calledWith(null);
+			expect(ref2, 'ref2').to.have.have.been.calledTwice.and.calledWith(null);
+			expect(componentRef, 'componentRef').to.have.been.calledTwice.and.calledWith(null);
 		});
 	});
 });
