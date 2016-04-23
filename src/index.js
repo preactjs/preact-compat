@@ -142,7 +142,7 @@ function cloneElement(element, props, ...children) {
 
 
 function isValidElement(element) {
-	return (element instanceof VNode) || element.$$typeof===REACT_ELEMENT_TYPE;
+	return element && ((element instanceof VNode) || element.$$typeof===REACT_ELEMENT_TYPE);
 }
 
 
