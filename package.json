@@ -47,7 +47,7 @@
     "babel-preset-stage-0": "^6.5.0",
     "chai": "^3.5.0",
     "es5-shim": "^4.5.7",
-    "eslint": "~2.10.0",
+    "eslint": "~2.11.0",
     "gzip-size-cli": "^1.0.0",
     "karma": "^0.13.22",
     "karma-chai": "^0.1.0",
