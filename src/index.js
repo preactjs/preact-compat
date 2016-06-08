@@ -314,6 +314,8 @@ class Component extends PreactComponent {
 	}
 }
 
+Component.prototype.isReactComponent = {}
+
 
 
 export { DOM, PropTypes, Children, render, createClass, createFactory, createElement, cloneElement, isValidElement, findDOMNode, unmountComponentAtNode, Component };
