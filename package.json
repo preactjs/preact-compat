@@ -36,7 +36,7 @@
     "babel-core": "^6.6.4",
     "babel-eslint": "^6.0.0",
     "babel-loader": "^6.2.4",
-    "babel-plugin-transform-class-properties": "^6.6.0",
+    "babel-plugin-transform-class-properties": "^6.10.2",
     "babel-plugin-transform-es2015-classes": "^6.6.4",
     "babel-plugin-transform-object-rest-spread": "^6.6.4",
     "babel-plugin-transform-react-jsx": "^6.6.4",
