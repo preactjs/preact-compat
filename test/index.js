@@ -1,4 +1,4 @@
-import React, { render, createClass, createElement, Component, PropTypes } from '../src';
+import React, { render, createClass, createElement, cloneElement, Component, PropTypes } from '../src';
 
 /*global sinon,expect*/
 
@@ -79,6 +79,13 @@ describe('preact-compat', () => {
 				.to.have.property('PropTypes')
 				.that.is.an('object')
 				.that.equals(PropTypes);
+		});
+	});
+
+	describe('cloneElement', () => {
+		it('should clone elements', () => {
+			let element = <foo a="b" c="d">a<span>b</span></foo>;
+			expect(cloneElement(element)).to.eql(element);
 		});
 	});
 });
