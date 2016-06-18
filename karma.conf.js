@@ -12,10 +12,12 @@ module.exports = function(config) {
 			'test/**/*.js'
 		],
 
+		mochaReporter: {
+			showDiff: true
+		},
+
 		preprocessors: {
-			'test/**/*.js': ['webpack'],
-			'src/**/*.js': ['webpack'],
-			'**/*.js': ['sourcemap']
+			'{src,test}/**/*.js': ['webpack', 'sourcemap']
 		},
 
 		webpack: {
