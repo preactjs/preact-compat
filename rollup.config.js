@@ -1,5 +1,6 @@
 import path from 'path';
 import fs from 'fs';
+import memory from 'rollup-plugin-memory';
 import babel from 'rollup-plugin-babel';
 import nodeResolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
@@ -14,11 +15,16 @@ export default {
 	sourceMap: path.resolve(pkg.main),
 	moduleName: pkg.amdName,
 	format: 'umd',
+	exports: 'default',
 	external,
 	globals: {
 		'preact-svg': 'preactSvg'
 	},
 	plugins: [
+		memory({
+			path: 'src/index.js',
+			contents: "export { default } from './index';"
+		}),
 		babel({
 			babelrc: false,
 			comments: false,
