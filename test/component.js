@@ -44,6 +44,25 @@ describe('components', () => {
 		expect(html).to.equal('<div id="demo">inner</div>');
 	});
 
+	it('should alias props.children', () => {
+		class Foo extends React.Component {
+			render() {
+				return <div>{this.props.children}</div>;
+			}
+		}
+
+		let children = ['a', <span>b</span>, <b>c</b>],
+			foo;
+
+		React.render((
+			<Foo ref={ c => foo=c }>
+				{ children }
+			</Foo>
+		), scratch);
+
+		expect(foo).to.exist.and.have.deep.property('props.children').eql(children);
+	});
+
 	describe('refs', () => {
 		it('should support string refs', () => {
 			let inst, innerInst;

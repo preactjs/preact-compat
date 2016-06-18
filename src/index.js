@@ -1,6 +1,6 @@
 import PropTypes from 'proptypes';
 import SVG from 'preact-svg';
-import { render as preactRender, h, Component as PreactComponent, hooks } from 'preact';
+import { render as preactRender, h, Component as PreactComponent, options } from 'preact';
 
 
 const ELEMENTS = 'a abbr address area article aside audio b base bdi bdo big blockquote body br button canvas caption cite code col colgroup data datalist dd del details dfn dialog div dl dt em embed fieldset figcaption figure footer form h1 h2 h3 h4 h5 h6 head header hgroup hr html i iframe img input ins kbd keygen label legend li link main map mark menu menuitem meta meter nav noscript object ol optgroup option output p param picture pre progress q rp rt ruby s samp script section select small source span strong style sub summary sup table tbody td textarea tfoot th thead time title tr track u ul var video wbr circle clipPath defs ellipse g image line linearGradient mask path pattern polygon polyline radialGradient rect stop svg text tspan'.split(' ');
@@ -45,6 +45,25 @@ Object.defineProperty(VNode.prototype, 'props', {
 	get() { return this.attributes; },
 	set(v) { this.attributes = v; }
 });
+
+
+const childrenPropertyAlias = {
+	get() {
+		return this.attributes && this.attributes.children;
+	},
+	set(children) {
+		let a = this.attributes || (this.attributes={});
+		a.children = children;
+	}
+};
+
+let oldVnodeHook = options.vnode || EmptyComponent;
+options.vnode = vnode => {
+	let a = vnode.attributes;
+	if (!a) a = vnode.attributes = {};
+	Object.defineProperty(a, 'children', childrenPropertyAlias);
+	oldVnodeHook(vnode);
+};
 
 
 
