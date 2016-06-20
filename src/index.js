@@ -123,7 +123,7 @@ let currentComponent;
 
 
 function createFactory(type) {
-	return (...args) => createElement(type, ...args);
+	return createElement.bind(null, type);
 }
 
 
@@ -162,7 +162,7 @@ function cloneElement(element, props, ...children) {
 	}
 	return createElement(
 		node.nodeName,
-		extend({}, node.attributes || {}, props),
+		extend(extend({}, node.attributes || {}), props),
 		...(children.length && children || node.children || [])
 	);
 }
@@ -193,15 +193,10 @@ function applyClassName({ attributes }) {
 }
 
 
-function extend(base, ...objs) {
-	for (let i=0; i<objs.length; i++) {
-		for (let key in objs[i]) {
-			if (objs[i].hasOwnProperty(key)) {
-				let v = objs[i][key];
-				if (v!==null && v!==undefined) {
-					base[key] = v;
-				}
-			}
+function extend(base, props) {
+	for (let key in props) {
+		if (props[key]!=null) {
+			base[key] = props[key];
 		}
 	}
 	return base;
@@ -214,12 +209,12 @@ let findDOMNode = component => component.base || component;
 function F(){}
 
 function createClass(obj) {
-	let cl = function(props, context) {
+	function cl(props, context) {
 		extend(this, obj);
 		Component.call(this, props, context, BYPASS_HOOK);
 		bindAll(this);
 		newComponentHook.call(this, props, context);
-	};
+	}
 
 	if (obj.propTypes) {
 		cl.propTypes = obj.propTypes;
@@ -242,7 +237,6 @@ function createClass(obj) {
 
 
 function bindAll(ctx) {
-	/*eslint guard-for-in:0*/
 	for (let i in ctx) {
 		let v = ctx[i];
 		if (typeof v==='function' && !v.__bound && !AUTOBIND_BLACKLIST.hasOwnProperty(i)) {
@@ -261,11 +255,12 @@ function callMethod(ctx, m, args) {
 	}
 }
 
-function multihook(...hooks) {
-	return function(...args) {
+function multihook() {
+	let hooks = arguments;
+	return function() {
 		let ret;
 		for (let i=0; i<hooks.length; i++) {
-			let r = callMethod(this, hooks[i], args);
+			let r = callMethod(this, hooks[i], arguments);
 			if (r!==undefined) ret = r;
 		}
 		return ret;
@@ -322,26 +317,28 @@ function afterRender() {
 
 
 
-class Component extends PreactComponent {
-	constructor(props, context, opts) {
-		super(props, context);
-		this.refs = {};
-		this._refProxies = {};
-		if (opts!==BYPASS_HOOK) {
-			newComponentHook.call(this, props, context);
-		}
+function Component(props, context, opts) {
+	PreactComponent.call(this, props, context);
+	this.refs = {};
+	this._refProxies = {};
+	if (opts!==BYPASS_HOOK) {
+		newComponentHook.call(this, props, context);
 	}
+}
+Component.prototype = new PreactComponent();
+extend(Component.prototype, {
+	constructor: Component,
+
+	isReactComponent: {},
 
 	getDOMNode() {
 		return this.base;
-	}
+	},
 
 	isMounted() {
 		return !!this.base;
 	}
-}
-
-Component.prototype.isReactComponent = {};
+});
 
 
 export { DOM, PropTypes, Children, render, createClass, createFactory, createElement, cloneElement, isValidElement, findDOMNode, unmountComponentAtNode, Component };

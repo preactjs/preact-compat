@@ -29,7 +29,7 @@ module.exports = function(config) {
 						loader: 'babel',
 						query: {
 							sourceMap: 'inline',
-							presets: ['es2015-loose', 'stage-0', 'react'],
+							presets: ['es2015', 'stage-0', 'react'],
 							plugins: [
 								'transform-object-rest-spread'
 							]

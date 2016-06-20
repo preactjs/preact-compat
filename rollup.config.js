@@ -16,6 +16,7 @@ export default {
 	moduleName: pkg.amdName,
 	format: 'umd',
 	exports: 'default',
+	useStrict: false,
 	external,
 	globals: {
 		'preact-svg': 'preactSvg'
@@ -30,7 +31,7 @@ export default {
 			comments: false,
 			exclude: 'node_modules/**',
 			presets: [
-				'es2015-loose-rollup',
+				'es2015-minimal-rollup',
 				'stage-0',
 				'react'
 			],
