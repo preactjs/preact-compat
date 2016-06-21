@@ -33,7 +33,7 @@
   },
   "homepage": "https://github.com/developit/preact-compat",
   "devDependencies": {
-    "babel-core": "^6.9.1",
+    "babel-core": "^6.10.4",
     "babel-eslint": "^6.0.5",
     "babel-loader": "^6.2.4",
     "babel-plugin-transform-class-properties": "^6.10.2",
