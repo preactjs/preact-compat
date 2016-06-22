@@ -71,7 +71,7 @@
     "rollup-plugin-node-resolve": "^1.7.0",
     "sinon": "^1.17.4",
     "sinon-chai": "^2.8.0",
-    "uglify-js": "^2.6.3",
+    "uglify-js": "^2.6.4",
     "webpack": "^1.13.1"
   },
   "peerDependencies": {
