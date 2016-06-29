@@ -61,6 +61,10 @@ let oldVnodeHook = options.vnode || EmptyComponent;
 options.vnode = vnode => {
 	let a = vnode.attributes;
 	if (!a) a = vnode.attributes = {};
+	// clone if needed (fixes #105):
+	if (Object.isExtensible && !Object.isExtensible(a)) {
+		a = extend({}, a, true);
+	}
 	Object.defineProperty(a, 'children', childrenPropertyAlias);
 	oldVnodeHook(vnode);
 };
@@ -193,9 +197,9 @@ function applyClassName({ attributes }) {
 }
 
 
-function extend(base, props) {
+function extend(base, props, all) {
 	for (let key in props) {
-		if (props[key]!=null) {
+		if (all===true || props[key]!=null) {
 			base[key] = props[key];
 		}
 	}
