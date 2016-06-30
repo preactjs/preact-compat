@@ -48,16 +48,6 @@ Object.defineProperty(VNode.prototype, 'props', {
 });
 
 
-const childrenPropertyAlias = {
-	get() {
-		return this.attributes && this.attributes.children;
-	},
-	set(children) {
-		let a = this.attributes || (this.attributes={});
-		a.children = children;
-	}
-};
-
 let oldVnodeHook = options.vnode || EmptyComponent;
 options.vnode = vnode => {
 	let a = vnode.attributes;
@@ -66,7 +56,7 @@ options.vnode = vnode => {
 	if (Object.isExtensible && !Object.isExtensible(a)) {
 		a = extend({}, a, true);
 	}
-	Object.defineProperty(a, 'children', childrenPropertyAlias);
+	a.children = vnode.children;
 	oldVnodeHook(vnode);
 };
 
