@@ -65,7 +65,7 @@
     "preact-jsx-chai": "^1.5.0",
     "pretty-bytes-cli": "^1.0.0",
     "rollup": "^0.31.2",
-    "rollup-plugin-babel": "^2.5.1",
+    "rollup-plugin-babel": "^2.6.1",
     "rollup-plugin-commonjs": "^3.0.0",
     "rollup-plugin-memory": "^1.0.0",
     "rollup-plugin-node-resolve": "^1.7.0",
