@@ -53,6 +53,18 @@ describe('preact-compat', () => {
 			expect(c).to.have.property('constructor').that.equals(constructor);
 			expect(c).to.have.property('render').not.with.property('__bound');
 		});
+
+		it('should copy statics', () => {
+			let def = {
+				statics: {
+					foo: 'bar',
+					baz() {}
+				}
+			};
+			let c = createClass(def);
+			expect(c).to.have.property('foo', def.statics.foo);
+			expect(c).to.have.property('baz', def.statics.baz);
+		});
 	});
 
 	describe('createElement()', () => {
