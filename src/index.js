@@ -211,6 +211,9 @@ function createClass(obj) {
 		newComponentHook.call(this, props, context);
 	}
 
+	if (obj.statics) {
+		extend(cl, obj.statics);
+	}
 	if (obj.propTypes) {
 		cl.propTypes = obj.propTypes;
 	}
