@@ -1,5 +1,4 @@
 import PropTypes from 'proptypes';
-import SVG from 'preact-svg';
 import { render as preactRender, cloneElement as preactCloneElement, h, Component as PreactComponent, options } from 'preact';
 
 const version = '15.1.0'; // trick libraries to think we are react
@@ -130,10 +129,6 @@ for (let i=ELEMENTS.length; i--; ) {
 
 function createElement(...args) {
 	let vnode = h(...args);
-
-	if (vnode.nodeName==='svg') {
-		vnode.nodeName = SVG;
-	}
 
 	applyClassName(vnode);
 
