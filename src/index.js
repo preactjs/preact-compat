@@ -137,8 +137,9 @@ function createElement(...args) {
 
 	applyClassName(vnode);
 
-	let ref = vnode.attributes && vnode.attributes.ref;
-	if (currentComponent && ref && typeof ref==='string') {
+	let ref = vnode.attributes && vnode.attributes.ref,
+		type = ref && typeof ref;
+	if (currentComponent && (type==='string' || type==='number')) {
 		vnode.attributes.ref = createStringRefProxy(ref, currentComponent);
 	}
 
