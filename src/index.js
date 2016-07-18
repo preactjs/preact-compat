@@ -38,12 +38,14 @@ VNode.prototype.$$typeof = REACT_ELEMENT_TYPE;
 
 Object.defineProperty(VNode.prototype, 'type', {
 	get() { return this.nodeName; },
-	set(v) { this.nodeName = v; }
+	set(v) { this.nodeName = v; },
+	configurable:true
 });
 
 Object.defineProperty(VNode.prototype, 'props', {
 	get() { return this.attributes; },
-	set(v) { this.attributes = v; }
+	set(v) { this.attributes = v; },
+	configurable:true
 });
 
 
