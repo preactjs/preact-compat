@@ -321,8 +321,9 @@ function propsHook(props) {
 		if (propTypes) {
 			for (let prop in propTypes) {
 				if (propTypes.hasOwnProperty(prop) && typeof propTypes[prop]==='function') {
-					let err = propTypes[prop](props, prop, this.constructor.name, 'prop');
-					if (err) throw err;
+					const displayName = this.displayName || this.constructor.name;
+					let err = propTypes[prop](props, prop, displayName, 'prop');
+					if (err) console.warn(err.message || err);
 				}
 			}
 		}
