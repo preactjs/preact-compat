@@ -323,7 +323,7 @@ function propsHook(props) {
 				if (propTypes.hasOwnProperty(prop) && typeof propTypes[prop]==='function') {
 					const displayName = this.displayName || this.constructor.name;
 					let err = propTypes[prop](props, prop, displayName, 'prop');
-					if (err) throw err;
+					if (err) console.warn(err.message || err);
 				}
 			}
 		}
