@@ -143,7 +143,7 @@ function statelessComponentHook(WrappedComponent) {
 	function StatelessComponent(props) {
 		// Ensure default props have been applied to the props.
 		const p = WrappedComponent.defaultProps
-			? extend(props, WrappedComponent.defaultProps, true)
+			? extend(WrappedComponent.defaultProps, props, true)
 			: props;
 		// Validate props.
 		propsHook.call(WrappedComponent, p);
