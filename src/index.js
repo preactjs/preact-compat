@@ -129,10 +129,39 @@ for (let i=ELEMENTS.length; i--; ) {
 }
 
 
+function isStatelessComponent(c) {
+	return typeof c === 'function' && !(c.prototype instanceof Component);
+}
+
+
+function statelessComponentHook(WrappedComponent) {
+	// Ensure the displayName has been set for debugging purposes
+	WrappedComponent.displayName = WrappedComponent.displayName
+		|| WrappedComponent.name
+		|| 'StatelessComponent';
+
+	function StatelessComponent(props) {
+		// Ensure default props have been applied to the props.
+		const p = WrappedComponent.defaultProps
+			? extend(WrappedComponent.defaultProps, props, true)
+			: props;
+		// Validate props.
+		propsHook.call(WrappedComponent, p);
+		return WrappedComponent(props);
+	}
+
+	return StatelessComponent;
+}
+
+
 function createElement(...args) {
 	let vnode = h(...args);
 
 	applyClassName(vnode);
+
+	if (isStatelessComponent(vnode.nodeName)) {
+		vnode.nodeName = statelessComponentHook(vnode.nodeName);
+	}
 
 	let ref = vnode.attributes && vnode.attributes.ref,
 		type = ref && typeof ref;
