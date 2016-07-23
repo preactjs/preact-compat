@@ -63,6 +63,42 @@ describe('components', () => {
 		expect(foo).to.exist.and.have.deep.property('props.children').eql(children);
 	});
 
+	describe('defaultProps', () => {
+		it('should support defaultProps for components', () => {
+			let render = sinon.stub().returns(<div />);
+
+			const Foo = React.createClass({
+				defaultProps: {
+					foo: 'default foo',
+					bar: 'default bar'
+				},
+				render
+			});
+
+			React.render(<Foo />, scratch);
+			expect(render).to.have.been.calledWithMatch(Foo.defaultProps);
+
+			render.reset();
+			React.render(<Foo bar="bar" />, scratch);
+			expect(render).to.have.been.calledWithMatch({ foo:'default foo', bar:'bar' });
+		});
+
+		it('should support defaultProps for pure components', () => {
+			const Foo = sinon.stub().returns(<div />);
+			Foo.defaultProps = {
+				foo: 'default foo',
+				bar: 'default bar'
+			};
+
+			React.render(<Foo />, scratch);
+			expect(Foo).to.have.been.calledWithMatch(Foo.defaultProps);
+
+			Foo.reset();
+			React.render(<Foo bar="bar" />, scratch);
+			expect(Foo).to.have.been.calledWithMatch({ foo:'default foo', bar:'bar' });
+		});
+	});
+
 	describe('propTypes', () => {
 		function checkPropTypes(Foo) {
 			sinon.stub(console, 'error');
