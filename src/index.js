@@ -183,14 +183,7 @@ function cloneElement(element, props, ...children) {
 		element.attributes || element.props,
 		element.children || element.props.children
 	);
-	if (preactCloneElement) {
-		return preactCloneElement(node, props, ...children);
-	}
-	return createElement(
-		node.nodeName,
-		extend(extend({}, node.attributes || {}), props),
-		...(children.length && children || node.children || [])
-	);
+	return preactCloneElement(node, props, ...children);
 }
 
 
