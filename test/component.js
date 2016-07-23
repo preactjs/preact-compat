@@ -63,6 +63,72 @@ describe('components', () => {
 		expect(foo).to.exist.and.have.deep.property('props.children').eql(children);
 	});
 
+	describe('propTypes', () => {
+		function checkPropTypes(Foo) {
+			sinon.stub(console, 'error');
+
+			React.render(<Foo />, scratch);
+			expect(console.error).to.have.been.calledWithMatch({
+				message: 'Required prop `func` was not specified in `Foo`.'
+			});
+
+			console.error.reset();
+
+			React.render(<Foo func={()=>{}} />, scratch);
+			expect(console.error).not.to.have.been.called;
+
+			React.render(<Foo func={()=>{}} bool="one" />, scratch);
+			expect(console.error).to.have.been.calledWithMatch({
+				message: 'Invalid prop `bool` of type `string` supplied to `Foo`, expected `boolean`.'
+			});
+
+			console.error.restore();
+		}
+
+		it('should support propTypes for ES Class components', () => {
+			class Foo extends React.Component {
+				static propTypes = {
+					func: React.PropTypes.func.isRequired,
+					bool: React.PropTypes.bool
+				};
+				render() {
+					return <div />;
+				}
+			}
+
+			checkPropTypes(Foo);
+		});
+
+		it('should support propTypes for createClass components', () => {
+			const Foo = React.createClass({
+				propTypes: {
+					func: React.PropTypes.func.isRequired,
+					bool: React.PropTypes.bool
+				},
+				render: () => <div />
+			});
+
+			checkPropTypes(Foo);
+		});
+
+		it('should support propTypes for pure components', () => {
+			function Foo() { return <div />; }
+			Foo.propTypes = {
+				func: React.PropTypes.func.isRequired,
+				bool: React.PropTypes.bool
+			};
+			checkPropTypes(Foo);
+
+			const Foo2 = () => <div />;
+			Foo2.displayName = 'Foo';
+			Foo2.propTypes = {
+				func: React.PropTypes.func.isRequired,
+				bool: React.PropTypes.bool
+			};
+			checkPropTypes(Foo2);
+		});
+	});
+
 	describe('refs', () => {
 		it('should support string refs', () => {
 			let inst, innerInst;

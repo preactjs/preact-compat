@@ -134,21 +134,25 @@ function isStatelessComponent(c) {
 }
 
 
-function statelessComponentHook(WrappedComponent) {
-	// Ensure the displayName has been set for debugging purposes
-	WrappedComponent.displayName = WrappedComponent.displayName
-		|| WrappedComponent.name
-		|| 'StatelessComponent';
+const STATELESS_WRAPPER_KEY = typeof Symbol!=='undefined' ? Symbol.for('__preactCompatStatelessWrapper') : '__preactCompatStatelessWrapper';
 
-	function StatelessComponent(props) {
-		// Ensure default props have been applied to the props.
-		const p = WrappedComponent.defaultProps
-			? extend(WrappedComponent.defaultProps, props)
-			: props;
-		// Validate props.
-		propsHook.call(WrappedComponent, p);
-		return WrappedComponent(props);
+// wraps stateless functional components in a PropTypes validator
+function statelessComponentHook(WrappedComponent) {
+	// cache wrapper creation
+	if (WrappedComponent[STATELESS_WRAPPER_KEY]) {
+		return WrappedComponent[STATELESS_WRAPPER_KEY];
 	}
+
+	function StatelessComponent(props, context) {
+		propsHook.call(WrappedComponent, props, context);
+		return WrappedComponent(props, context);
+	}
+
+	StatelessComponent.displayName = WrappedComponent.displayName;
+	StatelessComponent.propTypes = WrappedComponent.propTypes;
+	StatelessComponent.defaultProps = WrappedComponent.defaultProps;
+
+	Object.defineProperty(WrappedComponent, STATELESS_WRAPPER_KEY, { configurable:true, value:StatelessComponent });
 
 	return StatelessComponent;
 }
@@ -300,7 +304,7 @@ function newComponentHook(props, context) {
 }
 
 
-function propsHook(props) {
+function propsHook(props, context) {
 	if (!props) return;
 
 	// React annoyingly special-cases single children, and some react components are ridiculously strict about this.
@@ -317,13 +321,14 @@ function propsHook(props) {
 
 	// add proptype checking
 	if (DEV) {
-		let propTypes = this.propTypes || this.constructor.propTypes;
+		let ctor = typeof this==='function' ? this : this.constructor,
+			propTypes = this.propTypes || ctor.propTypes;
 		if (propTypes) {
 			for (let prop in propTypes) {
 				if (propTypes.hasOwnProperty(prop) && typeof propTypes[prop]==='function') {
-					const displayName = this.displayName || this.constructor.name;
+					const displayName = this.displayName || ctor.name;
 					let err = propTypes[prop](props, prop, displayName, 'prop');
-					if (err) console.warn(err.message || err);
+					if (err) console.error(new Error(err.message || err));
 				}
 			}
 		}
