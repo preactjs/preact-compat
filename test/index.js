@@ -65,6 +65,51 @@ describe('preact-compat', () => {
 			expect(c).to.have.property('foo', def.statics.foo);
 			expect(c).to.have.property('baz', def.statics.baz);
 		});
+
+		it('should support mixins', () => {
+			let def = {
+				mixins: [
+					{
+						foo: sinon.spy(),
+						bar: sinon.spy()
+					},
+					{
+						bar: sinon.spy(),
+						componentWillMount: sinon.spy(),
+						render: 'nothing here'
+					},
+					{
+						componentWillMount: sinon.spy()
+					}
+				],
+				foo: sinon.spy(),
+				componentWillMount: sinon.spy(),
+				render: sinon.stub().returns(null)
+			};
+			let C = createClass(def);
+			let inst = new C();
+
+			inst.foo();
+			expect(def.foo).to.have.been.calledOnce;
+			expect(def.mixins[0].foo).to.have.been.calledOnce.and.calledBefore(def.foo);
+
+			inst.bar();
+			expect(def.mixins[0].bar).to.have.been.calledOnce;
+			expect(def.mixins[1].bar).to.have.been.calledOnce.and.calledAfter(def.mixins[0].bar);
+
+			let props = {},
+				state = {};
+			inst.componentWillMount(props, state);
+			expect(def.mixins[1].componentWillMount)
+				.to.have.been.calledOnce
+				.and.calledWithExactly(props, state);
+			expect(def.mixins[2].componentWillMount)
+				.to.have.been.calledOnce
+				.and.calledWithExactly(props, state)
+				.and.calledAfter(def.mixins[1].componentWillMount);
+
+			expect(inst.render(props, state)).to.equal(null);
+		});
 	});
 
 	describe('createElement()', () => {
