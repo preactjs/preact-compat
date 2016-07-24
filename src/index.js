@@ -205,6 +205,8 @@ function createElement(...args) {
 		vnode.attributes.ref = createStringRefProxy(ref, currentComponent);
 	}
 
+	applyEventNormalization(vnode);
+
 	return vnode;
 }
 
@@ -234,6 +236,21 @@ function createStringRefProxy(name, component) {
 			}
 		}
 	});
+}
+
+
+function applyEventNormalization({ nodeName, attributes }) {
+	if (!attributes || typeof nodeName!=='string') return;
+	let props = {};
+	for (let i in attributes) {
+		props[i.toLowerCase()] = i;
+	}
+	if (props.onchange) {
+		nodeName = nodeName.toLowerCase();
+		let attr = nodeName==='select' ? 'onchange' : 'oninput';
+		if (nodeName==='input' && String(attributes.type).toLowerCase()==='checkbox') attr = 'onclick';
+		attributes[props[attr] || attr] = multihook(attributes[props[attr]], attributes[props.onchange]);
+	}
 }
 
 
