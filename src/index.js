@@ -74,6 +74,26 @@ function render(vnode, parent, callback) {
 }
 
 
+class ContextProvider {
+	getChildContext() {
+		return this.props.context;
+	}
+	render(props) {
+		return props.children[0];
+	}
+}
+
+function renderSubtreeIntoContainer(parentComponent, vnode, container, callback) {
+	let c = render((
+		<ContextProvider context={parentComponent.context}>
+			{vnode}
+		</ContextProvider>
+	), container);
+	if (callback) callback(c);
+	return c;
+}
+
+
 function unmountComponentAtNode(container) {
 	let existing = container._preactCompatRendered;
 	if (existing && existing.parentNode===container) {
@@ -391,5 +411,37 @@ extend(Component.prototype, {
 });
 
 
-export { version, DOM, PropTypes, Children, render, createClass, createFactory, createElement, cloneElement, isValidElement, findDOMNode, unmountComponentAtNode, Component };
-export default { version, DOM, PropTypes, Children, render, createClass, createFactory, createElement, cloneElement, isValidElement, findDOMNode, unmountComponentAtNode, Component };
+
+export {
+	version,
+	DOM,
+	PropTypes,
+	Children,
+	render,
+	createClass,
+	createFactory,
+	createElement,
+	cloneElement,
+	isValidElement,
+	findDOMNode,
+	unmountComponentAtNode,
+	Component,
+	renderSubtreeIntoContainer as unstable_renderSubtreeIntoContainer
+};
+
+export default {
+	version,
+	DOM,
+	PropTypes,
+	Children,
+	render,
+	createClass,
+	createFactory,
+	createElement,
+	cloneElement,
+	isValidElement,
+	findDOMNode,
+	unmountComponentAtNode,
+	Component,
+	unstable_renderSubtreeIntoContainer: renderSubtreeIntoContainer
+};
