@@ -70,7 +70,7 @@ function render(vnode, parent, callback) {
 	let out = preactRender(vnode, parent, prev);
 	parent._preactCompatRendered = out;
 	if (typeof callback==='function') callback();
-	return out && out._component;
+	return out && out._component || out.base;
 }
 
 
@@ -222,7 +222,7 @@ function extend(base, props, all) {
 }
 
 
-let findDOMNode = component => component.base || component;
+let findDOMNode = component => component && component.base || component;
 
 
 function F(){}

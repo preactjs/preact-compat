@@ -32,11 +32,11 @@ export default {
 			exclude: 'node_modules/**',
 			presets: [
 				'es2015-minimal-rollup',
-				'stage-0',
-				'react'
+				'stage-0'
 			],
 			plugins: [
-				'transform-class-properties'
+				'transform-class-properties',
+				['transform-react-jsx', {pragma:'h'}]
 			]
 		}),
 		nodeResolve({
