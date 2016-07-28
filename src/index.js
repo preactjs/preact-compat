@@ -165,27 +165,31 @@ function isStatelessComponent(c) {
 }
 
 
-const STATELESS_WRAPPER_KEY = typeof Symbol!=='undefined' ? Symbol.for('__preactCompatStatelessWrapper') : '__preactCompatStatelessWrapper';
+const COMPONENT_WRAPPER_KEY = typeof Symbol!=='undefined' ? Symbol.for('__preactCompatWrapper') : '__preactCompatWrapper';
 
 // wraps stateless functional components in a PropTypes validator
-function statelessComponentHook(WrappedComponent) {
-	// cache wrapper creation
-	if (WrappedComponent[STATELESS_WRAPPER_KEY]) {
-		return WrappedComponent[STATELESS_WRAPPER_KEY];
-	}
-
-	function StatelessComponent(props, context) {
+function wrapStatelessComponent(WrappedComponent) {
+	return function StatelessComponent(props, context) {
 		propsHook.call(WrappedComponent, props, context);
 		return WrappedComponent(props, context);
-	}
+	};
+}
 
-	StatelessComponent.displayName = WrappedComponent.displayName;
-	StatelessComponent.propTypes = WrappedComponent.propTypes;
-	StatelessComponent.defaultProps = WrappedComponent.defaultProps;
 
-	Object.defineProperty(WrappedComponent, STATELESS_WRAPPER_KEY, { configurable:true, value:StatelessComponent });
+function statelessComponentHook(Ctor) {
+	let Wrapped = Ctor[COMPONENT_WRAPPER_KEY];
+	if (Wrapped) return Wrapped===true ? Ctor : Wrapped;
 
-	return StatelessComponent;
+	Wrapped = wrapStatelessComponent(Ctor);
+
+	Object.defineProperty(Wrapped, COMPONENT_WRAPPER_KEY, { configurable:true, value:true });
+	Wrapped.displayName = Ctor.displayName;
+	Wrapped.propTypes = Ctor.propTypes;
+	Wrapped.defaultProps = Ctor.defaultProps;
+
+	Object.defineProperty(Ctor, COMPONENT_WRAPPER_KEY, { configurable:true, value:Wrapped });
+
+	return Wrapped;
 }
 
 
