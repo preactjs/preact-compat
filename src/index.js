@@ -161,7 +161,7 @@ function upgradeToVNodes(arr, offset) {
 }
 
 function isStatelessComponent(c) {
-	return typeof c === 'function' && !(c.prototype instanceof Component);
+	return typeof c==='function' && !(c.prototype && c.prototype.render);
 }
 
 
