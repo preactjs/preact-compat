@@ -31,11 +31,10 @@ export default {
 			comments: false,
 			exclude: 'node_modules/**',
 			presets: [
-				'es2015-minimal-rollup',
+				['es2015', { loose:true, modules:false }],
 				'stage-0'
 			],
 			plugins: [
-				'transform-class-properties',
 				['transform-react-jsx', {pragma:'h'}]
 			]
 		}),
