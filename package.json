@@ -58,9 +58,9 @@
     "karma-sourcemap-loader": "^0.3.7",
     "karma-webpack": "^1.7.0",
     "mkdirp": "^0.5.1",
-    "mocha": "^3.0.0",
+    "mocha": "^3.0.1",
     "npm-run-all": "^2.3.0",
-    "phantomjs-prebuilt": "^2.1.9",
+    "phantomjs-prebuilt": "^2.1.10",
     "preact": "^5.6.0",
     "preact-jsx-chai": "^2.0.2",
     "pretty-bytes-cli": "^1.0.0",
@@ -78,7 +78,7 @@
     "preact": ">=5"
   },
   "dependencies": {
-    "preact-render-to-string": "^3.0.4",
+    "preact-render-to-string": "^3.0.5",
     "proptypes": "^0.14.3"
   }
 }
