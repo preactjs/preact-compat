@@ -35,6 +35,18 @@ having a simple short-term solution for those who would like to liberate themsel
 
 ---
 
+## Installation
+You need to install `preact-compat` first through npm:
+
+```bash
+npm i --save preact-compat
+```
+
+NOTE: You need to have `preact` already installed, if you don't, install it like so:
+
+```bash
+npm i --save preact
+```
 
 ## Usage with Webpack
 
@@ -42,7 +54,7 @@ Using `preact-compat` with Webpack is easy.
 
 All you have to do is add an alias for `react` and `react-dom`:
 
-```js
+```javascript
 {
     // ...
     resolve: {
@@ -82,7 +94,7 @@ First, install it: `npm install --save-dev aliasify`
 
 With the above Webpack or Browserify aliases in place, existing React modules should work nicely:
 
-```js
+```javascript
 import React from 'react';
 import ReactDOM from 'react-dom';
 
