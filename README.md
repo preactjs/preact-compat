@@ -35,6 +35,18 @@ having a simple short-term solution for those who would like to liberate themsel
 
 ---
 
+## Installation
+You need to install `preact-compat` first through npm:
+
+```bash
+npm i --save preact-compat
+```
+
+NOTE: You need to have `preact` already installed, if you don't, install it like so:
+
+```bash
+npm i --save preact
+```
 
 ## Usage with Webpack
 
