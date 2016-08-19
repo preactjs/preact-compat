@@ -10,6 +10,18 @@ describe('preact-compat', () => {
 				.that.is.a('function')
 				.that.equals(render);
 		});
+		it('should replace isomorphic content', () => {
+			let root = document.createElement('div');
+			let initialChild = document.createElement('div');
+			initialChild.appendChild(document.createTextNode('initial content'));
+			root.appendChild(initialChild);
+
+			render(<div>dynamic content</div>, root);
+			expect(root)
+				.to.have.property('textContent')
+				.that.is.a('string')
+				.that.equals('dynamic content');
+		});
 	});
 
 	describe('createClass()', () => {
