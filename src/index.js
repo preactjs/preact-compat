@@ -65,16 +65,13 @@ options.vnode = vnode => {
 
 // proxy render() since React returns a Component reference.
 function render(vnode, parent, callback) {
-	//let emptyParent = parent.cloneNode(false); // get empty parent to render into
 	let prev = parent._preactCompatRendered;
 	if (prev){
 		if (prev.parentNode!==parent) prev = null;
 	} else if (parent.children){
 		prev = parent.children[0];
 	}
-	let out = preactRender(vnode, parent, prev); // render to an empty parent to avoid duplication with isomorphic content
-	//parent.parentNode.replaceChild(emptyParent, parent);
-	//parent = emptyParent;
+	let out = preactRender(vnode, parent, prev);
 	parent._preactCompatRendered = out;
 	if (typeof callback==='function') callback();
 	return out && out._component || out.base;
