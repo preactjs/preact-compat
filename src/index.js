@@ -66,10 +66,15 @@ options.vnode = vnode => {
 // proxy render() since React returns a Component reference.
 function render(vnode, parent, callback) {
 	let prev = parent._preactCompatRendered;
-	if (prev){
-		if (prev.parentNode!==parent) prev = null;
-	} else if (parent.children){
+	if (prev &&prev.parentNode!==parent) prev = null;
+	if (parent.children && parent.children.length){
 		prev = parent.children[0];
+		let extras = parent.children.length;
+		if (extras  > 1){
+			for (let i = 1; i < extras; i++){
+				parent.removeChild(parent.children[i]);
+			}
+		}
 	}
 	let out = preactRender(vnode, parent, prev);
 	parent._preactCompatRendered = out;
