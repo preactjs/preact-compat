@@ -10,11 +10,34 @@ describe('preact-compat', () => {
 				.that.is.a('function')
 				.that.equals(render);
 		});
+
 		it('should replace isomorphic content', () => {
-			let root = document.createElement('div');
-			let initialChild = document.createElement('div');
-			initialChild.appendChild(document.createTextNode('initial content'));
+			let ce = (type) => document.createElement(type);
+			let Text = (text) => document.createTextNode(text);
+			let root = ce('div');
+			let initialChild = ce('div');
+			initialChild.appendChild(Text('initial content'));
 			root.appendChild(initialChild);
+
+			render(<div>dynamic content</div>, root);
+			expect(root)
+				.to.have.property('textContent')
+				.that.is.a('string')
+				.that.equals('dynamic content');
+		});
+
+		it('should remove extra elements', () => {
+			let ce = (type) => document.createElement(type);
+			let Text = (text) => document.createTextNode(text);
+			let root = ce('div');
+
+			let c1 = ce('div');
+			c1.appendChild(Text('isomorphic content'));
+			root.appendChild(c1);
+
+			let c2 = ce('div');
+			c2.appendChild(Text('extra content'));
+			root.appendChild(c2);
 
 			render(<div>dynamic content</div>, root);
 			expect(root)
