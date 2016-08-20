@@ -45,7 +45,24 @@ describe('preact-compat', () => {
 				.that.is.a('string')
 				.that.equals('dynamic content');
 		});
+
+		it('should remove text nodes', () => {
+			let ce = (type) => document.createElement(type);
+			let Text = (text) => document.createTextNode(text);
+			let root = ce('div');
+
+			root.appendChild(Text('Text Content in the root'));
+			root.appendChild(Text('More Text Content'));
+
+			render(<div>dynamic content</div>, root);
+			expect(root)
+			.to.have.property('textContent')
+			.that.is.a('string')
+			.that.equals('dynamic content');
+		});
+
 	});
+
 
 	describe('createClass()', () => {
 		it('should be exported', () => {
