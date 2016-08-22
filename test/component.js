@@ -256,5 +256,39 @@ describe('components', () => {
 			expect(ref2, 'ref2').to.have.have.been.calledTwice.and.calledWith(null);
 			expect(componentRef, 'componentRef').to.have.been.calledTwice.and.calledWith(null);
 		});
+
+		it('should support string refs via cloneElement()', () => {
+			let inner, outer;
+
+			const Inner = React.createClass({
+				render() {
+					inner = this;
+					return (
+						<div>
+							{React.cloneElement(React.Children.only(this.props.children), { id:'one' })}
+							{React.cloneElement(React.Children.only(this.props.children), { id:'two', ref:'two' })}
+						</div>
+					);
+				}
+			});
+
+			const Outer = React.createClass({
+				render() {
+					outer = this;
+					return (
+						<Inner>
+							<span ref="one">foo</span>
+						</Inner>
+					);
+				}
+			});
+
+			React.render(<Outer />, scratch);
+
+			let one = scratch.firstElementChild.children[0];
+			let two = scratch.firstElementChild.children[1];
+			expect(outer).to.have.property('refs').eql({ one });
+			expect(inner).to.have.property('refs').eql({ two });
+		});
 	});
 });
