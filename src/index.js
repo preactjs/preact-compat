@@ -195,8 +195,11 @@ function statelessComponentHook(Ctor) {
 
 function createElement(...args) {
 	upgradeToVNodes(args, 2);
-	let vnode = h(...args);
+	return normalizeVNode(h(...args));
+}
 
+
+function normalizeVNode(vnode) {
 	applyClassName(vnode);
 
 	if (isStatelessComponent(vnode.nodeName)) {
@@ -221,7 +224,7 @@ function cloneElement(element, props, ...children) {
 		element.attributes || element.props,
 		element.children || element.props.children
 	);
-	return preactCloneElement(node, props, ...children);
+	return normalizeVNode(preactCloneElement(node, props, ...children));
 }
 
 
