@@ -1,3 +1,4 @@
+/* eslint-disable */
 var renderToString = require('preact-render-to-string');
 
 module.exports = {

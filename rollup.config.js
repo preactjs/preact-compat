@@ -1,7 +1,7 @@
 import path from 'path';
 import fs from 'fs';
 import memory from 'rollup-plugin-memory';
-import babel from 'rollup-plugin-babel';
+import buble from 'rollup-plugin-buble';
 import nodeResolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
 
@@ -26,17 +26,8 @@ export default {
 			path: 'src/index.js',
 			contents: "export { default } from './index';"
 		}),
-		babel({
-			babelrc: false,
-			comments: false,
-			exclude: 'node_modules/**',
-			presets: [
-				['es2015', { loose:true, modules:false }],
-				'stage-0'
-			],
-			plugins: [
-				['transform-react-jsx', {pragma:'h'}]
-			]
+		buble({
+			objectAssign: 'extend'
 		}),
 		nodeResolve({
 			jsnext: true,
