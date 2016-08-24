@@ -66,17 +66,20 @@ options.vnode = vnode => {
 // proxy render() since React returns a Component reference.
 function render(vnode, parent, callback) {
 	let prev = parent._preactCompatRendered;
-	if (prev &&prev.parentNode!==parent) prev = null;
-	if (parent.children && parent.children.length){ // children does not contain text nodes
-		prev = parent.children[0]; // first non-text node
-	}
-	if (parent.childNodes && parent.childNodes.length){ // delete extra nodes
-		for (let i = parent.childNodes.length; i--;){
-			let child = parent.childNodes[i];
-			if (child === prev) { continue; }
-			parent.removeChild(child);
+
+	// ignore impossible previous renders
+	if (prev && prev.parentNode!==parent) prev = null;
+
+	// default to first Element child
+	if (!prev) prev = parent.children[0];
+
+	// remove unaffected siblings
+	for (let i=parent.childNodes.length; i--; ) {
+		if (parent.childNodes[i]!==prev) {
+			parent.removeChild(parent.childNodes[i]);
 		}
 	}
+
 	let out = preactRender(vnode, parent, prev);
 	parent._preactCompatRendered = out;
 	if (typeof callback==='function') callback();
