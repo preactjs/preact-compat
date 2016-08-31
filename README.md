@@ -122,9 +122,9 @@ render((
 `preact-compat` and its single dependency [`proptypes`](https://git.io/proptypes) are both published as UMD modules as of `preact-compat` version `0.6`. This means you can use them via a `<script>` tag without issue:
 
 ```html
-<script src="//npmcdn.com/preact"></script>
-<script src="//npmcdn.com/proptypes"></script>
-<script src="//npmcdn.com/preact-compat"></script>
+<script src="//unpkg.com/preact"></script>
+<script src="//unpkg.com/proptypes"></script>
+<script src="//unpkg.com/preact-compat"></script>
 <script>
     var React = preactCompat,
         ReactDOM = preactCompat;
