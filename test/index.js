@@ -196,5 +196,31 @@ describe('preact-compat', () => {
 			let element = <foo a="b" c="d">a<span>b</span></foo>;
 			expect(cloneElement(element)).to.eql(element);
 		});
+
+		it('should shallow-merge new props onto cloned element', () => {
+			let element = <foo a="b" c="d" e={{f: {g: "h"}}} />;
+			let newProps = {
+				c: "x",
+				e: {f: {y: "z"}}
+			};
+
+			let expected = <foo a="b" c="x" e={{f: {y: "z"}}} />;
+
+			expect(cloneElement(element, newProps)).to.eql(expected);
+		});
+
+		it('should clone elements and replace children', () => {
+			let element 	= <foo a="b" c="d">a<span>b</span></foo>;
+			let expected 	= <foo a="b" c="d">x<span>y</span></foo>;
+
+			expect(cloneElement(element, {}, "x", <span>y</span>)).to.eql(expected);
+		});
+
+		it('should clone elements and replace children given as an array', () => {
+			let element 	= <foo a="b" c="d">a<span>b</span></foo>;
+			let expected 	= <foo a="b" c="d">x<span>y</span></foo>;
+
+			expect(cloneElement(element, {}, ["x", <span>y</span>])).to.eql(expected);
+		});
 	});
 });

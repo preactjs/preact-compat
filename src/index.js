@@ -234,6 +234,9 @@ function cloneElement(element, props, ...children) {
 		element.attributes || element.props,
 		element.children || element.props.children
 	);
+	if (children.length === 1 && Array.isArray(children[0])) {
+		children = children[0];
+	}
 	return normalizeVNode(preactCloneElement(node, props, ...children));
 }
 
