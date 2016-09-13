@@ -63,6 +63,28 @@ describe('components', () => {
 		expect(foo).to.exist.and.have.deep.property('props.children').eql(children);
 	});
 
+	it('should single out children before componentWillReceiveProps', () => {
+		let props;
+
+		class Child extends React.Component {
+			componentWillReceiveProps(newProps) {
+				props = newProps;
+			}
+		}
+		class Parent extends React.Component {
+			render() {
+				return <Child>second</Child>;
+			}
+		}
+
+		let a = React.render(<Parent/>, scratch);
+		a.forceUpdate();
+
+		expect(props).to.exist.and.deep.equal({
+			children: 'second'
+		});
+	});
+
 	describe('defaultProps', () => {
 		it('should support defaultProps for components', () => {
 			let render = sinon.stub().returns(<div />);
