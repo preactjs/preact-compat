@@ -78,7 +78,7 @@ describe('components', () => {
 		}
 
 		let a = React.render(<Parent/>, scratch);
-		a.forceUpdate ();
+		a.forceUpdate();
 
 		expect(props).to.exist.and.deep.equal({
 			children: 'second'
