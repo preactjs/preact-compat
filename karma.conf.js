@@ -1,4 +1,4 @@
-var path = require('path');
+let path = require('path');
 
 module.exports = function(config) {
 	config.set({
@@ -41,7 +41,8 @@ module.exports = function(config) {
 			resolve: {
 				modulesDirectories: [__dirname, 'node_modules'],
 				alias: {
-					src: __dirname+'/src'
+					src: path.join(__dirname, 'src'),
+					'preact-compat': path.join(__dirname, 'src')
 				}
 			}
 		},
