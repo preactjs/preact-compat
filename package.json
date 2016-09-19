@@ -67,7 +67,7 @@
     "rollup-plugin-commonjs": "^4.1.0",
     "rollup-plugin-memory": "^2.0.0",
     "rollup-plugin-node-resolve": "^2.0.0",
-    "sinon": "^1.17.5",
+    "sinon": "^1.17.6",
     "sinon-chai": "^2.8.0",
     "uglify-js": "^2.7.3",
     "webpack": "^1.13.2"
