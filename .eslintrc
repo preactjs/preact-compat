@@ -12,6 +12,11 @@
       "jsx": true
     }
   },
+  "globals": {
+    "expect": true,
+    "chai": true,
+    "sinon": true
+  },
   "rules": {
     "no-empty": 0,
     "no-console": 0,

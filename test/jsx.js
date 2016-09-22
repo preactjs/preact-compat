@@ -1,8 +1,6 @@
 import renderToString from 'preact-render-to-string';
 import React from '../src';
 
-/*global sinon,expect*/
-
 describe('jsx', () => {
 	it('should render react-style', () => {
 		let jsx = (

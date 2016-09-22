@@ -1,7 +1,5 @@
 import React, { render, createClass, createElement, cloneElement, Component, PropTypes } from '../src';
 
-/*global sinon,expect*/
-
 describe('preact-compat', () => {
 	describe('render()', () => {
 		it('should be exported', () => {

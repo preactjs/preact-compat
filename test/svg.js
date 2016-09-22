@@ -1,6 +1,5 @@
 import React from '../src';
 import assertJsx from 'preact-jsx-chai';
-/*global chai,sinon,expect*/
 chai.use(assertJsx);
 
 describe('svg', () => {
