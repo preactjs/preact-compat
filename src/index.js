@@ -49,16 +49,44 @@ Object.defineProperty(VNode.prototype, 'props', {
 });
 
 
-let oldVnodeHook = options.vnode || EmptyComponent;
+let oldVnodeHook = options.vnode;
 options.vnode = vnode => {
-	let a = vnode.attributes;
+	let a = vnode.attributes,
+		tag = vnode.nodeName;
 	if (!a) a = vnode.attributes = {};
+
+	if (typeof tag==='function') {
+		let isCompat = tag[COMPONENT_WRAPPER_KEY]===true,
+			p = tag;
+		if (!isCompat) {
+			do {
+				if (p instanceof Component) {
+					isCompat = true;
+					break;
+				}
+			} while ((p=p.prototype) && p!==Function && p!==Object);
+		}
+
+		if (isCompat) {
+			normalizeVNode(vnode);
+
+			// apply defaultProps
+			if (tag.defaultProps) {
+				for (let i in tag.defaultProps) {
+					if (tag.defaultProps.hasOwnProperty(i) && a[i]==null) {
+						a[i] = tag.defaultProps[i];
+					}
+				}
+			}
+		}
+	}
+
 	// clone if needed (fixes #105):
 	if (Object.isExtensible && !Object.isExtensible(a)) {
 		a = extend({}, a, true);
 	}
 	a.children = vnode.children;
-	oldVnodeHook(vnode);
+	if (oldVnodeHook) oldVnodeHook(vnode);
 };
 
 
@@ -263,10 +291,12 @@ function applyEventNormalization({ nodeName, attributes }) {
 		props[i.toLowerCase()] = i;
 	}
 	if (props.onchange) {
-		let attr = 'oninput';
 		nodeName = nodeName.toLowerCase();
-		if (nodeName==='input' && String(attributes.type).toLowerCase()==='checkbox') attr = 'onclick';
-		attributes[props[attr] || attr] = multihook(attributes[props[attr]], attributes[props.onchange]);
+		let attr = nodeName==='input' && String(attributes.type).toLowerCase()==='checkbox' ? 'onclick' : 'oninput',
+			normalized = props[attr] || attr;
+		if (!attributes[normalized]) {
+			attributes[normalized] = multihook(attributes[props[attr]], attributes[props.onchange]);
+		}
 	}
 }
 
