@@ -415,7 +415,7 @@ function multihook() {
 function newComponentHook(props, context) {
 	propsHook.call(this, props, context);
 	this.componentWillReceiveProps = multihook(propsHook, this.componentWillReceiveProps || 'componentWillReceiveProps');
-	this.render = multihook(beforeRender, this.render || 'render', afterRender);
+	this.render = multihook(propsHook, beforeRender, this.render || 'render', afterRender);
 }
 
 
@@ -451,7 +451,7 @@ function propsHook(props, context) {
 }
 
 
-function beforeRender() {
+function beforeRender(props) {
 	currentComponent = this;
 }
 
