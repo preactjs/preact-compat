@@ -59,7 +59,7 @@
     "npm-run-all": "^3.1.0",
     "phantomjs-prebuilt": "^2.1.10",
     "preact": "^6.0.1",
-    "preact-jsx-chai": "^2.0.2",
+    "preact-jsx-chai": "^2.2.0",
     "pretty-bytes-cli": "^1.0.0",
     "rollup": "^0.36.1",
     "rollup-plugin-babel": "^2.6.1",
