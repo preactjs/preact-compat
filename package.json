@@ -76,7 +76,7 @@
     "preact": ">=5"
   },
   "dependencies": {
-    "preact-render-to-string": "^3.0.5",
+    "preact-render-to-string": "^3.2.1",
     "preact-transition-group": "^1.1.0",
     "proptypes": "^0.14.3"
   }
