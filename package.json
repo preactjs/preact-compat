@@ -44,7 +44,7 @@
     "chai": "^3.5.0",
     "diff": "^3.0.0",
     "es5-shim": "^4.5.9",
-    "eslint": "^3.4.0",
+    "eslint": "^3.6.0",
     "gzip-size-cli": "^1.0.0",
     "karma": "^1.1.2",
     "karma-chai": "^0.1.0",
