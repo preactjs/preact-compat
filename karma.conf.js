@@ -2,7 +2,7 @@ var path = require('path');
 
 module.exports = function(config) {
 	config.set({
-		frameworks: ['mocha', 'chai-sinon'],
+		frameworks: ['mocha', 'chai-sinon', 'source-map-support'],
 		reporters: ['mocha'],
 
 		browsers: ['PhantomJS'],
@@ -44,7 +44,8 @@ module.exports = function(config) {
 					src: path.join(__dirname, 'src'),
 					'preact-compat': path.join(__dirname, 'src')
 				}
-			}
+			},
+			devtool: 'inline-sourcemap'
 		},
 
 		webpackMiddleware: {
