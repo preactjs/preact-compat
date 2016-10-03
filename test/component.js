@@ -83,6 +83,26 @@ describe('components', () => {
 		});
 	});
 
+	describe('getInitialState', () => {
+		it('should be invoked for new components', () => {
+			class Foo extends React.Component {
+				getInitialState() {
+					return { foo: 'bar' };
+				}
+				render() {
+					return <div />;
+				}
+			}
+
+			sinon.spy(Foo.prototype, 'getInitialState');
+
+			let a = React.render(<Foo />, scratch);
+
+			expect(Foo.prototype.getInitialState).to.have.been.calledOnce;
+			expect(a.state).to.eql({ foo: 'bar' });
+		});
+	});
+
 	describe('defaultProps', () => {
 		it('should support defaultProps for components', () => {
 			let render = sinon.stub().returns(<div />);
