@@ -318,6 +318,13 @@ function extend(base, props, all) {
 }
 
 
+function shallowDiffers(a, b) {
+	for (let i in a) if (!(i in b)) return true;
+	for (let i in b) if (a[i]!==b[i]) return true;
+	return false;
+}
+
+
 let findDOMNode = component => component && component.base || component;
 
 
@@ -489,6 +496,16 @@ extend(Component.prototype, {
 
 
 
+function PureComponent(props, context) {
+	Component.call(this, props, context);
+}
+PureComponent.prototype = new Component({}, {}, BYPASS_HOOK);
+PureComponent.prototype.shouldComponentUpdate = function(props, state) {
+	return shallowDiffers(this.props, props) || shallowDiffers(this.state, state);
+};
+
+
+
 export {
 	version,
 	DOM,
@@ -503,6 +520,7 @@ export {
 	findDOMNode,
 	unmountComponentAtNode,
 	Component,
+	PureComponent,
 	renderSubtreeIntoContainer as unstable_renderSubtreeIntoContainer
 };
 
@@ -520,5 +538,6 @@ export default {
 	findDOMNode,
 	unmountComponentAtNode,
 	Component,
+	PureComponent,
 	unstable_renderSubtreeIntoContainer: renderSubtreeIntoContainer
 };

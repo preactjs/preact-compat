@@ -1,4 +1,5 @@
 import renderToString from 'preact-render-to-string';
+import { rerender } from 'preact';
 import React from '../src';
 
 describe('components', () => {
@@ -329,6 +330,49 @@ describe('components', () => {
 			let two = scratch.firstElementChild.children[1];
 			expect(outer).to.have.property('refs').eql({ one });
 			expect(inner).to.have.property('refs').eql({ two });
+		});
+	});
+
+	describe('PureComponent', () => {
+		it('should be a class', () => {
+			expect(React).to.have.property('PureComponent').that.is.a('function');
+		});
+
+		it('should only re-render when props or state change', () => {
+			class C extends React.PureComponent {
+				render() {
+					return <div />;
+				}
+			}
+			let spy = sinon.spy(C.prototype, 'render');
+
+			let inst = React.render(<C />, scratch);
+			expect(spy).to.have.been.calledOnce;
+			spy.reset();
+
+			inst = React.render(<C />, scratch);
+			expect(spy).not.to.have.been.called;
+
+			let b = { foo: 'bar' };
+			inst = React.render(<C a="a" b={b} />, scratch);
+			expect(spy).to.have.been.calledOnce;
+			spy.reset();
+
+			inst = React.render(<C a="a" b={b} />, scratch);
+			expect(spy).not.to.have.been.called;
+
+			inst.setState({ });
+			rerender();
+			expect(spy).not.to.have.been.called;
+
+			inst.setState({ a:'a', b });
+			rerender();
+			expect(spy).to.have.been.calledOnce;
+			spy.reset();
+
+			inst.setState({ a:'a', b });
+			rerender();
+			expect(spy).not.to.have.been.called;
 		});
 	});
 });
