@@ -35,6 +35,8 @@ const EmptyComponent = () => null;
 // make react think we're react.
 let VNode = h('').constructor;
 VNode.prototype.$$typeof = REACT_ELEMENT_TYPE;
+VNode.prototype.preactCompatUpgraded = false;
+VNode.prototype.preactCompatNormalized = false;
 
 Object.defineProperty(VNode.prototype, 'type', {
 	get() { return this.nodeName; },
@@ -51,43 +53,49 @@ Object.defineProperty(VNode.prototype, 'props', {
 
 let oldVnodeHook = options.vnode;
 options.vnode = vnode => {
-	let a = vnode.attributes,
-		tag = vnode.nodeName;
-	if (!a) a = vnode.attributes = {};
+	if (vnode && typeof vnode==='object' && !vnode.preactCompatUpgraded) {
+		handleVNode(vnode);
+	}
+	if (oldVnodeHook) oldVnodeHook(vnode);
+};
+
+function handleVNode(vnode) {
+	let tag = vnode.nodeName,
+		a = vnode.attributes;
+
+	vnode.preactCompatUpgraded = true;
+
+	// clone if needed (fixes #105):
+	if (a && Object.isExtensible && !Object.isExtensible(a)) {
+		vnode.attributes = a = extend({}, a, true);
+	}
 
 	if (typeof tag==='function') {
-		let isCompat = tag[COMPONENT_WRAPPER_KEY]===true,
-			p = tag;
-		if (!isCompat) {
-			do {
-				if (p instanceof Component) {
-					isCompat = true;
-					break;
-				}
-			} while ((p=p.prototype) && p!==Function && p!==Object);
+		let isCompat = tag[COMPONENT_WRAPPER_KEY]===true || (tag.prototype && 'isReactComponent' in tag.prototype);
+
+		if (tag.prototype && !tag.prototype.setState || !tag.prototype.render) isCompat = true;
+
+		if (!isCompat) return;
+
+		if (!a) a = vnode.attributes = {};
+
+		if (!vnode.preactCompatNormalized) {
+			normalizeVNode(vnode);
 		}
 
-		if (isCompat) {
-			normalizeVNode(vnode);
-
-			// apply defaultProps
-			if (tag.defaultProps) {
-				for (let i in tag.defaultProps) {
-					if (tag.defaultProps.hasOwnProperty(i) && a[i]==null) {
-						a[i] = tag.defaultProps[i];
-					}
+		// apply defaultProps
+		if (tag.defaultProps) {
+			for (let i in tag.defaultProps) {
+				if (tag.defaultProps.hasOwnProperty(i) && (!a.hasOwnProperty(i) || a[i]==null)) {
+					a[i] = tag.defaultProps[i];
 				}
 			}
 		}
-	}
 
-	// clone if needed (fixes #105):
-	if (Object.isExtensible && !Object.isExtensible(a)) {
-		a = extend({}, a, true);
+		if (vnode.children && !vnode.children.length) vnode.children = undefined;
+
+		if (vnode.children) a.children = vnode.children;
 	}
-	a.children = vnode.children;
-	if (oldVnodeHook) oldVnodeHook(vnode);
-};
 
 
 
@@ -238,6 +246,7 @@ function createElement(...args) {
 
 
 function normalizeVNode(vnode) {
+	vnode.preactCompatNormalized = true;
 	applyClassName(vnode);
 
 	if (isStatelessComponent(vnode.nodeName)) {
@@ -257,10 +266,12 @@ function normalizeVNode(vnode) {
 
 
 function cloneElement(element, props, ...children) {
+	if (!isValidElement(element)) return element;
+	let elementProps = element.attributes || element.props;
 	let node = h(
 		element.nodeName || element.type,
-		element.attributes || element.props,
-		element.children || element.props.children
+		elementProps,
+		element.children || elementProps && elementProps.children
 	);
 	return normalizeVNode(preactCloneElement(node, props, ...children));
 }
@@ -431,7 +442,7 @@ function propsHook(props, context) {
 
 	// React annoyingly special-cases single children, and some react components are ridiculously strict about this.
 	let c = props.children;
-	if (Array.isArray(c) && c.length===1) {
+	if (c && Array.isArray(c) && c.length===1) {
 		props.children = c[0];
 
 		// but its totally still going to be an Array.
