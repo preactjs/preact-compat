@@ -227,10 +227,12 @@ const COMPONENT_WRAPPER_KEY = typeof Symbol!=='undefined' ? Symbol.for('__preact
 
 // wraps stateless functional components in a PropTypes validator
 function wrapStatelessComponent(WrappedComponent) {
-	return function StatelessComponent(props, context) {
-		propsHook.call(WrappedComponent, props, context);
-		return WrappedComponent(props, context);
-	};
+	return createClass({
+		displayName: WrappedComponent.displayName || WrappedComponent.name,
+		render(props, state, context) {
+			return WrappedComponent(props, context);
+		}
+	});
 }
 
 
