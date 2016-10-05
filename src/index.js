@@ -320,7 +320,7 @@ function applyEventNormalization({ nodeName, attributes }) {
 		let attr = nodeName==='input' && String(attributes.type).toLowerCase()==='checkbox' ? 'onclick' : 'oninput',
 			normalized = props[attr] || attr;
 		if (!attributes[normalized]) {
-			attributes[normalized] = multihook(attributes[props[attr]], attributes[props.onchange]);
+			attributes[normalized] = multihook([attributes[props[attr]], attributes[props.onchange]]);
 		}
 	}
 }
@@ -407,7 +407,7 @@ function collateMixins(mixins) {
 // apply a mapping of Arrays of mixin methods to a component instance
 function applyMixins(inst, mixins) {
 	for (let key in mixins) if (mixins.hasOwnProperty(key)) {
-		inst[key] = multihook(...mixins[key].concat(inst[key] || key));
+		inst[key] = multihook(mixins[key].concat(inst[key] || key));
 	}
 }
 
@@ -431,13 +431,12 @@ function callMethod(ctx, m, args) {
 	}
 }
 
-function multihook() {
-	let hooks = arguments;
+function multihook(hooks) {
 	return function() {
 		let ret;
 		for (let i=0; i<hooks.length; i++) {
 			let r = callMethod(this, hooks[i], arguments);
-			if (r!==undefined) ret = r;
+			if (typeof r!=='undefined') ret = r;
 		}
 		return ret;
 	};
@@ -446,8 +445,8 @@ function multihook() {
 
 function newComponentHook(props, context) {
 	propsHook.call(this, props, context);
-	this.componentWillReceiveProps = multihook(propsHook, this.componentWillReceiveProps || 'componentWillReceiveProps');
-	this.render = multihook(propsHook, beforeRender, this.render || 'render', afterRender);
+	this.componentWillReceiveProps = multihook([propsHook, this.componentWillReceiveProps || 'componentWillReceiveProps']);
+	this.render = multihook([propsHook, beforeRender, this.render || 'render', afterRender]);
 }
 
 
