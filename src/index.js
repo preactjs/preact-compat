@@ -22,6 +22,9 @@ const AUTOBIND_BLACKLIST = {
 };
 
 
+const CAMEL_PROPS = /^(accent|alignment|arabic|baseline|cap|clip|color|fill|flood|font|glyph|horiz|marker|overline|paint|stop|strikethrough|stroke|text|underline|unicode|units|v|vert|word|writing|x)[A-Z]/g;
+
+
 const BYPASS_HOOK = {};
 
 /*global process*/
@@ -96,6 +99,15 @@ function handleVNode(vnode) {
 
 		if (vnode.children) a.children = vnode.children;
 	}
+	else if (a) {
+		for (let i in a) {
+			if (a.hasOwnProperty(i) && i.match(CAMEL_PROPS)) {
+				a[i.replace(/([A-Z0-9])/g, '-$1').toLowerCase()] = a[i];
+				delete a[i];
+			}
+		}
+	}
+}
 
 
 
