@@ -74,30 +74,26 @@ function handleVNode(vnode) {
 	}
 
 	if (typeof tag==='function') {
-		let isCompat = tag[COMPONENT_WRAPPER_KEY]===true || (tag.prototype && 'isReactComponent' in tag.prototype);
+		if (tag[COMPONENT_WRAPPER_KEY]===true || (tag.prototype && 'isReactComponent' in tag.prototype)) {
+			if (!a) a = vnode.attributes = {};
 
-		if (tag.prototype && !tag.prototype.setState || !tag.prototype.render) isCompat = true;
+			if (!vnode.preactCompatNormalized) {
+				normalizeVNode(vnode);
+			}
 
-		if (!isCompat) return;
-
-		if (!a) a = vnode.attributes = {};
-
-		if (!vnode.preactCompatNormalized) {
-			normalizeVNode(vnode);
-		}
-
-		// apply defaultProps
-		if (tag.defaultProps) {
-			for (let i in tag.defaultProps) {
-				if (tag.defaultProps.hasOwnProperty(i) && (!a.hasOwnProperty(i) || a[i]==null)) {
-					a[i] = tag.defaultProps[i];
+			// apply defaultProps
+			if (tag.defaultProps) {
+				for (let i in tag.defaultProps) {
+					if (tag.defaultProps.hasOwnProperty(i) && (!a.hasOwnProperty(i) || a[i]==null)) {
+						a[i] = tag.defaultProps[i];
+					}
 				}
 			}
+
+			if (vnode.children && !vnode.children.length) vnode.children = undefined;
+
+			if (vnode.children) a.children = vnode.children;
 		}
-
-		if (vnode.children && !vnode.children.length) vnode.children = undefined;
-
-		if (vnode.children) a.children = vnode.children;
 	}
 	else if (a) {
 		for (let i in a) {
