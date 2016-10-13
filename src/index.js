@@ -56,10 +56,6 @@ Object.defineProperty(VNode.prototype, 'props', {
 
 let oldVnodeHook = options.vnode;
 options.vnode = vnode => {
-	// if (!vnode.preactCompatUpgraded) {
-	// 	vnode.preactCompatUpgraded = true;
-	// 	handleVNode(vnode);
-	// }
 	if (!vnode.preactCompatUpgraded) {
 		vnode.preactCompatUpgraded = true;
 		let tag = vnode.nodeName,
@@ -74,19 +70,6 @@ options.vnode = vnode => {
 		}
 		else if (attrs) {
 			handleElementVNode(vnode, attrs);
-			// let a = vnode.attributes,
-			// 	shouldSanitize, attrs, i;
-			// if (a) {
-			// 	for (i in a) if ((shouldSanitize = CAMEL_PROPS.test(i))) break;
-			// 	if (shouldSanitize) {
-			// 		attrs = vnode.attributes = {};
-			// 		for (i in a) {
-			// 			if (a.hasOwnProperty(i)) {
-			// 				attrs[ CAMEL_PROPS.test(i) ? i.replace(/([A-Z0-9])/, '-$1').toLowerCase() : i ] = a[i];
-			// 			}
-			// 		}
-			// 	}
-			// }
 		}
 	}
 	if (oldVnodeHook) oldVnodeHook(vnode);
@@ -99,37 +82,14 @@ function handleComponentVNode(vnode) {
 	let tag = vnode.nodeName,
 		a = vnode.attributes;
 
-	// if (tag[COMPONENT_WRAPPER_KEY]===true || (tag.prototype && 'isReactComponent' in tag.prototype)) {
-
-	// vnode.attributes = a = a ? extend({}, a) : {};
 	vnode.attributes = {};
 	if (tag.defaultProps) extend(vnode.attributes, tag.defaultProps);
 	if (a) extend(vnode.attributes, a);
 	a = vnode.attributes;
 
-	// if (!a) {
-	// 	a = vnode.attributes = {};
-	// }
-	// else if (Object.isExtensible && !Object.isExtensible(a)) {
-	// 	// clone if needed (fixes #105):
-	// 	a = vnode.attributes = extend({}, a, true);
-	// }
-
-	// apply defaultProps
-	// let dp = tag.defaultProps;
-	// if (dp) {
-	// 	for (let i in dp) {
-	// 		if (dp.hasOwnProperty(i) && (!a.hasOwnProperty(i) || a[i]==null)) {
-	// 			a[i] = dp[i];
-	// 		}
-	// 		// if (dp.hasOwnProperty(i) && typeof a[i]==='undefined') a[i] = dp[i];
-	// 	}
-	// }
-
 	if (vnode.children && !vnode.children.length) vnode.children = undefined;
 
 	if (vnode.children) a.children = vnode.children;
-	// }
 }
 
 function handleElementVNode(vnode, a) {
@@ -144,89 +104,8 @@ function handleElementVNode(vnode, a) {
 				}
 			}
 		}
-		// for (let i in a) {
-		// 	if (a.hasOwnProperty(i) && CAMEL_PROPS.test(i)) {
-		// 		a[i.replace(/([A-Z0-9])/, '-$1').toLowerCase()] = a[i];
-		// 		delete a[i];
-		// 	}
-		// }
 	}
 }
-
-
-
-// function handleVNode(vnode) {
-// 	let tag = vnode.nodeName,
-// 		a = vnode.attributes,
-// 		attrs, shouldSanitize;
-//
-// 	if (typeof tag==='function') {
-// 		if (tag[COMPONENT_WRAPPER_KEY]===true || (tag.prototype && 'isReactComponent' in tag.prototype)) {
-// 			if (!vnode.preactCompatNormalized) {
-// 				normalizeVNode(vnode);
-// 			}
-//
-// 			// vnode.attributes = a = a ? extend({}, a) : {};
-// 			vnode.attributes = {};
-// 			if (tag.defaultProps) extend(vnode.attributes, tag.defaultProps);
-// 			if (a) extend(vnode.attributes, a);
-// 			a = vnode.attributes;
-//
-// 			// if (!a) {
-// 			// 	a = vnode.attributes = {};
-// 			// }
-// 			// else if (Object.isExtensible && !Object.isExtensible(a)) {
-// 			// 	// clone if needed (fixes #105):
-// 			// 	a = vnode.attributes = extend({}, a, true);
-// 			// }
-//
-// 			// apply defaultProps
-// 			// let dp = tag.defaultProps;
-// 			// if (dp) {
-// 			// 	for (let i in dp) {
-// 			// 		if (dp.hasOwnProperty(i) && (!a.hasOwnProperty(i) || a[i]==null)) {
-// 			// 			a[i] = dp[i];
-// 			// 		}
-// 			// 		// if (dp.hasOwnProperty(i) && typeof a[i]==='undefined') a[i] = dp[i];
-// 			// 	}
-// 			// }
-//
-// 			if (vnode.children && !vnode.children.length) vnode.children = undefined;
-//
-// 			if (vnode.children) a.children = vnode.children;
-// 		}
-// 	}
-// 	else if (a) {
-// 		for (let i in a) if ((shouldSanitize = CAMEL_PROPS.test(i))) break;
-// 		if (shouldSanitize) {
-// 			attrs = vnode.attributes = {};
-// 			for (let i in a) {
-// 				if (a.hasOwnProperty(i)) {
-// 					attrs[ CAMEL_PROPS.test(i) ? i.replace(/([A-Z0-9])/, '-$1').toLowerCase() : i ] = a[i];
-// 				}
-// 			}
-// 		}
-// 		// for (let i in a) {
-// 		// 	if (a.hasOwnProperty(i) && CAMEL_PROPS.test(i)) {
-// 		// 		a[i.replace(/([A-Z0-9])/, '-$1').toLowerCase()] = a[i];
-// 		// 		delete a[i];
-// 		// 	}
-// 		// }
-// 	}
-// }
-
-
-
-// function cloneAttributes(vnode) {
-// 	if (!vnode.attributes) {
-// 		vnode.attributes = {};
-// 	}
-// 	else if (Object.isExtensible && !Object.isExtensible(vnode.attributes)) {
-// 		// clone if needed (fixes #105):
-// 		vnode.attributes = extend({}, vnode.attributes, true);
-// 	}
-// 	return vnode.attributes;
-// }
 
 
 
