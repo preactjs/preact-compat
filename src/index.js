@@ -58,8 +58,12 @@ let oldVnodeHook = options.vnode;
 options.vnode = vnode => {
 	if (!vnode.preactCompatUpgraded) {
 		vnode.preactCompatUpgraded = true;
+
 		let tag = vnode.nodeName,
 			attrs = vnode.attributes;
+
+		if (!attrs) attrs = vnode.attributes = {};
+
 		if (typeof tag==='function') {
 			if (tag[COMPONENT_WRAPPER_KEY]===true || (tag.prototype && 'isReactComponent' in tag.prototype)) {
 				if (!vnode.preactCompatNormalized) {
@@ -259,8 +263,6 @@ function createElement(...args) {
 
 function normalizeVNode(vnode) {
 	vnode.preactCompatNormalized = true;
-
-	if (!vnode.attributes) vnode.attributes = {};
 
 	applyClassName(vnode);
 
