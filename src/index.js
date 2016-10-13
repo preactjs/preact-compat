@@ -56,50 +56,52 @@ Object.defineProperty(VNode.prototype, 'props', {
 
 let oldVnodeHook = options.vnode;
 options.vnode = vnode => {
-	if (vnode && typeof vnode==='object' && !vnode.preactCompatUpgraded) {
-		handleVNode(vnode);
+	if (!vnode.preactCompatUpgraded) {
+		vnode.preactCompatUpgraded = true;
+		let tag = vnode.nodeName,
+			attrs = vnode.attributes;
+		if (typeof tag==='function') {
+			if (tag[COMPONENT_WRAPPER_KEY]===true || (tag.prototype && 'isReactComponent' in tag.prototype)) {
+				if (!vnode.preactCompatNormalized) {
+					normalizeVNode(vnode);
+				}
+				handleComponentVNode(vnode);
+			}
+		}
+		else if (attrs) {
+			handleElementVNode(vnode, attrs);
+		}
 	}
 	if (oldVnodeHook) oldVnodeHook(vnode);
 };
 
-function handleVNode(vnode) {
+
+
+
+function handleComponentVNode(vnode) {
 	let tag = vnode.nodeName,
 		a = vnode.attributes;
 
-	vnode.preactCompatUpgraded = true;
+	vnode.attributes = {};
+	if (tag.defaultProps) extend(vnode.attributes, tag.defaultProps);
+	if (a) extend(vnode.attributes, a);
+	a = vnode.attributes;
 
-	// clone if needed (fixes #105):
-	if (a && Object.isExtensible && !Object.isExtensible(a)) {
-		vnode.attributes = a = extend({}, a, true);
-	}
+	if (vnode.children && !vnode.children.length) vnode.children = undefined;
 
-	if (typeof tag==='function') {
-		if (tag[COMPONENT_WRAPPER_KEY]===true || (tag.prototype && 'isReactComponent' in tag.prototype)) {
-			if (!a) a = vnode.attributes = {};
+	if (vnode.children) a.children = vnode.children;
+}
 
-			if (!vnode.preactCompatNormalized) {
-				normalizeVNode(vnode);
-			}
-
-			// apply defaultProps
-			if (tag.defaultProps) {
-				for (let i in tag.defaultProps) {
-					if (tag.defaultProps.hasOwnProperty(i) && (!a.hasOwnProperty(i) || a[i]==null)) {
-						a[i] = tag.defaultProps[i];
-					}
+function handleElementVNode(vnode, a) {
+	let shouldSanitize, attrs, i;
+	if (a) {
+		for (i in a) if ((shouldSanitize = CAMEL_PROPS.test(i))) break;
+		if (shouldSanitize) {
+			attrs = vnode.attributes = {};
+			for (i in a) {
+				if (a.hasOwnProperty(i)) {
+					attrs[ CAMEL_PROPS.test(i) ? i.replace(/([A-Z0-9])/, '-$1').toLowerCase() : i ] = a[i];
 				}
-			}
-
-			if (vnode.children && !vnode.children.length) vnode.children = undefined;
-
-			if (vnode.children) a.children = vnode.children;
-		}
-	}
-	else if (a) {
-		vnode.attributes = {};
-		for (let i in a) {
-			if (a.hasOwnProperty(i)) {
-				vnode.attributes[ CAMEL_PROPS.test(i) ? i.replace(/([A-Z0-9])/, '-$1').toLowerCase() : i ] = a[i];
 			}
 		}
 	}
@@ -329,9 +331,9 @@ function applyClassName({ attributes }) {
 }
 
 
-function extend(base, props, all) {
+function extend(base, props) {
 	for (let key in props) {
-		if (all===true || props[key]!=null) {
+		if (props.hasOwnProperty(key)) {
 			base[key] = props[key];
 		}
 	}
