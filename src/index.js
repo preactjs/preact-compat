@@ -512,6 +512,15 @@ extend(Component.prototype, {
 
 	isReactComponent: {},
 
+	replaceState(state, callback) {
+		this.setState(state, callback);
+		for (let i in this.state) {
+			if (!(i in state)) {
+				delete this.state[i];
+			}
+		}
+	},
+
 	getDOMNode() {
 		return this.base;
 	},

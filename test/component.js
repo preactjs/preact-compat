@@ -43,6 +43,38 @@ describe('components', () => {
 		expect(html).to.equal('<div id="demo">inner</div>');
 	});
 
+	it('should support replaceState()', done => {
+		class Demo extends React.Component {
+			render() {
+				return <div />;
+			}
+		}
+
+		let render = sinon.spy(Demo.prototype, 'render'),
+			inst;
+
+		React.render(<Demo ref={ c => inst=c } />, scratch);
+
+		inst.setState({ foo:'bar', baz:'bat' });
+		setTimeout( () => {
+			expect(inst.state).to.eql({ foo:'bar', baz:'bat' });
+
+			let callbackState;
+			let callback = sinon.spy( () => {
+				callbackState = inst.state;
+			});
+			inst.replaceState({}, callback);
+
+			setTimeout( () => {
+				expect(callback).to.have.been.calledOnce;
+				expect(callbackState).to.eql({});
+				expect(inst.state).to.eql({});
+
+				done();
+			}, 10);
+		}, 10);
+	});
+
 	it('should alias props.children', () => {
 		class Foo extends React.Component {
 			render() {
