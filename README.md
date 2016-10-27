@@ -89,6 +89,34 @@ First, install it: `npm install --save-dev aliasify`
 }
 ```
 
+## Usage with Babel
+
+Using `preact-compat` with Babel is easy.
+
+Install the babel plugin for aliasing: `npm install --save-dev babel-plugin-module-resolver`
+
+All you have to do is tell babel to process jsx with 'h' and add an alias for `react` and `react-dom` in your .babelrc:
+
+```js
+{
+    // ...
+    "plugins": [
+        ["transform-react-jsx", { "pragma":"h" }],
+        ["module-resolver", {
+        "root": ["."],
+        "alias": {
+            "react": "preact-compat",
+            "react-dom": "preact-compat"
+        }
+        }]
+    ],
+    "presets": [
+        "react"
+    ]
+    // ...
+}
+```
+
 
 ## Once Aliased
 
