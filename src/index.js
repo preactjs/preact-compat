@@ -115,7 +115,7 @@ function handleElementVNode(vnode, a) {
 
 // proxy render() since React returns a Component reference.
 function render(vnode, parent, callback) {
-	let prev = parent._preactCompatRendered;
+	let prev = parent && parent._preactCompatRendered;
 
 	// ignore impossible previous renders
 	if (prev && prev.parentNode!==parent) prev = null;
@@ -131,7 +131,7 @@ function render(vnode, parent, callback) {
 	}
 
 	let out = preactRender(vnode, parent, prev);
-	parent._preactCompatRendered = out;
+	if (parent) parent._preactCompatRendered = out;
 	if (typeof callback==='function') callback();
 	return out && out._component || out.base;
 }
