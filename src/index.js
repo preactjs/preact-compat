@@ -170,18 +170,21 @@ const ARR = [];
 // This API is completely unnecessary for Preact, so it's basically passthrough.
 let Children = {
 	map(children, fn, ctx) {
+		if (children == null) return null;
 		children = Children.toArray(children);
 		if (ctx && ctx!==children) fn = fn.bind(ctx);
 		return children.map(fn);
 	},
 	forEach(children, fn, ctx) {
+		if (children == null) return null;
 		children = Children.toArray(children);
 		if (ctx && ctx!==children) fn = fn.bind(ctx);
 		children.forEach(fn);
 	},
 	count(children) {
-		children = Children.toArray(children);
-		return children.length;
+		let count = 0;
+		Children.forEach(children, () => count++);
+		return count;
 	},
 	only(children) {
 		children = Children.toArray(children);
