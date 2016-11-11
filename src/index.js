@@ -182,9 +182,7 @@ let Children = {
 		children.forEach(fn);
 	},
 	count(children) {
-		let count = 0;
-		Children.forEach(children, () => count++);
-		return count;
+		return children && children.length || 0;
 	},
 	only(children) {
 		children = Children.toArray(children);
