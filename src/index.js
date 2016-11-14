@@ -364,8 +364,8 @@ function createClass(obj) {
 	function cl(props, context) {
 		extend(this, obj);
 		if (mixins) applyMixins(this, mixins);
-		Component.call(this, props, context, BYPASS_HOOK);
 		bindAll(this);
+		Component.call(this, props, context, BYPASS_HOOK);
 		newComponentHook.call(this, props, context);
 	}
 
