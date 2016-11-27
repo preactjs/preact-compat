@@ -54,6 +54,15 @@ Object.defineProperty(VNode.prototype, 'props', {
 });
 
 
+
+let oldEventHook = options.event;
+options.event = e => {
+	e.persist = Object;
+	if (oldEventHook) e = oldEventHook(e);
+	return e;
+};
+
+
 let oldVnodeHook = options.vnode;
 options.vnode = vnode => {
 	if (!vnode.preactCompatUpgraded) {
