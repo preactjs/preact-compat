@@ -28,7 +28,7 @@ const CAMEL_PROPS = /^(?:accent|alignment|arabic|baseline|cap|clip|color|fill|fl
 const BYPASS_HOOK = {};
 
 /*global process*/
-const DEV = typeof process!=='undefined' && process.env && process.env.NODE_ENV!=='production';
+const DEV = typeof process==='undefined' || !process.env || process.env.NODE_ENV!=='production';
 
 // a component that renders nothing. Used to replace components for unmountComponentAtNode.
 const EmptyComponent = () => null;
