@@ -333,6 +333,7 @@ function applyEventNormalization({ nodeName, attributes }) {
 			normalized = props[attr] || attr;
 		if (!attributes[normalized]) {
 			attributes[normalized] = multihook([attributes[props[attr]], attributes[props.onchange]]);
+			delete attributes[props.onchange];
 		}
 	}
 }
