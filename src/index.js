@@ -371,7 +371,6 @@ function createClass(obj) {
 	let mixins = obj.mixins && collateMixins(obj.mixins);
 
 	function cl(props, context) {
-		extend(this, obj);
 		if (mixins) applyMixins(this, mixins);
 		bindAll(this);
 		Component.call(this, props, context, BYPASS_HOOK);
@@ -392,8 +391,7 @@ function createClass(obj) {
 	}
 
 	F.prototype = Component.prototype;
-	cl.prototype = new F();
-	cl.prototype.constructor = cl;
+	cl.prototype = extend(new F(), extend({ constructor: cl }, obj));
 
 	cl.displayName = obj.displayName || 'Component';
 
