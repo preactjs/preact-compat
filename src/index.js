@@ -421,7 +421,17 @@ function collateMixins(mixins) {
 // apply a mapping of Arrays of mixin methods to a component prototype
 function applyMixins(proto, mixins) {
 	for (let key in mixins) if (mixins.hasOwnProperty(key)) {
-		proto[key] = multihook(proto[key] ? mixins[key].concat(proto[key]) : mixins[key]);
+		const hooks = proto[key] ? mixins[key].concat(proto[key]) : mixins[key];
+		if (
+			key==="getDefaultProps" ||
+			key==="getInitialState" ||
+			key==="getChildContext"
+		) {
+			proto[key] = multihook(hooks, mergeNoDupes);
+		}
+		else {
+			proto[key] = multihook(hooks);
+		}
 	}
 }
 
@@ -445,15 +455,34 @@ function callMethod(ctx, m, args) {
 	}
 }
 
-function multihook(hooks) {
+function multihook(hooks, mergeFn) {
 	return function() {
 		let ret;
 		for (let i=0; i<hooks.length; i++) {
 			let r = callMethod(this, hooks[i], arguments);
-			if (typeof r!=='undefined') ret = r;
+
+			if (mergeFn) {
+				ret = mergeFn(ret, r);
+			}
+			else if (typeof r!=='undefined') ret = r;
 		}
 		return ret;
 	};
+}
+
+
+// Used for lifecycle hooks like getInitialState to merge the return values
+function mergeNoDupes(previous, current) {
+	if (current!=null) {
+		if (typeof current!=='object') throw new Error('Expected return value to be an object or null.');
+		if (!previous) previous = {};
+
+		for (let key in current) if (current.hasOwnProperty(key)) {
+			if (previous.hasOwnProperty(key)) throw new Error('Duplicate key "' + key + '" found when merging return value.');
+			previous[key] = current[key];
+		}
+	}
+	return previous;
 }
 
 

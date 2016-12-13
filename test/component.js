@@ -254,6 +254,86 @@ describe('components', () => {
 					a: true
 				});
 			});
+
+			it('should combine the results', () => {
+				const Foo = React.createClass({
+					mixins: [
+						{ getDefaultProps: () => ({ a: true }) },
+						{ getDefaultProps: () => ({ b: true }) }
+					],
+					getDefaultProps() {
+						return { c: true };
+					},
+					render() {
+						return <div />;
+					}
+				});
+
+				expect(Foo.defaultProps).to.eql({
+					a: true,
+					b: true,
+					c: true
+				});
+			});
+
+			it('should throw an error for duplicate keys', () => {
+				expect(() => {
+					const Foo = React.createClass({
+						mixins: [
+							{ getDefaultProps: () => ({ a: true }) }
+						],
+						getDefaultProps() {
+							return { a: true };
+						},
+						render() {
+							return <div />;
+						}
+					});
+				}).to.throw();
+			});
+		});
+
+		describe("getInitialState", () => {
+			it('should combine the results', () => {
+				const Foo = React.createClass({
+					mixins: [
+						{ getInitialState: () => ({ a: true }) },
+						{ getInitialState: () => ({ b: true }) }
+					],
+					getInitialState() {
+						return { c: true };
+					},
+					render() {
+						return <div />;
+					}
+				});
+
+				let a = React.render(<Foo />, scratch);
+
+				expect(a.state).to.eql({
+					a: true,
+					b: true,
+					c: true
+				});
+			});
+
+			it('should throw an error for duplicate keys', () => {
+				const Foo = React.createClass({
+					mixins: [
+						{ getInitialState: () => ({ a: true }) }
+					],
+					getInitialState() {
+						return { a: true };
+					},
+					render() {
+						return <div />;
+					}
+				});
+
+				expect(() => {
+					React.render(<Foo />, scratch);
+				}).to.throw();
+			});
 		});
 	});
 
