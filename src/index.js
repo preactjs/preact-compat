@@ -369,15 +369,18 @@ let findDOMNode = component => component && component.base || component;
 function F(){}
 
 function createClass(obj) {
-	let mixins = obj.mixins && collateMixins(obj.mixins);
-
 	function cl(props, context) {
-		if (mixins) applyMixins(this, mixins);
 		bindAll(this);
 		Component.call(this, props, context, BYPASS_HOOK);
 		newComponentHook.call(this, props, context);
 	}
 
+	obj = extend({ constructor: cl }, obj);
+
+	// We need to apply mixins here so that getDefaultProps is correctly mixed
+	if (obj.mixins) {
+		applyMixins(obj, collateMixins(obj.mixins));
+	}
 	if (obj.statics) {
 		extend(cl, obj.statics);
 	}
@@ -392,7 +395,7 @@ function createClass(obj) {
 	}
 
 	F.prototype = Component.prototype;
-	cl.prototype = extend(new F(), extend({ constructor: cl }, obj));
+	cl.prototype = extend(new F(), obj);
 
 	cl.displayName = obj.displayName || 'Component';
 
@@ -415,10 +418,10 @@ function collateMixins(mixins) {
 }
 
 
-// apply a mapping of Arrays of mixin methods to a component instance
-function applyMixins(inst, mixins) {
+// apply a mapping of Arrays of mixin methods to a component prototype
+function applyMixins(proto, mixins) {
 	for (let key in mixins) if (mixins.hasOwnProperty(key)) {
-		inst[key] = multihook(mixins[key].concat(inst[key] || key));
+		proto[key] = multihook(proto[key] ? mixins[key].concat(proto[key]) : mixins[key]);
 	}
 }
 

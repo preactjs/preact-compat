@@ -238,6 +238,25 @@ describe('components', () => {
 		});
 	});
 
+	describe("mixins", () => {
+		describe("getDefaultProps", () => {
+			it('should use a mixin', () => {
+				const Foo = React.createClass({
+					mixins: [
+						{ getDefaultProps: () => ({ a: true }) }
+					],
+					render() {
+						return <div />;
+					}
+				});
+
+				expect(Foo.defaultProps).to.eql({
+					a: true
+				});
+			});
+		});
+	});
+
 	describe('refs', () => {
 		it('should support string refs', () => {
 			let inst, innerInst;
