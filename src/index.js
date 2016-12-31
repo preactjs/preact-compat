@@ -328,6 +328,10 @@ function applyEventNormalization({ nodeName, attributes }) {
 	for (let i in attributes) {
 		props[i.toLowerCase()] = i;
 	}
+	if (props.ondoubleclick) {
+		attributes.ondblclick = attributes[props.ondoubleclick];
+		delete attributes[props.ondoubleclick];
+	}
 	if (props.onchange) {
 		nodeName = nodeName.toLowerCase();
 		let attr = nodeName==='input' && String(attributes.type).toLowerCase()==='checkbox' ? 'onclick' : 'oninput',
