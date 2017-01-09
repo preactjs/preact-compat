@@ -59,6 +59,13 @@ describe('preact-compat', () => {
 			.that.equals('dynamic content');
 		});
 
+		it('should support defaultValue', () => {
+			let scratch = document.createElement('div');
+			(document.body || document.documentElement).appendChild(scratch);
+			render(<input defaultValue="foo"></input>, scratch);
+			expect(scratch.firstElementChild).to.have.property('value', 'foo');
+		});
+
 	});
 
 

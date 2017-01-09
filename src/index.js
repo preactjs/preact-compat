@@ -82,14 +82,24 @@ options.vnode = vnode => {
 			}
 		}
 		else if (attrs) {
+			if (typeof vnode.nodeName==='string' && vnode.attributes && vnode.attributes.defaultValue) {
+				addDefaultValue(vnode);
+			}
 			handleElementVNode(vnode, attrs);
 		}
 	}
 	if (oldVnodeHook) oldVnodeHook(vnode);
 };
 
-
-
+function addDefaultValue(vnode) {
+	let attrs = vnode.attributes;
+	if (attrs && attrs.defaultValue) {
+		if (!attrs.value && attrs.value!==0) {
+			attrs.value = attrs.defaultValue;
+		}
+		delete attrs.defaultValue;
+	}
+}
 
 function handleComponentVNode(vnode) {
 	let tag = vnode.nodeName,
