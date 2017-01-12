@@ -64,7 +64,7 @@
     "pretty-bytes-cli": "^1.0.0",
     "rollup": "^0.41.1",
     "rollup-plugin-babel": "^2.6.1",
-    "rollup-plugin-buble": "^0.13.0",
+    "rollup-plugin-buble": "^0.14.0",
     "rollup-plugin-commonjs": "^4.1.0",
     "rollup-plugin-memory": "^2.0.0",
     "rollup-plugin-node-resolve": "^2.0.0",
