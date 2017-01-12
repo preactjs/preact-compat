@@ -82,14 +82,17 @@ options.vnode = vnode => {
 			}
 		}
 		else if (attrs) {
+			if (typeof vnode.nodeName==='string' && attrs.defaultValue) {
+				if (!attrs.value && attrs.value!==0) {
+					attrs.value = attrs.defaultValue;
+				}
+				delete attrs.defaultValue;
+			}
 			handleElementVNode(vnode, attrs);
 		}
 	}
 	if (oldVnodeHook) oldVnodeHook(vnode);
 };
-
-
-
 
 function handleComponentVNode(vnode) {
 	let tag = vnode.nodeName,
