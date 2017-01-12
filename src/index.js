@@ -82,7 +82,7 @@ options.vnode = vnode => {
 			}
 		}
 		else if (attrs) {
-			if (typeof vnode.nodeName==='string' && vnode.attributes && vnode.attributes.defaultValue) {
+			if (typeof vnode.nodeName==='string' && attrs.defaultValue) {
 				if (!attrs.value && attrs.value!==0) {
 					attrs.value = attrs.defaultValue;
 				}
