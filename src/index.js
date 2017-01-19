@@ -337,7 +337,7 @@ function applyEventNormalization({ nodeName, attributes }) {
 	}
 	if (props.onchange) {
 		nodeName = nodeName.toLowerCase();
-		let attr = nodeName==='input' && attributes.type.match(/^che|rad/i) ? 'onclick' : 'oninput',
+		let attr = nodeName==='input' && String(attributes.type).toLowerCase().match(/^che|rad/i) ? 'onclick' : 'oninput',
 			normalized = props[attr] || attr;
 		if (!attributes[normalized]) {
 			attributes[normalized] = multihook([attributes[props[attr]], attributes[props.onchange]]);
