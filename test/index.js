@@ -176,6 +176,20 @@ describe('preact-compat', () => {
 				.that.is.a('function')
 				.that.equals(createElement);
 		});
+
+		it('should normalize vnodes', () => {
+			let vnode = <div a="b"><a>t</a></div>;
+			// let $$typeof = (typeof Symbol!=='undefined' && Symbol.for && Symbol.for('react.element')) || 0xeac7;
+			let $$typeof = 0xeac7;
+			expect(vnode).to.have.property('$$typeof', $$typeof);
+			expect(vnode).to.have.property('type', 'div');
+			expect(vnode).to.have.property('props').that.is.an('object');
+			expect(vnode).to.have.deep.property('props.children[0]');
+			expect(vnode.props.children[0]).to.have.property('$$typeof', $$typeof);
+			expect(vnode.props.children[0]).to.have.property('type', 'a');
+			expect(vnode.props.children[0]).to.have.property('props').that.is.an('object');
+			expect(vnode.props.children[0].props).to.eql({ children:['t'] });
+		});
 	});
 
 	describe('Component', () => {

@@ -5,7 +5,7 @@ const version = '15.1.0'; // trick libraries to think we are react
 
 const ELEMENTS = 'a abbr address area article aside audio b base bdi bdo big blockquote body br button canvas caption cite code col colgroup data datalist dd del details dfn dialog div dl dt em embed fieldset figcaption figure footer form h1 h2 h3 h4 h5 h6 head header hgroup hr html i iframe img input ins kbd keygen label legend li link main map mark menu menuitem meta meter nav noscript object ol optgroup option output p param picture pre progress q rp rt ruby s samp script section select small source span strong style sub summary sup table tbody td textarea tfoot th thead time title tr track u ul var video wbr circle clipPath defs ellipse g image line linearGradient mask path pattern polygon polyline radialGradient rect stop svg text tspan'.split(' ');
 
-const REACT_ELEMENT_TYPE = (typeof Symbol === 'function' && Symbol.for && Symbol.for('react.element')) || 0xeac7;
+const REACT_ELEMENT_TYPE = (typeof Symbol!=='undefined' && Symbol.for && Symbol.for('react.element')) || 0xeac7;
 
 // don't autobind these methods since they already have guaranteed context.
 const AUTOBIND_BLACKLIST = {
@@ -36,7 +36,7 @@ const EmptyComponent = () => null;
 
 
 // make react think we're react.
-let VNode = h('').constructor;
+let VNode = h('a', null).constructor;
 VNode.prototype.$$typeof = REACT_ELEMENT_TYPE;
 VNode.prototype.preactCompatUpgraded = false;
 VNode.prototype.preactCompatNormalized = false;
@@ -70,28 +70,37 @@ options.vnode = vnode => {
 		vnode.preactCompatUpgraded = true;
 
 		let tag = vnode.nodeName,
-			attrs = vnode.attributes;
+			attrs = vnode.attributes,
+			originalAttrs = attrs;
 
 		if (!attrs) attrs = vnode.attributes = {};
 
 		if (typeof tag==='function') {
 			if (tag[COMPONENT_WRAPPER_KEY]===true || (tag.prototype && 'isReactComponent' in tag.prototype)) {
+				if (vnode.children && !vnode.children.length) vnode.children = undefined;
+				if (vnode.children) attrs.children = vnode.children;
+
 				if (!vnode.preactCompatNormalized) {
 					normalizeVNode(vnode);
 				}
 				handleComponentVNode(vnode);
 			}
 		}
-		else if (attrs) {
-			if (typeof vnode.nodeName==='string' && attrs.defaultValue) {
+		else {
+			if (vnode.children && !vnode.children.length) vnode.children = undefined;
+			if (vnode.children) attrs.children = vnode.children;
+
+			if (attrs.defaultValue) {
 				if (!attrs.value && attrs.value!==0) {
 					attrs.value = attrs.defaultValue;
 				}
 				delete attrs.defaultValue;
 			}
+
 			handleElementVNode(vnode, attrs);
 		}
 	}
+
 	if (oldVnodeHook) oldVnodeHook(vnode);
 };
 
@@ -102,11 +111,6 @@ function handleComponentVNode(vnode) {
 	vnode.attributes = {};
 	if (tag.defaultProps) extend(vnode.attributes, tag.defaultProps);
 	if (a) extend(vnode.attributes, a);
-	a = vnode.attributes;
-
-	if (vnode.children && !vnode.children.length) vnode.children = undefined;
-
-	if (vnode.children) a.children = vnode.children;
 }
 
 function handleElementVNode(vnode, a) {
