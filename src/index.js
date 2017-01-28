@@ -59,8 +59,8 @@ Object.defineProperty(VNode.prototype, 'props', {
 
 let oldEventHook = options.event;
 options.event = e => {
-	e.persist = Object;
 	if (oldEventHook) e = oldEventHook(e);
+	e.persist = Object;
 	e.nativeEvent = e;
 	return e;
 };
@@ -375,7 +375,9 @@ function shallowDiffers(a, b) {
 }
 
 
-let findDOMNode = component => component && component.base || component;
+function findDOMNode(component) {
+	return component && component.base || component;
+}
 
 
 function F(){}
@@ -539,8 +541,7 @@ function Component(props, context, opts) {
 		newComponentHook.call(this, props, context);
 	}
 }
-Component.prototype = new PreactComponent();
-extend(Component.prototype, {
+extend(Component.prototype = new PreactComponent(), {
 	constructor: Component,
 
 	isReactComponent: {},
@@ -568,7 +569,8 @@ extend(Component.prototype, {
 function PureComponent(props, context) {
 	Component.call(this, props, context);
 }
-PureComponent.prototype = new Component({}, {}, BYPASS_HOOK);
+F.prototype = Component.prototype;
+PureComponent.prototype = new F();
 PureComponent.prototype.shouldComponentUpdate = function(props, state) {
 	return shallowDiffers(this.props, props) || shallowDiffers(this.state, state);
 };
