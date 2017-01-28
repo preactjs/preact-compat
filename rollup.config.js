@@ -27,7 +27,8 @@ export default {
 			contents: "export { default } from './index';"
 		}),
 		buble({
-			objectAssign: 'extend'
+			objectAssign: 'extend',
+			namedFunctionExpressions: false
 		}),
 		nodeResolve({
 			jsnext: true,
