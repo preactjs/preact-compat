@@ -534,7 +534,7 @@ function afterRender() {
 
 function Component(props, context, opts) {
 	PreactComponent.call(this, props, context);
-	if (this.getInitialState) this.state = this.getInitialState();
+	this.state = this.getInitialState ? this.getInitialState() : {};
 	this.refs = {};
 	this._refProxies = {};
 	if (opts!==BYPASS_HOOK) {
