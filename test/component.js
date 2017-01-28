@@ -276,7 +276,8 @@ describe('components', () => {
 				});
 			});
 
-			it('should throw an error for duplicate keys', () => {
+			// Disabled to save bytes
+			xit('should throw an error for duplicate keys', () => {
 				expect(() => {
 					const Foo = React.createClass({
 						mixins: [
@@ -317,7 +318,8 @@ describe('components', () => {
 				});
 			});
 
-			it('should throw an error for duplicate keys', () => {
+			// Disabled to save bytes
+			xit('should throw an error for duplicate keys', () => {
 				const Foo = React.createClass({
 					mixins: [
 						{ getInitialState: () => ({ a: true }) }

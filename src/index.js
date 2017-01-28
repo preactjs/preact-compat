@@ -7,6 +7,8 @@ const ELEMENTS = 'a abbr address area article aside audio b base bdi bdo big blo
 
 const REACT_ELEMENT_TYPE = (typeof Symbol!=='undefined' && Symbol.for && Symbol.for('react.element')) || 0xeac7;
 
+const COMPONENT_WRAPPER_KEY = typeof Symbol!=='undefined' ? Symbol.for('__preactCompatWrapper') : '__preactCompatWrapper';
+
 // don't autobind these methods since they already have guaranteed context.
 const AUTOBIND_BLACKLIST = {
 	constructor: 1,
@@ -31,7 +33,7 @@ const BYPASS_HOOK = {};
 const DEV = typeof process==='undefined' || !process.env || process.env.NODE_ENV!=='production';
 
 // a component that renders nothing. Used to replace components for unmountComponentAtNode.
-const EmptyComponent = () => null;
+function EmptyComponent() { return null; }
 
 
 
@@ -70,8 +72,7 @@ options.vnode = vnode => {
 		vnode.preactCompatUpgraded = true;
 
 		let tag = vnode.nodeName,
-			attrs = vnode.attributes,
-			originalAttrs = attrs;
+			attrs = vnode.attributes;
 
 		if (!attrs) attrs = vnode.attributes = {};
 
@@ -242,8 +243,6 @@ function isStatelessComponent(c) {
 	return typeof c==='function' && !(c.prototype && c.prototype.render);
 }
 
-
-const COMPONENT_WRAPPER_KEY = typeof Symbol!=='undefined' ? Symbol.for('__preactCompatWrapper') : '__preactCompatWrapper';
 
 // wraps stateless functional components in a PropTypes validator
 function wrapStatelessComponent(WrappedComponent) {
@@ -434,17 +433,10 @@ function collateMixins(mixins) {
 // apply a mapping of Arrays of mixin methods to a component prototype
 function applyMixins(proto, mixins) {
 	for (let key in mixins) if (mixins.hasOwnProperty(key)) {
-		const hooks = proto[key] ? mixins[key].concat(proto[key]) : mixins[key];
-		if (
-			key==="getDefaultProps" ||
-			key==="getInitialState" ||
-			key==="getChildContext"
-		) {
-			proto[key] = multihook(hooks, mergeNoDupes);
-		}
-		else {
-			proto[key] = multihook(hooks);
-		}
+		proto[key] = multihook(
+			mixins[key].concat(proto[key] || ARR),
+			key==='getDefaultProps' || key==='getInitialState' || key==='getChildContext'
+		);
 	}
 }
 
@@ -468,34 +460,22 @@ function callMethod(ctx, m, args) {
 	}
 }
 
-function multihook(hooks, mergeFn) {
+function multihook(hooks, skipDuplicates) {
 	return function() {
 		let ret;
 		for (let i=0; i<hooks.length; i++) {
 			let r = callMethod(this, hooks[i], arguments);
 
-			if (mergeFn) {
-				ret = mergeFn(ret, r);
+			if (skipDuplicates && r!=null) {
+				if (!ret) ret = {};
+				for (let key in r) if (r.hasOwnProperty(key)) {
+					ret[key] = r[key];
+				}
 			}
 			else if (typeof r!=='undefined') ret = r;
 		}
 		return ret;
 	};
-}
-
-
-// Used for lifecycle hooks like getInitialState to merge the return values
-function mergeNoDupes(previous, current) {
-	if (current!=null) {
-		if (typeof current!=='object') throw new Error('Expected return value to be an object or null.');
-		if (!previous) previous = {};
-
-		for (let key in current) if (current.hasOwnProperty(key)) {
-			if (previous.hasOwnProperty(key)) throw new Error('Duplicate key "' + key + '" found when merging return value.');
-			previous[key] = current[key];
-		}
-	}
-	return previous;
 }
 
 
