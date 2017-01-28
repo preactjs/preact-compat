@@ -59,6 +59,7 @@ let oldEventHook = options.event;
 options.event = e => {
 	e.persist = Object;
 	if (oldEventHook) e = oldEventHook(e);
+	e.nativeEvent = e;
 	return e;
 };
 
