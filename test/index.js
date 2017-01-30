@@ -179,7 +179,7 @@ describe('preact-compat', () => {
 
 		it('should normalize vnodes', () => {
 			let vnode = <div a="b"><a>t</a></div>;
-			// let $$typeof = (typeof Symbol!=='undefined' && Symbol.for && Symbol.for('react.element')) || 0xeac7;
+			// using typeof Symbol here injects a polyfill, which ruins the test. we'll hardcode the non-symbol value for now.
 			let $$typeof = 0xeac7;
 			expect(vnode).to.have.property('$$typeof', $$typeof);
 			expect(vnode).to.have.property('type', 'div');
@@ -189,6 +189,28 @@ describe('preact-compat', () => {
 			expect(vnode.props.children[0]).to.have.property('type', 'a');
 			expect(vnode.props.children[0]).to.have.property('props').that.is.an('object');
 			expect(vnode.props.children[0].props).to.eql({ children:['t'] });
+		});
+
+		it('should normalize onChange', () => {
+			let props = { onChange(){} };
+
+			function expectToBeNormalized(vnode, desc) {
+				expect(vnode, desc).to.have.property('props').with.all.keys(['oninput'].concat(vnode.props.type ? 'type' : [])).and.property('oninput').that.is.a('function');
+			}
+
+			function expectToBeUnmodified(vnode, desc) {
+				expect(vnode, desc).to.have.property('props').eql({ ...props, ...(vnode.props.type ? { type:vnode.props.type } : {}) });
+			}
+
+			expectToBeUnmodified(<div {...props} />, '<div>');
+			expectToBeUnmodified(<input {...props} type="radio" />, '<input type="radio">');
+			expectToBeUnmodified(<input {...props} type="checkbox" />, '<input type="checkbox">');
+			expectToBeUnmodified(<input {...props} type="file" />, '<input type="file">');
+
+			expectToBeNormalized(<textarea {...props} />, '<textarea>');
+			expectToBeNormalized(<input {...props} />, '<input>');
+			expectToBeNormalized(<input {...props} type="text" />, '<input type="text">');
+
 		});
 	});
 

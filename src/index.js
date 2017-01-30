@@ -339,12 +339,11 @@ function applyEventNormalization({ nodeName, attributes }) {
 		attributes.ondblclick = attributes[props.ondoubleclick];
 		delete attributes[props.ondoubleclick];
 	}
-	if (props.onchange) {
-		nodeName = nodeName.toLowerCase();
-		let attr = nodeName==='input' && /^che|rad/i.test(attributes.type) ? 'onclick' : 'oninput',
-			normalized = props[attr] || attr;
+	// for *textual inputs* (incl textarea), normalize `onChange` -> `onInput`:
+	if (props.onchange && (nodeName==='textarea' || (nodeName.toLowerCase()==='input' && !/^fil|che|rad/i.test(attributes.type)))) {
+		let normalized = props.oninput || 'oninput';
 		if (!attributes[normalized]) {
-			attributes[normalized] = multihook([attributes[props[attr]], attributes[props.onchange]]);
+			attributes[normalized] = multihook([attributes[normalized], attributes[props.onchange]]);
 			delete attributes[props.onchange];
 		}
 	}
