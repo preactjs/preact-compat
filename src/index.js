@@ -248,8 +248,8 @@ function isStatelessComponent(c) {
 function wrapStatelessComponent(WrappedComponent) {
 	return createClass({
 		displayName: WrappedComponent.displayName || WrappedComponent.name,
-		render(props, state, context) {
-			return WrappedComponent(props, context);
+		render() {
+			return WrappedComponent(this.props, this.context);
 		}
 	});
 }
