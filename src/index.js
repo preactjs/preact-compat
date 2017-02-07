@@ -168,7 +168,7 @@ function renderSubtreeIntoContainer(parentComponent, vnode, container, callback)
 	let wrap = h(ContextProvider, { context: parentComponent.context }, vnode);
 	let c = render(wrap, container);
 	if (callback) callback(c);
-	return c;
+	return c._component || c.base;
 }
 
 

@@ -1,4 +1,4 @@
-import React, { render, createClass, createElement, cloneElement, Component, PropTypes } from '../src';
+import React, { render, createClass, createElement, cloneElement, Component, PropTypes, unstable_renderSubtreeIntoContainer } from '../src';
 
 describe('preact-compat', () => {
 	describe('render()', () => {
@@ -236,6 +236,35 @@ describe('preact-compat', () => {
 		it('should clone elements', () => {
 			let element = <foo a="b" c="d">a<span>b</span></foo>;
 			expect(cloneElement(element)).to.eql(element);
+		});
+	});
+
+	describe('unstable_renderSubtreeIntoContainer', () => {
+		it('should export instance', () => {
+			class Inner extends Component {
+				render() {
+					return null;
+				}
+				getNode() {
+					return 'inner';
+				}
+			}
+
+			class App extends Component {
+				render() {
+					return null;
+				}
+				componentDidMount() {
+					this.renderInner();
+				}
+				renderInner() {
+					const wrapper = document.createElement('div');
+					this.inner = unstable_renderSubtreeIntoContainer(this, <Inner/>, wrapper);
+				}
+			}
+			const root = document.createElement('div');
+			const app = render(<App/>, root);
+			expect(typeof app.inner.getNode === 'function').to.equal(true);
 		});
 	});
 });
