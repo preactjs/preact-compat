@@ -508,4 +508,34 @@ describe('components', () => {
 			expect(spy).not.to.have.been.called;
 		});
 	});
+
+	describe('should support mock react internal property', () => {
+		class App extends React.Component {
+			render(){
+				return <AppInner/>;
+			}
+		}
+		class AppInner extends React.Component {
+			render(){
+				return <div>app inner</div>;
+			}
+		}
+		it('should support ReactDOMComponent', () => {
+			const appInner = React.render(<AppInner/>, scratch);
+			const appInnerReactInst = appInner._reactInternalInstance;
+			expect(appInnerReactInst).to.ok;
+			expect(appInnerReactInst._currentElement).to.ok;
+			expect(appInnerReactInst._currentElement.type).to.equal(AppInner);
+			expect(appInnerReactInst.getPublicInstance().base.tagName.toLowerCase()).to.equal('div');
+			expect(appInnerReactInst._renderedComponent).to.ok;
+			expect(appInnerReactInst._renderedComponent._currentElement.type).to.equal('div');
+		});
+
+		it('should suppport ReactCompositeComponent', () => {
+			const app = React.render(<App/>, scratch);
+			const appReactInst = app._reactInternalInstance;
+			expect(appReactInst).to.ok;
+			expect(appReactInst._renderedComponent._currentElement.type).to.equal(AppInner);
+		});
+	});
 });

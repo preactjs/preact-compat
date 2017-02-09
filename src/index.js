@@ -7,6 +7,8 @@ const ELEMENTS = 'a abbr address area article aside audio b base bdi bdo big blo
 
 const REACT_ELEMENT_TYPE = (typeof Symbol!=='undefined' && Symbol.for && Symbol.for('react.element')) || 0xeac7;
 
+const ATTR_KEY = typeof Symbol ==='function' ? Symbol.for('preactattr') : '__preactattr_';
+
 const COMPONENT_WRAPPER_KEY = typeof Symbol!=='undefined' ? Symbol.for('__preactCompatWrapper') : '__preactCompatWrapper';
 
 // don't autobind these methods since they already have guaranteed context.
@@ -536,9 +538,16 @@ function Component(props, context, opts) {
 	this.state = this.getInitialState ? this.getInitialState() : {};
 	this.refs = {};
 	this._refProxies = {};
+	this._reactInternalInstance = {};
 	if (opts!==BYPASS_HOOK) {
 		newComponentHook.call(this, props, context);
 	}
+	const component = this;
+	const componentDidMount = component.componentDidMount || 'componentDidMount';
+	this.componentDidMount = function () {
+		patch(component);
+		callMethod(this, componentDidMount, arguments);
+	};
 }
 extend(Component.prototype = new PreactComponent(), {
 	constructor: Component,
@@ -563,6 +572,67 @@ extend(Component.prototype = new PreactComponent(), {
 	}
 });
 
+function patch(component) {
+	extend(component._reactInternalInstance, createReactCompositeComponent(component));
+}
+
+function createReactCompositeComponent(component) {
+	const _currentElement = createReactElement(component);
+	const node = component.base;
+	let ret = {
+		_instance: component,
+		_currentElement,
+		getPublicInstance() {
+			return component;
+		}
+	};
+	return updateReactComponent(ret, component);
+}
+
+function updateReactComponent(ret, component) {
+	if (component._component) {
+		ret._renderedComponent = createReactCompositeComponent(component._component);
+	}
+	else {
+		ret._renderedComponent = createReactDOMComponent(component.base);
+	}
+	return ret;
+}
+
+function createReactElement(component) {
+	return {
+		$$typeof: REACT_ELEMENT_TYPE,
+		type: component.constructor,
+		key: component.key,
+		ref: null,
+		props: component.props,
+		// dev mode, we don't need
+		_store: {}
+	};
+}
+
+function createReactDOMComponent(node) {
+	const childNodes = node.nodeType === 1 ? [].slice.call(node.childNodes) : [];
+	const isText = node.nodeType === 3;
+	return {
+		_currentElement: isText ? node.textContent : {
+			$$typeof: REACT_ELEMENT_TYPE,
+			type: node.nodeName.toLowerCase(),
+			props: node[ATTR_KEY]
+		},
+		_renderedChildren: childNodes.map(child => {
+			if(child._component) {
+				return createReactCompositeComponent(child._component);
+			}
+			return createReactDOMComponent(child);
+		}),
+		getPublicInstance() {
+			return node;
+		},
+		_stringText: isText ? node.textContent : null
+	};
+}
+
 
 
 function PureComponent(props, context) {
@@ -574,7 +644,9 @@ PureComponent.prototype.shouldComponentUpdate = function(props, state) {
 	return shallowDiffers(this.props, props) || shallowDiffers(this.state, state);
 };
 
-
+function batchedUpdates(callback) {
+	callback && callback();
+}
 
 export {
 	version,
@@ -609,5 +681,6 @@ export default {
 	unmountComponentAtNode,
 	Component,
 	PureComponent,
-	unstable_renderSubtreeIntoContainer: renderSubtreeIntoContainer
+	unstable_renderSubtreeIntoContainer: renderSubtreeIntoContainer,
+	unstable_batchedUpdates: batchedUpdates
 };
