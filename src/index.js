@@ -538,16 +538,14 @@ function Component(props, context, opts) {
 	this.state = this.getInitialState ? this.getInitialState() : {};
 	this.refs = {};
 	this._refProxies = {};
-	this._reactInternalInstance = {};
 	if (opts!==BYPASS_HOOK) {
 		newComponentHook.call(this, props, context);
 	}
-	const component = this;
-	const componentDidMount = component.componentDidMount || 'componentDidMount';
-	this.componentDidMount = function () {
-		patch(component);
-		callMethod(this, componentDidMount, arguments);
-	};
+	Object.defineProperty(this, '_reactInternalInstance', {
+		get() {
+			return patch(this);
+		}
+	});
 }
 extend(Component.prototype = new PreactComponent(), {
 	constructor: Component,
@@ -573,12 +571,11 @@ extend(Component.prototype = new PreactComponent(), {
 });
 
 function patch(component) {
-	extend(component._reactInternalInstance, createReactCompositeComponent(component));
+	return createReactCompositeComponent(component);
 }
 
 function createReactCompositeComponent(component) {
 	const _currentElement = createReactElement(component);
-	const node = component.base;
 	let ret = {
 		_instance: component,
 		_currentElement,
@@ -621,7 +618,7 @@ function createReactDOMComponent(node) {
 			props: node[ATTR_KEY]
 		},
 		_renderedChildren: childNodes.map(child => {
-			if(child._component) {
+			if (child._component) {
 				return createReactCompositeComponent(child._component);
 			}
 			return createReactDOMComponent(child);
