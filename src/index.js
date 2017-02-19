@@ -133,7 +133,7 @@ function handleElementVNode(vnode, a) {
 
 // proxy render() since React returns a Component reference.
 function render(vnode, parent, callback) {
-	let prev = parent && parent._preactCompatRendered;
+	let prev = parent && parent._preactCompatRendered && parent._preactCompatRendered.base;
 
 	// ignore impossible previous renders
 	if (prev && prev.parentNode!==parent) prev = null;
@@ -149,9 +149,9 @@ function render(vnode, parent, callback) {
 	}
 
 	let out = preactRender(vnode, parent, prev);
-	if (parent) parent._preactCompatRendered = out;
+	if (parent) parent._preactCompatRendered = out && (out._component || { base: out });
 	if (typeof callback==='function') callback();
-	return out && out._component || out.base;
+	return out && out._component || out;
 }
 
 
@@ -173,7 +173,7 @@ function renderSubtreeIntoContainer(parentComponent, vnode, container, callback)
 
 
 function unmountComponentAtNode(container) {
-	let existing = container._preactCompatRendered;
+	let existing = container._preactCompatRendered && container._preactCompatRendered.base;
 	if (existing && existing.parentNode===container) {
 		preactRender(h(EmptyComponent), container, existing);
 		return true;
