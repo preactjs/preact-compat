@@ -1,4 +1,3 @@
-import path from 'path';
 import fs from 'fs';
 import memory from 'rollup-plugin-memory';
 import buble from 'rollup-plugin-buble';
@@ -11,15 +10,13 @@ let external = Object.keys(pkg.peerDependencies || {}).concat(Object.keys(pkg.de
 
 export default {
 	entry: 'src/index.js',
-	dest: pkg.main,
-	sourceMap: path.resolve(pkg.main),
-	moduleName: pkg.amdName,
-	format: 'umd',
+	sourceMap: true,
 	exports: 'default',
 	useStrict: false,
 	external,
 	globals: {
-		'preact-svg': 'preactSvg'
+		'preact': 'preact',
+		'proptypes': 'PropTypes'
 	},
 	plugins: [
 		memory({
@@ -39,5 +36,9 @@ export default {
 			include: 'node_modules/**',
 			exclude: '**/*.css'
 		})
+	],
+	targets: [
+		{ dest: pkg.main, format: 'umd', moduleName: pkg.amdName },
+		{ dest: pkg.module, format: 'es' }
 	]
 };
