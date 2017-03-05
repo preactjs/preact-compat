@@ -307,6 +307,9 @@ function cloneElement(element, props, ...children) {
 		elementProps,
 		element.children || elementProps && elementProps.children
 	);
+	if (children.length === 1 && Array.isArray(children[0])) {
+		children = children[0];
+	}
 	return normalizeVNode(preactCloneElement(node, props, ...children));
 }
 
