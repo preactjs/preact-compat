@@ -311,10 +311,10 @@ function cloneElement(element, props, ...children) {
 	// Arguments 3+ overwrite element.children in preactCloneElement
 	let cloneArgs = [node, props];
 	if (children && children.length) {
-		cloneArgs = cloneArgs.concat(children);
+		cloneArgs.push(children);
 	}
 	else if (props && props.children) {
-		cloneArgs = cloneArgs.concat(props.children);
+		cloneArgs.push(props.children);
 	}
 	return normalizeVNode(preactCloneElement(...cloneArgs));
 }
