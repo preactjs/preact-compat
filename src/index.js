@@ -307,7 +307,16 @@ function cloneElement(element, props, ...children) {
 		elementProps,
 		element.children || elementProps && elementProps.children
 	);
-	return normalizeVNode(preactCloneElement(node, props, ...children));
+	// Only provide the 3rd argument if needed.
+	// Arguments 3+ overwrite element.children in preactCloneElement
+	let cloneArgs = [node, props];
+	if (children && children.length) {
+		cloneArgs.push(children);
+	}
+	else if (props && props.children) {
+		cloneArgs.push(props.children);
+	}
+	return normalizeVNode(preactCloneElement(...cloneArgs));
 }
 
 
