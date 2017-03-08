@@ -191,6 +191,13 @@ describe('preact-compat', () => {
 			expect(vnode.props.children[0].props).to.eql({ children:['t'] });
 		});
 
+		it('should not remove children if it’s an empty array', () => {
+			let vnode = createElement('div', {}, []);
+			expect(vnode).to.have.property('type', 'div');
+			expect(vnode).to.have.property('props').that.is.an('object');
+			expect(vnode.props.children).to.eql([]);
+		});
+
 		it('should normalize onChange', () => {
 			let props = { onChange(){} };
 
