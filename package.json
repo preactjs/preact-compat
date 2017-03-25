@@ -73,7 +73,7 @@
     "sinon": "^1.17.5",
     "sinon-chai": "^2.8.0",
     "uglify-js": "^2.7.3",
-    "webpack": "^1.13.2"
+    "webpack": "^2.3.2"
   },
   "peerDependencies": {
     "preact": ">=5"
