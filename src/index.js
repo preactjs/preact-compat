@@ -293,7 +293,7 @@ function normalizeVNode(vnode) {
 	}
 
 	applyEventNormalization(vnode);
-
+	validatePropTypes(vnode);
 	return vnode;
 }
 
@@ -318,6 +318,28 @@ function cloneElement(element, props, ...children) {
 	return normalizeVNode(preactCloneElement(...cloneArgs));
 }
 
+function validatePropTypes (vnode) {
+	let componentClass = typeof vnode.nodeName === 'function' ? vnode.nodeName : vnode.type;
+
+	if (typeof componentClass !== 'function') return;
+	let name = (
+		componentClass.prototype.displayName
+		|| componentClass.displayName
+		|| componentClass.name
+	);
+
+	let propTypes = componentClass.propTypes;
+
+	if (propTypes) {
+		let props = vnode.props;
+		for (let propKey in propTypes) {
+			if (propTypes.hasOwnProperty(propKey) && typeof propTypes[propKey] === 'function') {
+				let err = propTypes[propKey](props, propKey, name, 'prop');
+				if (err) console.error(new Error(err.message || err));
+			}
+		}
+	}
+}
 
 function isValidElement(element) {
 	return element && ((element instanceof VNode) || element.$$typeof===REACT_ELEMENT_TYPE);
@@ -507,21 +529,6 @@ function propsHook(props, context) {
 		if (props.children && typeof props.children==='object') {
 			props.children.length = 1;
 			props.children[0] = props.children;
-		}
-	}
-
-	// add proptype checking
-	if (DEV) {
-		let ctor = typeof this==='function' ? this : this.constructor,
-			propTypes = this.propTypes || ctor.propTypes;
-		if (propTypes) {
-			for (let prop in propTypes) {
-				if (propTypes.hasOwnProperty(prop) && typeof propTypes[prop]==='function') {
-					const displayName = this.displayName || ctor.name;
-					let err = propTypes[prop](props, prop, displayName, 'prop');
-					if (err) console.error(new Error(err.message || err));
-				}
-			}
 		}
 	}
 }

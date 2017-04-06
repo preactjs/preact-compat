@@ -236,6 +236,28 @@ describe('components', () => {
 			};
 			checkPropTypes(Foo2);
 		});
+
+		it.only('should handle function as children propTypes', () => {
+			function Foo (props) { return React.Children.only(props.children)(); }
+
+			Foo.propTypes = {
+				children: React.PropTypes.func.isRequired
+			};
+
+			sinon.stub(console, 'error');
+
+			React.render(<Foo/>, scratch);
+			expect(console.error).to.have.been.calledWithMatch({
+				message: 'Children.only() expects only one child.'
+			});
+
+			console.error.reset();
+
+			React.render(<Foo>{() => <div/>}</Foo>, scratch);
+			expect(console.error).not.to.have.been.called;
+
+			console.error.restore();
+		});
 	});
 
 	describe("mixins", () => {
