@@ -191,6 +191,14 @@ describe('components', () => {
 				message: 'Invalid prop `bool` of type `string` supplied to `Foo`, expected `boolean`.'
 			});
 
+			console.error.reset();
+
+			const clone = React.cloneElement(<Foo func={() => {}} bool="one"/>);
+			React.render(clone, scratch);
+			expect(console.error).to.have.been.calledWithMatch({
+				message: 'Invalid prop `bool` of type `string` supplied to `Foo`, expected `boolean`.'
+			});
+
 			console.error.restore();
 		}
 
