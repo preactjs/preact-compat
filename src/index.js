@@ -270,10 +270,45 @@ function statelessComponentHook(Ctor) {
 	return Wrapped;
 }
 
+function validatePropTypes (vnode) {
+	if (DEV) {
+		let componentClass = typeof vnode.nodeName === "function"
+			? vnode.nodeName
+			: vnode.type;
+
+		if (typeof componentClass !== "function") return;
+		let name = componentClass.displayName || componentClass.name;
+		let propTypes = componentClass.propTypes;
+		if (propTypes) {
+			let props = vnode.props.children
+				? vnode.props
+				: {
+					...vnode.props,
+					...{
+						children: Array.isArray(vnode.children) &&
+						vnode.children.length === 1
+							? vnode.children[0]
+							: vnode.children
+					}
+				};
+			for (let propKey in propTypes) {
+				if (
+					propTypes.hasOwnProperty(propKey) &&
+					typeof propTypes[propKey] === "function"
+				) {
+					let err = propTypes[propKey](props, propKey, name, "prop");
+					if (err) console.error(new Error(err.message || err));
+				}
+			}
+		}
+	}
+}
 
 function createElement(...args) {
 	upgradeToVNodes(args, 2);
-	return normalizeVNode(h(...args));
+	let node = h(...args);
+	validatePropTypes(node);
+	return normalizeVNode(node);
 }
 
 
@@ -293,7 +328,6 @@ function normalizeVNode(vnode) {
 	}
 
 	applyEventNormalization(vnode);
-	validatePropTypes(vnode);
 	return vnode;
 }
 
@@ -315,30 +349,9 @@ function cloneElement(element, props, ...children) {
 	else if (props && props.children) {
 		cloneArgs.push(props.children);
 	}
-	return normalizeVNode(preactCloneElement(...cloneArgs));
-}
-
-function validatePropTypes (vnode) {
-	let componentClass = typeof vnode.nodeName === 'function' ? vnode.nodeName : vnode.type;
-
-	if (typeof componentClass !== 'function') return;
-	let name = (
-		componentClass.prototype.displayName
-		|| componentClass.displayName
-		|| componentClass.name
-	);
-
-	let propTypes = componentClass.propTypes;
-
-	if (propTypes) {
-		let props = vnode.props;
-		for (let propKey in propTypes) {
-			if (propTypes.hasOwnProperty(propKey) && typeof propTypes[propKey] === 'function') {
-				let err = propTypes[propKey](props, propKey, name, 'prop');
-				if (err) console.error(new Error(err.message || err));
-			}
-		}
-	}
+	let newNode = preactCloneElement(...cloneArgs);
+	validatePropTypes(newNode);
+	return normalizeVNode(newNode);
 }
 
 function isValidElement(element) {
@@ -511,7 +524,7 @@ function multihook(hooks, skipDuplicates) {
 
 
 function newComponentHook(props, context) {
-	propsHook.call(this, props, context);
+	propsHook(props, context);
 	this.componentWillReceiveProps = multihook([propsHook, this.componentWillReceiveProps || 'componentWillReceiveProps']);
 	this.render = multihook([propsHook, beforeRender, this.render || 'render', afterRender]);
 }
@@ -532,7 +545,6 @@ function propsHook(props, context) {
 		}
 	}
 }
-
 
 function beforeRender(props) {
 	currentComponent = this;

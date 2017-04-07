@@ -191,6 +191,14 @@ describe('components', () => {
 				message: 'Invalid prop `bool` of type `string` supplied to `Foo`, expected `boolean`.'
 			});
 
+			console.error.reset();
+
+			const clone = React.cloneElement(<Foo func={() => {}} bool="one"/>);
+			React.render(clone, scratch);
+			expect(console.error).to.have.been.calledWithMatch({
+				message: 'Invalid prop `bool` of type `string` supplied to `Foo`, expected `boolean`.'
+			});
+
 			console.error.restore();
 		}
 
@@ -235,28 +243,6 @@ describe('components', () => {
 				bool: React.PropTypes.bool
 			};
 			checkPropTypes(Foo2);
-		});
-
-		it.only('should handle function as children propTypes', () => {
-			function Foo (props) { return React.Children.only(props.children)(); }
-
-			Foo.propTypes = {
-				children: React.PropTypes.func.isRequired
-			};
-
-			sinon.stub(console, 'error');
-
-			React.render(<Foo/>, scratch);
-			expect(console.error).to.have.been.calledWithMatch({
-				message: 'Children.only() expects only one child.'
-			});
-
-			console.error.reset();
-
-			React.render(<Foo>{() => <div/>}</Foo>, scratch);
-			expect(console.error).not.to.have.been.called;
-
-			console.error.restore();
 		});
 	});
 
