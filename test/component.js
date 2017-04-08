@@ -178,7 +178,7 @@ describe('components', () => {
 
 			React.render(<Foo />, scratch);
 			expect(console.error).to.have.been.calledWithMatch({
-				message: 'Required prop `func` was not specified in `Foo`.'
+				message: 'The prop `func` is marked as required in `Foo`, but its value is `undefined`.'
 			});
 
 			console.error.reset();
