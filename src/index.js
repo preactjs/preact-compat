@@ -515,13 +515,8 @@ function propsHook(props, context) {
 		let ctor = typeof this==='function' ? this : this.constructor,
 			propTypes = this.propTypes || ctor.propTypes;
 		if (propTypes) {
-			for (let prop in propTypes) {
-				if (propTypes.hasOwnProperty(prop) && typeof propTypes[prop]==='function') {
-					const displayName = this.displayName || ctor.name;
-					let err = propTypes[prop](props, prop, displayName, 'prop');
-					if (err) console.error(new Error(err.message || err));
-				}
-			}
+			const displayName = this.displayName || ctor.name;
+			PropTypes.checkPropTypes(propTypes, props, 'prop', displayName);
 		}
 	}
 }
