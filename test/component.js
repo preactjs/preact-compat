@@ -177,9 +177,7 @@ describe('components', () => {
 			sinon.stub(console, 'error');
 
 			React.render(<Foo />, scratch);
-			expect(console.error).to.have.been.calledWithMatch({
-				message: 'Required prop `func` was not specified in `Foo`.'
-			});
+			expect(console.error).to.have.been.calledWithMatch('Failed prop type: The prop `func` is marked as required in `Foo`, but its value is `undefined`.');
 
 			console.error.reset();
 
@@ -187,9 +185,7 @@ describe('components', () => {
 			expect(console.error).not.to.have.been.called;
 
 			React.render(<Foo func={()=>{}} bool="one" />, scratch);
-			expect(console.error).to.have.been.calledWithMatch({
-				message: 'Invalid prop `bool` of type `string` supplied to `Foo`, expected `boolean`.'
-			});
+			expect(console.error).to.have.been.calledWithMatch('Failed prop type: Invalid prop `bool` of type `string` supplied to `Foo`, expected `boolean`.');
 
 			console.error.restore();
 		}
