@@ -1,4 +1,4 @@
-import PropTypes from 'proptypes';
+import PropTypes from 'prop-types';
 import { render as preactRender, cloneElement as preactCloneElement, h, Component as PreactComponent, options } from 'preact';
 
 const version = '15.1.0'; // trick libraries to think we are react
@@ -514,14 +514,10 @@ function propsHook(props, context) {
 	if (DEV) {
 		let ctor = typeof this==='function' ? this : this.constructor,
 			propTypes = this.propTypes || ctor.propTypes;
+		const displayName = this.displayName || ctor.name;
+
 		if (propTypes) {
-			for (let prop in propTypes) {
-				if (propTypes.hasOwnProperty(prop) && typeof propTypes[prop]==='function') {
-					const displayName = this.displayName || ctor.name;
-					let err = propTypes[prop](props, prop, displayName, 'prop');
-					if (err) console.error(new Error(err.message || err));
-				}
-			}
+			PropTypes.checkPropTypes(propTypes, props, 'prop', displayName);
 		}
 	}
 }

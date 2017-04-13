@@ -173,13 +173,13 @@ describe('components', () => {
 	});
 
 	describe('propTypes', () => {
-		function checkPropTypes(Foo) {
+		function checkPropTypes(Foo, name = 'Foo') {
 			sinon.stub(console, 'error');
-
 			React.render(<Foo />, scratch);
-			expect(console.error).to.have.been.calledWithMatch({
-				message: 'Required prop `func` was not specified in `Foo`.'
-			});
+			expect(console.error).to.have.been.calledWithMatch(
+				'Warning: Failed prop type: The prop `func` is marked as required in `' + name + '`, but its value is `undefined`.'
+			);
+			expect(console.error).to.have.been.called;
 
 			console.error.reset();
 
@@ -187,9 +187,9 @@ describe('components', () => {
 			expect(console.error).not.to.have.been.called;
 
 			React.render(<Foo func={()=>{}} bool="one" />, scratch);
-			expect(console.error).to.have.been.calledWithMatch({
-				message: 'Invalid prop `bool` of type `string` supplied to `Foo`, expected `boolean`.'
-			});
+			expect(console.error).to.have.been.calledWithMatch(
+				'Warning: Failed prop type: Invalid prop `bool` of type `string` supplied to `' + name + '`, expected `boolean`.'
+			);
 
 			console.error.restore();
 		}
@@ -209,7 +209,7 @@ describe('components', () => {
 		});
 
 		it('should support propTypes for createClass components', () => {
-			const Foo = React.createClass({
+			const Bar = React.createClass({
 				propTypes: {
 					func: React.PropTypes.func.isRequired,
 					bool: React.PropTypes.bool
@@ -217,24 +217,24 @@ describe('components', () => {
 				render: () => <div />
 			});
 
-			checkPropTypes(Foo);
+			checkPropTypes(Bar, 'Bar');
 		});
 
 		it('should support propTypes for pure components', () => {
-			function Foo() { return <div />; }
-			Foo.propTypes = {
+			function Baz() { return <div />; }
+			Baz.propTypes = {
 				func: React.PropTypes.func.isRequired,
 				bool: React.PropTypes.bool
 			};
-			checkPropTypes(Foo);
+			checkPropTypes(Baz, 'Baz');
 
-			const Foo2 = () => <div />;
-			Foo2.displayName = 'Foo';
-			Foo2.propTypes = {
+			const Bip = () => <div />;
+			Bip.displayName = 'Bip';
+			Bip.propTypes = {
 				func: React.PropTypes.func.isRequired,
 				bool: React.PropTypes.bool
 			};
-			checkPropTypes(Foo2);
+			checkPropTypes(Bip, 'Bip');
 		});
 	});
 
