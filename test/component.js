@@ -193,11 +193,11 @@ describe('components', () => {
 
 			console.error.reset();
 
-			const clone = React.cloneElement(<Foo func={() => {}} bool="one"/>);
+			const clone = React.cloneElement(<Foo func={'funky'} bool/>);
 			React.render(clone, scratch);
-			expect(console.error).to.have.been.calledWithMatch({
-				message: 'Invalid prop `bool` of type `string` supplied to `Foo`, expected `boolean`.'
-			});
+			expect(console.error).to.have.been.calledWithMatch(
+				'Warning: Failed prop type: Invalid prop `func` of type `string` supplied to `' + name + '`, expected `function`.'
+			);
 
 			console.error.restore();
 		}
