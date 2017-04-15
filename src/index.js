@@ -280,18 +280,15 @@ function validatePropTypes (vnode) {
 		let name = componentClass.displayName || componentClass.name;
 		let propTypes = componentClass.propTypes;
 		if (propTypes) {
-			let props = vnode.props.children
-				? vnode.props
-				: {
-					...vnode.props,
-					...{
-						children: Array.isArray(vnode.children) &&
-						vnode.children.length === 1
-							? vnode.children[0]
-							: vnode.children
-					}
-				};
-
+			let props = vnode.props;
+			if (
+				!(vnode.props && vnode.props.children) &&
+				vnode.children &&
+				vnode.children.length
+			) {
+				props.children = vnode.children;
+			}
+			propsHook(props);
 			PropTypes.checkPropTypes(propTypes, props, 'prop', name);
 		}
 	}
