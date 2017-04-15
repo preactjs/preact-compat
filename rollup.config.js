@@ -21,7 +21,7 @@ export default {
 	useStrict: false,
 	globals: {
 		'preact': 'preact',
-		'proptypes': 'PropTypes'
+		'prop-types': 'PropTypes'
 	},
 	plugins: [
 		format==='umd' && memory({
