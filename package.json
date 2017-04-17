@@ -1,15 +1,16 @@
 {
   "name": "preact-compat",
   "amdName": "preactCompat",
-  "version": "3.13.1",
+  "version": "3.14.3",
   "description": "A React compatibility layer for Preact",
   "main": "dist/preact-compat.js",
   "minified:main": "dist/preact-compat.min.js",
-  "jsnext:main": "src/index.js",
-  "module": "src/index.js",
+  "jsnext:main": "dist/preact-compat.es.js",
+  "module": "dist/preact-compat.es.js",
   "scripts": {
-    "build": "npm-run-all transpile minify size",
-    "transpile": "rollup -c rollup.config.js",
+    "build": "npm-run-all transpile:* minify size",
+    "transpile:umd": "rollup -c --environment FORMAT:umd",
+    "transpile:es": "rollup -c --environment FORMAT:es",
     "minify": "uglifyjs $npm_package_main -c dead_code,evaluate -m -o $npm_package_minified_main -p relative --in-source-map ${npm_package_main}.map --source-map ${npm_package_minified_main}.map",
     "size": "echo \"gzip size: $(gzip-size $npm_package_minified_main | pretty-bytes)\"",
     "test": "npm-run-all lint build test:karma",
@@ -78,9 +79,10 @@
     "preact": ">=5"
   },
   "dependencies": {
-    "preact-render-to-string": "^3.2.1",
+    "immutability-helper": "^2.1.2",
+    "preact-render-to-string": "^3.6.0",
     "preact-transition-group": "^1.1.0",
-    "proptypes": "^0.14.3",
+    "prop-types": "^15.5.8",
     "standalone-react-addons-pure-render-mixin": "^0.1.1"
   }
 }

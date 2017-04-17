@@ -1,4 +1,4 @@
-import PropTypes from 'proptypes';
+import PropTypes from 'prop-types';
 import { render as preactRender, cloneElement as preactCloneElement, h, Component as PreactComponent, options } from 'preact';
 
 const version = '15.1.0'; // trick libraries to think we are react
@@ -74,9 +74,7 @@ options.vnode = vnode => {
 		vnode.preactCompatUpgraded = true;
 
 		let tag = vnode.nodeName,
-			attrs = vnode.attributes;
-
-		if (!attrs) attrs = vnode.attributes = {};
+			attrs = vnode.attributes = extend({}, vnode.attributes);
 
 		if (typeof tag==='function') {
 			if (tag[COMPONENT_WRAPPER_KEY]===true || (tag.prototype && 'isReactComponent' in tag.prototype)) {
@@ -135,7 +133,7 @@ function handleElementVNode(vnode, a) {
 
 // proxy render() since React returns a Component reference.
 function render(vnode, parent, callback) {
-	let prev = parent && parent._preactCompatRendered;
+	let prev = parent && parent._preactCompatRendered && parent._preactCompatRendered.base;
 
 	// ignore impossible previous renders
 	if (prev && prev.parentNode!==parent) prev = null;
@@ -151,9 +149,9 @@ function render(vnode, parent, callback) {
 	}
 
 	let out = preactRender(vnode, parent, prev);
-	if (parent) parent._preactCompatRendered = out;
+	if (parent) parent._preactCompatRendered = out && (out._component || { base: out });
 	if (typeof callback==='function') callback();
-	return out && out._component || out.base;
+	return out && out._component || out;
 }
 
 
@@ -175,7 +173,7 @@ function renderSubtreeIntoContainer(parentComponent, vnode, container, callback)
 
 
 function unmountComponentAtNode(container) {
-	let existing = container._preactCompatRendered;
+	let existing = container._preactCompatRendered && container._preactCompatRendered.base;
 	if (existing && existing.parentNode===container) {
 		preactRender(h(EmptyComponent), container, existing);
 		return true;
@@ -210,6 +208,7 @@ let Children = {
 		return children[0];
 	},
 	toArray(children) {
+		if (children == null) return [];
 		return Array.isArray && Array.isArray(children) ? children : ARR.concat(children);
 	}
 };
@@ -309,7 +308,16 @@ function cloneElement(element, props, ...children) {
 		elementProps,
 		element.children || elementProps && elementProps.children
 	);
-	return normalizeVNode(preactCloneElement(node, props, ...children));
+	// Only provide the 3rd argument if needed.
+	// Arguments 3+ overwrite element.children in preactCloneElement
+	let cloneArgs = [node, props];
+	if (children && children.length) {
+		cloneArgs.push(children);
+	}
+	else if (props && props.children) {
+		cloneArgs.push(props.children);
+	}
+	return normalizeVNode(preactCloneElement(...cloneArgs));
 }
 
 
@@ -508,14 +516,10 @@ function propsHook(props, context) {
 	if (DEV) {
 		let ctor = typeof this==='function' ? this : this.constructor,
 			propTypes = this.propTypes || ctor.propTypes;
+		const displayName = this.displayName || ctor.name;
+
 		if (propTypes) {
-			for (let prop in propTypes) {
-				if (propTypes.hasOwnProperty(prop) && typeof propTypes[prop]==='function') {
-					const displayName = this.displayName || ctor.name;
-					let err = propTypes[prop](props, prop, displayName, 'prop');
-					if (err) console.error(new Error(err.message || err));
-				}
-			}
+			PropTypes.checkPropTypes(propTypes, props, 'prop', displayName);
 		}
 	}
 }
