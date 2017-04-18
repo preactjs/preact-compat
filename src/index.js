@@ -574,6 +574,7 @@ function PureComponent(props, context) {
 }
 F.prototype = Component.prototype;
 PureComponent.prototype = new F();
+PureComponent.prototype.isPureReactComponent = true;
 PureComponent.prototype.shouldComponentUpdate = function(props, state) {
 	return shallowDiffers(this.props, props) || shallowDiffers(this.state, state);
 };
