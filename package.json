@@ -1,7 +1,7 @@
 {
   "name": "preact-compat",
   "amdName": "preactCompat",
-  "version": "3.14.3",
+  "version": "3.15.0",
   "description": "A React compatibility layer for Preact",
   "main": "dist/preact-compat.js",
   "minified:main": "dist/preact-compat.min.js",
@@ -18,7 +18,7 @@
     "test:karma": "karma start --single-run",
     "test:watch": "karma start",
     "prepublish": "npm-run-all build test",
-    "release": "npm run -s build && git commit -am $npm_package_version && git tag $npm_package_version && git push && git push --tags && npm publish"
+    "release": "npm run -s build && git commit -am $npm_package_version && git tag $npm_package_version && git push --follow-tags && npm publish"
   },
   "keywords": [
     "preact",
