@@ -270,10 +270,35 @@ function statelessComponentHook(Ctor) {
 	return Wrapped;
 }
 
+function validatePropTypes (vnode) {
+	if (DEV) {
+		let componentClass = typeof vnode.nodeName === "function"
+			? vnode.nodeName
+			: vnode.type;
+
+		if (typeof componentClass !== "function") return;
+		let name = componentClass.displayName || componentClass.name;
+		let propTypes = componentClass.propTypes;
+		if (propTypes) {
+			let props = vnode.props;
+			if (
+				!(vnode.props && vnode.props.children) &&
+				vnode.children &&
+				vnode.children.length
+			) {
+				props.children = vnode.children;
+			}
+			propsHook(props);
+			PropTypes.checkPropTypes(propTypes, props, 'prop', name);
+		}
+	}
+}
 
 function createElement(...args) {
 	upgradeToVNodes(args, 2);
-	return normalizeVNode(h(...args));
+	let node = h(...args);
+	validatePropTypes(node);
+	return normalizeVNode(node);
 }
 
 
@@ -293,7 +318,6 @@ function normalizeVNode(vnode) {
 	}
 
 	applyEventNormalization(vnode);
-
 	return vnode;
 }
 
@@ -315,9 +339,10 @@ function cloneElement(element, props, ...children) {
 	else if (props && props.children) {
 		cloneArgs.push(props.children);
 	}
-	return normalizeVNode(preactCloneElement(...cloneArgs));
+	let newNode = preactCloneElement(...cloneArgs);
+	validatePropTypes(newNode);
+	return normalizeVNode(newNode);
 }
-
 
 function isValidElement(element) {
 	return element && ((element instanceof VNode) || element.$$typeof===REACT_ELEMENT_TYPE);
@@ -489,7 +514,7 @@ function multihook(hooks, skipDuplicates) {
 
 
 function newComponentHook(props, context) {
-	propsHook.call(this, props, context);
+	propsHook(props, context);
 	this.componentWillReceiveProps = multihook([propsHook, this.componentWillReceiveProps || 'componentWillReceiveProps']);
 	this.render = multihook([propsHook, beforeRender, this.render || 'render', afterRender]);
 }
@@ -509,19 +534,7 @@ function propsHook(props, context) {
 			props.children[0] = props.children;
 		}
 	}
-
-	// add proptype checking
-	if (DEV) {
-		let ctor = typeof this==='function' ? this : this.constructor,
-			propTypes = this.propTypes || ctor.propTypes;
-		const displayName = this.displayName || ctor.name;
-
-		if (propTypes) {
-			PropTypes.checkPropTypes(propTypes, props, 'prop', displayName);
-		}
-	}
 }
-
 
 function beforeRender(props) {
 	currentComponent = this;
