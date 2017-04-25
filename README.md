@@ -60,7 +60,9 @@ All you have to do is add an alias for `react` and `react-dom`:
     resolve: {
         alias: {
             'react': 'preact-compat',
-            'react-dom': 'preact-compat'
+            'react-dom': 'preact-compat',
+            // Not necessary unless you consume a module using `createClass`
+            'create-react-class': 'preact-compat/lib/create-react-class'
         }
     }
     // ...
@@ -82,7 +84,9 @@ First, install it: `npm install --save-dev aliasify`
     "aliasify": {
         "aliases": {
             "react": "preact-compat",
-            "react-dom": "preact-compat"
+            "react-dom": "preact-compat",
+            // Not necessary unless you consume a module using `createClass`
+            "create-react-class": "preact-compat/lib/create-react-class"
         }
     }
     // ...
@@ -106,7 +110,9 @@ All you have to do is tell babel to process jsx with 'h' and add an alias for `r
         "root": ["."],
         "alias": {
             "react": "preact-compat",
-            "react-dom": "preact-compat"
+            "react-dom": "preact-compat",
+            // Not necessary unless you consume a module using `createClass`
+            "create-react-class": "preact-compat/lib/create-react-class"
         }
         }]
     ],
@@ -147,7 +153,7 @@ render((
 
 ## Use Without Webpack/Browserify
 
-`preact-compat` and its single dependency [`proptypes`](https://git.io/proptypes) are both published as UMD modules as of `preact-compat` version `0.6`. This means you can use them via a `<script>` tag without issue:
+`preact-compat` and its single dependency [`prop-types`](https://github.com/reactjs/prop-types) are both published as UMD modules as of `preact-compat` version `0.6`. This means you can use them via a `<script>` tag without issue:
 
 ```html
 <script src="//unpkg.com/preact"></script>
@@ -168,7 +174,7 @@ You can see the above in action with this [JSFiddle Example](https://jsfiddle.ne
 
 ### PropTypes
 
-`preact-compat` adds support for validating PropTypes out of the box. This can be disabled the same way it is when using React, by defining a global `process.env.NODE_ENV='production'`.  PropType errors should work the same as in React - the [`proptypes`](https://git.io/proptypes) module used here is extracted verbatim from the React source into a standalone module.
+`preact-compat` adds support for validating PropTypes out of the box. This can be disabled the same way it is when using React, by defining a global `process.env.NODE_ENV='production'`.  PropType errors should work the same as in React - the [`prop-types`](https://github.com/reactjs/prop-types) module used here is published by the React team to replace PropTypes in React.
 
 <img src="http://i.imgur.com/tGT7Dvw.png" width="650" alt="PropType validation example output" />
 

@@ -76,7 +76,7 @@ options.vnode = vnode => {
 
 		if (typeof tag==='function') {
 			if (tag[COMPONENT_WRAPPER_KEY]===true || (tag.prototype && 'isReactComponent' in tag.prototype)) {
-				if (vnode.children && !vnode.children.length) vnode.children = undefined;
+				if (vnode.children && String(vnode.children)==='') vnode.children = undefined;
 				if (vnode.children) attrs.children = vnode.children;
 
 				if (!vnode.preactCompatNormalized) {
@@ -86,7 +86,7 @@ options.vnode = vnode => {
 			}
 		}
 		else {
-			if (vnode.children && !vnode.children.length) vnode.children = undefined;
+			if (vnode.children && String(vnode.children)==='') vnode.children = undefined;
 			if (vnode.children) attrs.children = vnode.children;
 
 			if (attrs.defaultValue) {
@@ -574,6 +574,7 @@ function PureComponent(props, context) {
 }
 F.prototype = Component.prototype;
 PureComponent.prototype = new F();
+PureComponent.prototype.isPureReactComponent = true;
 PureComponent.prototype.shouldComponentUpdate = function(props, state) {
 	return shallowDiffers(this.props, props) || shallowDiffers(this.state, state);
 };
