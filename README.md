@@ -60,7 +60,9 @@ All you have to do is add an alias for `react` and `react-dom`:
     resolve: {
         alias: {
             'react': 'preact-compat',
-            'react-dom': 'preact-compat'
+            'react-dom': 'preact-compat',
+            // Not necessary unless you consume a module using `createClass`
+            'create-react-class': 'preact-compat/lib/create-react-class'
         }
     }
     // ...
@@ -82,7 +84,9 @@ First, install it: `npm install --save-dev aliasify`
     "aliasify": {
         "aliases": {
             "react": "preact-compat",
-            "react-dom": "preact-compat"
+            "react-dom": "preact-compat",
+            // Not necessary unless you consume a module using `createClass`
+            "create-react-class": "preact-compat/lib/create-react-class"
         }
     }
     // ...
@@ -106,7 +110,9 @@ All you have to do is tell babel to process jsx with 'h' and add an alias for `r
         "root": ["."],
         "alias": {
             "react": "preact-compat",
-            "react-dom": "preact-compat"
+            "react-dom": "preact-compat",
+            // Not necessary unless you consume a module using `createClass`
+            "create-react-class": "preact-compat/lib/create-react-class"
         }
         }]
     ],
