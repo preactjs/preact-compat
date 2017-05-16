@@ -116,6 +116,22 @@ describe('components', () => {
 		});
 	});
 
+	it('should support array[object] children', () => {
+		let children;
+
+		class Foo extends React.Component {
+			render() {
+				children = this.props.children;
+				return <div />;
+			}
+		}
+
+		const data = [{a: ''}];
+		React.render(<Foo>{ data }</Foo>, scratch);
+
+		expect(children).to.exist.and.deep.equal(data);
+	});
+
 	describe('getInitialState', () => {
 		it('should be invoked for new components', () => {
 			class Foo extends React.Component {

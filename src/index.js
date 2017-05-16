@@ -500,7 +500,7 @@ function propsHook(props, context) {
 
 	// React annoyingly special-cases single children, and some react components are ridiculously strict about this.
 	let c = props.children;
-	if (c && Array.isArray(c) && c.length===1) {
+	if (c && Array.isArray(c) && c.length===1 && (typeof c[0] === 'string' || c[0] instanceof VNode)) {
 		props.children = c[0];
 
 		// but its totally still going to be an Array.
