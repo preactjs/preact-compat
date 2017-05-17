@@ -301,4 +301,33 @@ describe('preact-compat', () => {
 			expect(typeof app.inner.getNode === 'function').to.equal(true);
 		});
 	});
+
+	describe('unstable_renderSubtreeIntoContainer', () => {
+		it('should export instance', () => {
+			class Inner extends Component {
+				render() {
+					return null;
+				}
+				getNode() {
+					return 'inner';
+				}
+			}
+
+			class App extends Component {
+				render() {
+					return null;
+				}
+				componentDidMount() {
+					this.renderInner();
+				}
+				renderInner() {
+					const wrapper = document.createElement('div');
+					this.inner = unstable_renderSubtreeIntoContainer(this, <Inner/>, wrapper);
+				}
+			}
+			const root = document.createElement('div');
+			const app = render(<App/>, root);
+			expect(typeof app.inner.getNode === 'function').to.equal(true);
+		});
+	});
 });
