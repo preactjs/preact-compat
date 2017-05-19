@@ -461,9 +461,6 @@ function bindAll(ctx) {
 
 
 function callMethod(ctx, m, args) {
-	if (typeof m==='string') {
-		m = ctx.constructor.prototype[m];
-	}
 	if (typeof m==='function') {
 		return m.apply(ctx, args);
 	}
@@ -490,8 +487,8 @@ function multihook(hooks, skipDuplicates) {
 
 function newComponentHook(props, context) {
 	propsHook.call(this, props, context);
-	this.componentWillReceiveProps = multihook([propsHook, this.componentWillReceiveProps || 'componentWillReceiveProps']);
-	this.render = multihook([propsHook, beforeRender, this.render || 'render', afterRender]);
+	this.componentWillReceiveProps = multihook([propsHook, this.componentWillReceiveProps]);
+	this.render = multihook([propsHook, beforeRender, this.render, afterRender]);
 }
 
 
