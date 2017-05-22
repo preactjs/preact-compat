@@ -128,7 +128,7 @@ All you have to do is tell babel to process jsx with 'h' and add an alias for `r
 
 Using `preact-compat` with Brunch requires no extra plugins.
 
-In your `bunch-config.js` you can export an [`npm` object](http://brunch.io/docs/config#-npm-) to configure aliases:
+In your `brunch-config.js` you can export an [`npm` object](http://brunch.io/docs/config#-npm-) to configure aliases:
 
 ```js
 // ...
