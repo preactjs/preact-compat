@@ -207,7 +207,7 @@ let Children = {
 	},
 	toArray(children) {
 		if (children == null) return [];
-		return Array.isArray && Array.isArray(children) ? children : ARR.concat(children);
+		return ARR.concat(children);
 	}
 };
 
