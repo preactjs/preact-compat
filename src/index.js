@@ -137,7 +137,7 @@ function render(vnode, parent, callback) {
 	if (prev && prev.parentNode!==parent) prev = null;
 
 	// default to first Element child
-	if (parent.children && !prev) prev = parent.children[0];
+	if (!prev && parent) prev = parent.firstElementChild;
 
 	// remove unaffected siblings
 	for (let i=parent.childNodes.length; i--; ) {
