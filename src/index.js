@@ -180,45 +180,40 @@ function unmountComponentAtNode(container) {
 	return false;
 }
 
+/**  Children Helpers **/
+
 const KEY_SEPARATOR = '.';
 const KEY_SUBSEPARATOR = ':';
+const ESCAPE_REGEX = /[=:]/g;
+const ESCAPER_LOOKUP = {
+	'=': '=0',
+	':': '=2'
+};
+const USER_KEY_ESCAPE_REGEX = /\/+/g;
 
-function escape(key) {
-	let escapeRegex = /[=:]/g;
-	let escaperLookup = {
-		'=': '=0',
-		':': '=2'
-	};
-	let escapedString = ('' + key).replace(escapeRegex, (match) => {
-		return escaperLookup[match];
-	});
-
-	return '$' + escapedString;
+function escapeUserProvidedKey(text) {
+	return ('' + text).replace(USER_KEY_ESCAPE_REGEX, '$&/');
 }
 
 function getKey(component, i) {
 	if (typeof component === 'object' && component != null && component.key) {
-		return escape(component.key);
+		return '$' + ('' + component.key).replace(ESCAPE_REGEX, (match) => ESCAPER_LOOKUP[match]);
 	}
 
 	return String(i);
 }
 
 function cloneAndReplaceKey(oldElement, newKey) {
-	const res = cloneElement(oldElement, {
-		key: newKey
-	});
-	return res;
+	return;
 }
 
 function iterateChildren(children, callback, name) {
 	let type = typeof children;
-  // null like
+
 	if (type === 'undefined' || type === 'boolean') {
 		children = null;
 	}
 
-  // single case
 	if (children === null || type === 'string' || type === 'number' || type === 'object' && children.$$typeof === REACT_ELEMENT_TYPE) {
 		return callback(children, name === '' ? KEY_SEPARATOR + getKey(children, 0) : name);
 	}
@@ -239,9 +234,32 @@ function iterateChildren(children, callback, name) {
 	}
 }
 
-let userProvidedKeyEscapeRegex = /\/+/g;
-function escapeUserProvidedKey(text) {
-	return ('' + text).replace(userProvidedKeyEscapeRegex, '$&/');
+
+function identity (el) {
+	return el;
+}
+
+function mapChildren (children, fn, result, prefix, count, ctx) {
+	if (children == null) {
+		return children;
+	}
+
+	iterateChildren(children, (child, childKey) => {
+		let mappedChild = fn.call(ctx, child, count++);
+
+		if (Array.isArray(mappedChild)) {
+			mapChildren(mappedChild, fn, result, childKey, count, ctx);
+		}
+		else if (mappedChild) {
+			if (isValidElement(mappedChild)) {
+				const newKey = prefix + (mappedChild.key && (!child || child.key !== mappedChild.key) ? escapeUserProvidedKey(mappedChild.key) + '/' : '') + childKey;
+				result.push(cloneElement(mappedChild, {key: newKey}));
+			}
+			else {
+				result.push(mappedChild);
+			}
+		}
+	}, prefix);
 }
 
 // This API is completely unnecessary for Preact,
@@ -253,7 +271,7 @@ let Children = {
 			return res;
 		}
 
-		mapChildrenWithKey(children, fn, res, '', 0,ctx);
+		mapChildren(children, fn, res, '', 0, ctx);
 
 		return res;
 	},
@@ -261,7 +279,7 @@ let Children = {
 		if (children == null) {
 			return children;
 		}
-		mapChildrenWithKey(children, fn, [], '', 0, ctx);
+		mapChildren(children, fn, [], '', 0, ctx);
 	},
 	count(children) {
 		let count = 0;
@@ -278,41 +296,11 @@ let Children = {
 	toArray(children) {
 		let res = [];
 
-		mapChildrenWithKey(children, identity, res, '', 0, null);
+		mapChildren(children, identity, res, '', 0, null);
 
 		return res;
 	}
 };
-
-function identity (el) {
-	return el;
-}
-
-function mapChildrenWithKey (children, fn, result, prefix, count, ctx) {
-	if (children == null) {
-		return children;
-	}
-
-	iterateChildren(children, (child, childKey) => {
-		let mappedChild = fn.call(ctx, child, count++);
-
-		if (Array.isArray(mappedChild)) {
-			mapChildrenWithKey(mappedChild, fn, result, childKey, count, ctx);
-		}
-		else if (mappedChild) {
-			if (isValidElement(mappedChild)) {
-				result.push(cloneAndReplaceKey(
-          mappedChild,
-          prefix + (mappedChild.key && (!child || child.key !== mappedChild.key) ? escapeUserProvidedKey(mappedChild.key) + '/' : '') + childKey
-        ));
-			}
-			else {
-				result.push(mappedChild);
-			}
-		}
-	}, prefix);
-}
-
 
 /** Track current render() component for ref assignment */
 let currentComponent;

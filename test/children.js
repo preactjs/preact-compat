@@ -1,6 +1,6 @@
 import React, { render, createClass, createElement, cloneElement, Component, PropTypes, unstable_renderSubtreeIntoContainer } from '../src';
 
-describe.only('Children', () => {
+describe('Children', () => {
 	it('should support identity for simple', () => {
 		let context = {};
 		let callback = sinon.spy(function (kid, index) {
