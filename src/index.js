@@ -197,7 +197,6 @@ function escape(key) {
 }
 
 function getKey(component, i) {
-	console.log('getkey', i, component && component.key);
 	if (typeof component === 'object' && component != null && component.key) {
 		return escape(component.key);
 	}
@@ -206,9 +205,10 @@ function getKey(component, i) {
 }
 
 function cloneAndReplaceKey(oldElement, newKey) {
-	return cloneElement(oldElement, {
-		key: newKey || oldElement.key
+	const res = cloneElement(oldElement, {
+		key: newKey
 	});
+	return res;
 }
 
 function iterateChildren(children, callback, name) {
@@ -228,11 +228,9 @@ function iterateChildren(children, callback, name) {
 	let nextNamePrefix = name === '' ? KEY_SEPARATOR : name + KEY_SUBSEPARATOR;
 
 	if (Array.isArray(children)) {
-		console.log('array');
 		for (let i = 0; i < children.length; i++) {
 			child = children[i];
 			nextName = nextNamePrefix + getKey(child, i);
-			console.log('i', i, nextName);
 			iterateChildren(child, callback, nextName);
 		}
 	}
@@ -267,7 +265,9 @@ let Children = {
 	},
 	count(children) {
 		let count = 0;
-		Children.forEach(children, () => count++);
+		Children.forEach(children, () => {
+			count++;
+		});
 		return count;
 	},
 	only(children) {
@@ -295,14 +295,14 @@ function mapChildrenWithKey (children, fn, result, prefix, count, ctx) {
 
 	iterateChildren(children, (child, childKey) => {
 		let mappedChild = fn.call(ctx, child, count++);
+
 		if (Array.isArray(mappedChild)) {
-			mapChildrenWithKey(mappedChild, result, childKey, prefix, count, ctx);
+			mapChildrenWithKey(mappedChild, fn, result, childKey, count, ctx);
 		}
 		else if (mappedChild) {
 			if (isValidElement(mappedChild)) {
-				console.log(prefix, mappedChild.key, child.key, childKey);
 				result.push(cloneAndReplaceKey(
-          child,
+          mappedChild,
           prefix + (mappedChild.key && (!child || child.key !== mappedChild.key) ? escapeUserProvidedKey(mappedChild.key) + '/' : '') + childKey
         ));
 			}
