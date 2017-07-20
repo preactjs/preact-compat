@@ -1,4 +1,3 @@
-
 import React, { render, createClass, createElement, cloneElement, Component, PropTypes, unstable_renderSubtreeIntoContainer, __spread } from '../src';
 
 describe('preact-compat', () => {
