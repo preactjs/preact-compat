@@ -587,8 +587,6 @@ PureComponent.prototype.shouldComponentUpdate = function(props, state) {
 	return shallowDiffers(this.props, props) || shallowDiffers(this.state, state);
 };
 
-// internal react API that has been long deprecated, but some random repos still decided to use it.
-
 export {
 	version,
 	DOM,
