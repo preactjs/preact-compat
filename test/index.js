@@ -1,4 +1,4 @@
-import React, { render, createClass, createElement, cloneElement, Component, PropTypes, unstable_renderSubtreeIntoContainer } from '../src';
+import React, { render, createClass, createElement, cloneElement, Component, PropTypes, unstable_renderSubtreeIntoContainer, __spread } from '../src';
 
 describe('preact-compat', () => {
 	describe('render()', () => {
@@ -320,6 +320,20 @@ describe('preact-compat', () => {
 			const root = document.createElement('div');
 			const app = render(<App/>, root);
 			expect(typeof app.inner.getNode === 'function').to.equal(true);
+		});
+	});
+
+	describe('__spread', () => {
+		it('should be exported', () => {
+			expect(React)
+				.to.have.property('__spread')
+				.that.is.a('function')
+				.that.equals(__spread);
+		});
+
+		it('should alias Object.assign to __spread', () => {
+			expect(__spread)
+				.equals(Object.assign);
 		});
 	});
 });

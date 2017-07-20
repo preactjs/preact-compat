@@ -26,8 +26,10 @@ const AUTOBIND_BLACKLIST = {
 
 const CAMEL_PROPS = /^(?:accent|alignment|arabic|baseline|cap|clip|color|fill|flood|font|glyph|horiz|marker|overline|paint|stop|strikethrough|stroke|text|underline|unicode|units|v|vert|word|writing|x)[A-Z]/;
 
+const __spread = Object.assign;
 
 const BYPASS_HOOK = {};
+
 
 /*global process*/
 const DEV = typeof process==='undefined' || !process.env || process.env.NODE_ENV!=='production';
@@ -597,7 +599,8 @@ export {
 	unmountComponentAtNode,
 	Component,
 	PureComponent,
-	renderSubtreeIntoContainer as unstable_renderSubtreeIntoContainer
+	renderSubtreeIntoContainer as unstable_renderSubtreeIntoContainer,
+	__spread
 };
 
 export default {
@@ -615,5 +618,6 @@ export default {
 	unmountComponentAtNode,
 	Component,
 	PureComponent,
-	unstable_renderSubtreeIntoContainer: renderSubtreeIntoContainer
+	unstable_renderSubtreeIntoContainer: renderSubtreeIntoContainer,
+	__spread
 };
