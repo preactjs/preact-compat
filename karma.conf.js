@@ -8,8 +8,9 @@ module.exports = function(config) {
 		browsers: ['PhantomJS'],
 
 		files: [
+			'./node_modules/phantomjs-polyfill-object-assign/object-assign-polyfill.js',
 			require.resolve('es5-shim'),
-			'test/**/*.js'
+			'test/**/*.js',
 		],
 
 		mochaReporter: {
