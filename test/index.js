@@ -1,4 +1,4 @@
-import React, { render, createClass, createElement, cloneElement, Component, PropTypes, unstable_renderSubtreeIntoContainer } from '../src';
+import React, { render, createClass, createElement, cloneElement, Component, PropTypes, unstable_renderSubtreeIntoContainer, __Spread } from '../src';
 
 describe('preact-compat', () => {
 	describe('render()', () => {
@@ -274,16 +274,16 @@ describe('preact-compat', () => {
 	});
 
 	describe('unstable_renderSubtreeIntoContainer', () => {
-		it('should export instance', () => {
-			class Inner extends Component {
-				render() {
-					return null;
-				}
-				getNode() {
-					return 'inner';
-				}
+		class Inner extends Component {
+			render() {
+				return null;
 			}
+			getNode() {
+				return 'inner';
+			}
+		}
 
+		it('should export instance', () => {
 			class App extends Component {
 				render() {
 					return null;
@@ -299,6 +299,41 @@ describe('preact-compat', () => {
 			const root = document.createElement('div');
 			const app = render(<App/>, root);
 			expect(typeof app.inner.getNode === 'function').to.equal(true);
+		});
+
+		it('should there must be a context in callback', () => {
+			class App extends Component {
+				render() {
+					return null;
+				}
+				componentDidMount() {
+					this.renderInner();
+				}
+				renderInner() {
+					const wrapper = document.createElement('div');
+					const self = this;
+					unstable_renderSubtreeIntoContainer(this, <Inner/>, wrapper, function() {
+						self.inner = this;
+					});
+				}
+			}
+			const root = document.createElement('div');
+			const app = render(<App/>, root);
+			expect(typeof app.inner.getNode === 'function').to.equal(true);
+		});
+	});
+
+	describe('__spread', () => {
+		it('should be exported', () => {
+			expect(React)
+				.to.have.property('__spread')
+				.that.is.a('function')
+				.that.equals(__spread);
+		});
+
+		it('should alias Object.assign to __spread', () => {
+			expect(__spread)
+				.equals(Object.assign);
 		});
 	});
 });
