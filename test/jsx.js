@@ -14,6 +14,6 @@ describe('jsx', () => {
 
 		let html = renderToString(jsx);
 
-		expect(html).to.equal('<div class="foo bar" data-foo="bar"><span id="some_id">inner!</span>ab</div>');
+		expect(html).to.equal('<div data-foo="bar" class="foo bar"><span id="some_id">inner!</span>ab</div>');
 	});
 });

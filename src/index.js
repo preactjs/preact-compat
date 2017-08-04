@@ -368,6 +368,7 @@ function applyClassName(vnode) {
 
 let classNameDescriptor = {
 	configurable: true,
+	enumerable: false,
 	get() { return this.class; },
 	set(v) { this.class = v; }
 };
