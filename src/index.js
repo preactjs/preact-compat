@@ -374,9 +374,16 @@ let classNameDescriptor = {
 };
 
 function extend(base, props) {
-	for (let key in props) {
-		if (props.hasOwnProperty(key)) {
-			base[key] = props[key];
+	const extenders = [].slice.call(arguments, 1);
+	let obj;
+	while (extenders.length) {
+		obj = extenders.shift();
+		if (obj) {
+			for (let key in obj) {
+				if (obj.hasOwnProperty(key)) {
+					base[key] = obj[key];
+				}
+			}
 		}
 	}
 	return base;
@@ -587,8 +594,6 @@ PureComponent.prototype.shouldComponentUpdate = function(props, state) {
 	return shallowDiffers(this.props, props) || shallowDiffers(this.state, state);
 };
 
-
-
 export {
 	version,
 	DOM,
@@ -604,7 +609,10 @@ export {
 	unmountComponentAtNode,
 	Component,
 	PureComponent,
-	renderSubtreeIntoContainer as unstable_renderSubtreeIntoContainer
+	renderSubtreeIntoContainer as unstable_renderSubtreeIntoContainer,
+	// this is a really old hidden react api, but something out there uses it
+	// https://twitter.com/Joseph_Wynn/status/888046593286574085
+	extend as __spread
 };
 
 export default {
@@ -622,5 +630,6 @@ export default {
 	unmountComponentAtNode,
 	Component,
 	PureComponent,
-	unstable_renderSubtreeIntoContainer: renderSubtreeIntoContainer
+	unstable_renderSubtreeIntoContainer: renderSubtreeIntoContainer,
+	__spread: extend
 };

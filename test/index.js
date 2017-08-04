@@ -1,4 +1,13 @@
-import React, { render, createClass, createElement, cloneElement, Component, PropTypes, unstable_renderSubtreeIntoContainer } from '../src';
+import React, {
+	render,
+	createClass,
+	createElement,
+	cloneElement,
+	Component,
+	PropTypes,
+	unstable_renderSubtreeIntoContainer,
+	__spread
+} from '../src';
 
 describe('preact-compat', () => {
 	describe('render()', () => {
@@ -320,6 +329,19 @@ describe('preact-compat', () => {
 			const root = document.createElement('div');
 			const app = render(<App/>, root);
 			expect(typeof app.inner.getNode === 'function').to.equal(true);
+		});
+	});
+
+	describe('Unsupported hidden internal __spread API', () => {
+		it('should work with multiple objects', () => {
+			const start = {};
+			const result = React.__spread(start, {one: 1, two: 3}, {two: 2});
+			expect(result).to.equal(start);
+			expect(start).to.deep.equal({ one: 1, two: 2});
+		});
+
+		it('should be exported on default and as __spread', () => {
+			expect(__spread).to.equal(React.__spread);
 		});
 	});
 });
