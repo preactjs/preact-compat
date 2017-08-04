@@ -137,7 +137,7 @@ function render(vnode, parent, callback) {
 	if (prev && prev.parentNode!==parent) prev = null;
 
 	// default to first Element child
-	if (!prev) prev = parent.children[0];
+	if (!prev && parent) prev = parent.firstElementChild;
 
 	// remove unaffected siblings
 	for (let i=parent.childNodes.length; i--; ) {
@@ -164,9 +164,10 @@ class ContextProvider {
 
 function renderSubtreeIntoContainer(parentComponent, vnode, container, callback) {
 	let wrap = h(ContextProvider, { context: parentComponent.context }, vnode);
-	let c = render(wrap, container);
-	if (callback) callback(c);
-	return c._component || c.base;
+	let renderContainer = render(wrap, container);
+	let component = renderContainer._component || renderContainer.base;
+	if (callback) callback.call(component, renderContainer);
+	return component;
 }
 
 
@@ -207,7 +208,7 @@ let Children = {
 	},
 	toArray(children) {
 		if (children == null) return [];
-		return Array.isArray && Array.isArray(children) ? children : ARR.concat(children);
+		return ARR.concat(children);
 	}
 };
 
@@ -506,7 +507,7 @@ function propsHook(props, context) {
 
 	// React annoyingly special-cases single children, and some react components are ridiculously strict about this.
 	let c = props.children;
-	if (c && Array.isArray(c) && c.length===1) {
+	if (c && Array.isArray(c) && c.length===1 && (typeof c[0]==='string' || typeof c[0]==='function' || c[0] instanceof VNode)) {
 		props.children = c[0];
 
 		// but its totally still going to be an Array.

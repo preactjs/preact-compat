@@ -2,6 +2,7 @@
 
 [![NPM](http://img.shields.io/npm/v/preact-compat.svg?style=flat)](https://www.npmjs.org/package/preact-compat)
 [![travis-ci](https://travis-ci.org/developit/preact-compat.svg?branch=master)](https://travis-ci.org/developit/preact-compat)
+[![CDNJS](https://img.shields.io/cdnjs/v/preact-compat.svg)](https://cdnjs.com/libraries/preact-compat)
 
 
 This module is a compatibility layer that makes React-based modules work with [Preact], without any code changes.
