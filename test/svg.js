@@ -44,9 +44,10 @@ describe('svg', () => {
 		React.render((
 			<svg viewBox="0 0 100 100">
 				<text textAnchor="mid">foo</text>
+				<path vectorEffect="non-scaling-stroke" d="M0 0 L100 100" />
 			</svg>
 		), scratch);
 
-		expect(scratch.innerHTML).to.equal('<svg viewBox="0 0 100 100"><text text-anchor="mid">foo</text></svg>');
+		expect(scratch.innerHTML).to.equal('<svg viewBox="0 0 100 100"><text text-anchor="mid">foo</text><path vector-effect="non-scaling-stroke" d="M0 0 L100 100"></path></svg>');
 	});
 });
