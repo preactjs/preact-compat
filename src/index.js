@@ -358,12 +358,18 @@ function applyEventNormalization({ nodeName, attributes }) {
 }
 
 
-function applyClassName({ attributes }) {
-	if (!attributes) return;
-	let cl = attributes.className || attributes.class;
-	if (cl) attributes.className = cl;
+function applyClassName(vnode) {
+	let a = vnode.attributes || (vnode.attributes = {});
+	if (a.className) a.class = a.className;
+	Object.defineProperty(a, 'className', classNameDescriptor);
 }
 
+
+let classNameDescriptor = {
+	configurable: true,
+	get() { return this.class; },
+	set(v) { this.class = v; }
+};
 
 function extend(base, props) {
 	for (let key in props) {
