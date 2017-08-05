@@ -361,6 +361,7 @@ function applyEventNormalization({ nodeName, attributes }) {
 
 function applyClassName(vnode) {
 	let a = vnode.attributes || (vnode.attributes = {});
+	classNameDescriptor.enumerable = 'className' in a;
 	if (a.className) a.class = a.className;
 	Object.defineProperty(a, 'className', classNameDescriptor);
 }
@@ -368,17 +369,13 @@ function applyClassName(vnode) {
 
 let classNameDescriptor = {
 	configurable: true,
-	enumerable: false,
 	get() { return this.class; },
 	set(v) { this.class = v; }
 };
 
 function extend(base, props) {
-	const extenders = [].slice.call(arguments, 1);
-	let obj;
-	while (extenders.length) {
-		obj = extenders.shift();
-		if (obj) {
+	for (let i=1, obj; i<arguments.length; i++) {
+		if ((obj = arguments[i])) {
 			for (let key in obj) {
 				if (obj.hasOwnProperty(key)) {
 					base[key] = obj[key];
