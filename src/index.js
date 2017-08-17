@@ -304,7 +304,7 @@ function cloneElement(element, props, ...children) {
 	let elementProps = element.attributes || element.props;
 	let node = h(
 		element.nodeName || element.type,
-		elementProps,
+		extend({}, elementProps),
 		element.children || elementProps && elementProps.children
 	);
 	// Only provide the 3rd argument if needed.
