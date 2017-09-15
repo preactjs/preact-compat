@@ -96,37 +96,26 @@ First, install it: `npm install --save-dev aliasify`
 
 ## Usage with Rollup
 
-Using `preact-compat` with rollup requires [rollup-plugin-alias](http://npm.im/rollup-plugin-alias), along with a few other plugins
+Using `preact-compat` with rollup requires [rollup-plugin-alias](http://npm.im/rollup-plugin-alias)
 
-First, install it: `npm install --save-dev rollup-plugin-alias rollup-plugin-buble rollup-plugin-commonjs rollup-plugin-node-resolve rollup-plugin-replace`
+First, install it: `npm install --save-dev rollup-plugin-alias`
 
-... then in your `rollup.config.js`, configure the alias plugin to point to `react` and `react-dom`, along with the rest of the plugins:
+... then in your `rollup.config.js`, configure the alias plugin to point to `react`, `react-dom`, and optionally `create-react-class`, along with the rest of the plugins:
 
 ```js
+import path from "path";
 import alias from "rollup-plugin-alias";
-import buble from "rollup-plugin-buble";
-import resolve from "rollup-plugin-node-resolve";
-import replace from "rollup-plugin-replace";
-import commonjs from "rollup-plugin-commonjs";
 // ...
 
 export default {
     // ...
     plugins: [
         // ...
-        resolve({
-            jsnext: true // preact
-        }),
         alias({
-            "react": "node_modules/preact-compat/dist/preact-compat.es.js",
-            "react-dom": "node_modules/preact-compat/dist/preact-compat.es.js",
-            "create-react-class": "node_modules/preact-compat/lib/create-react-class.js"
+            "react": path.resolve(__dirname, "node_modules", "preact-compat", "dist", "preact-compat.es.js"),
+            "react-dom": path.resolve(__dirname, "node_modules", "preact-compat", "dist", "preact-compat.es.js"),
+            "create-react-class": path.resolve(__dirname, "node_modules", "preact-compat", "lib", "create-react-class.js")
         }),
-        commonjs(), // prop-types
-        replace({
-            "process.env.NODE_ENV": JSON.stringify("development") // prop-types
-        }),
-        buble() // es6
     // ...
 }
 ```
