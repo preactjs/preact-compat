@@ -96,6 +96,9 @@ options.vnode = vnode => {
 				delete attrs.defaultValue;
 			}
 
+			if (!vnode.preactCompatNormalized) {
+				normalizeVNode(vnode);
+			}
 			handleElementVNode(vnode, attrs);
 		}
 	}
