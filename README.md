@@ -158,7 +158,7 @@ render((
 
 ```html
 <script src="//unpkg.com/preact"></script>
-<script src="//unpkg.com/prop-types"></script>
+<script src="//unpkg.com/prop-types/prop-types.min.js"></script>
 <script src="//unpkg.com/preact-compat"></script>
 <script>
     var React = preactCompat,
