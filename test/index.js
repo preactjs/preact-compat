@@ -249,7 +249,9 @@ describe('preact-compat', () => {
 
 		it('should support props.children', () => {
 			let element = <foo children={<span>b</span>}></foo>;
-			expect(cloneElement(element)).to.eql(element);
+			let clone = cloneElement(element);
+			expect(clone).to.eql(element);
+			expect(cloneElement(clone).props.children).to.eql(element.props.children);
 		});
 
 		it('children take precedence over props.children', () => {
