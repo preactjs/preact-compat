@@ -292,6 +292,25 @@ describe('components', () => {
 				});
 			});
 
+			it('should work with statics', () => {
+				const Foo = React.createClass({
+					statics: {
+						a: false
+					},
+					getDefaultProps() {
+						return { b: true, c: this.a };
+					},
+					render() {
+						return <div />;
+					}
+				});
+
+				expect(Foo.defaultProps).to.eql({
+					b: true,
+					c: false
+				});
+			});
+
 			// Disabled to save bytes
 			xit('should throw an error for duplicate keys', () => {
 				expect(() => {

@@ -424,7 +424,7 @@ function createClass(obj) {
 		cl.defaultProps = obj.defaultProps;
 	}
 	if (obj.getDefaultProps) {
-		cl.defaultProps = obj.getDefaultProps();
+		cl.defaultProps = obj.getDefaultProps.call(cl);
 	}
 
 	F.prototype = Component.prototype;
