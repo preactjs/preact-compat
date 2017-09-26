@@ -3,6 +3,7 @@ import React, {
 	createClass,
 	createElement,
 	cloneElement,
+	findDOMNode,
 	Component,
 	PropTypes,
 	unstable_renderSubtreeIntoContainer,
@@ -281,6 +282,41 @@ describe('preact-compat', () => {
 			let childrenA = [<span>b</span>];
 			let clone = cloneElement(element, { children: childrenA }, undefined);
 			expect(clone.children).to.eql(undefined);
+		});
+	});
+
+	describe('findDOMNode()', () => {
+		class Helper extends React.Component {
+			render({something}) {
+				if (something == null) return null;
+				if (something === false) return null;
+				return <div></div>;
+			}
+		}
+
+		it('should return DOM Node if render is not false nor null', () => {
+			let scratch = document.createElement('div');
+			(document.body || document.documentElement).appendChild(scratch);
+			const helper = React.render(<Helper />, scratch);
+			expect(findDOMNode(helper)).to.be.instanceof(Node);
+		});
+
+		// NOTE: React.render() returning false or null has the component pointing
+		// 			to no DOM Node, in contrast, Preact always render an empty Text DOM Node.
+		xit('should return null if render returns false', () => {
+			let scratch = document.createElement('div');
+			(document.body || document.documentElement).appendChild(scratch);
+			const helper = React.render(<Helper something={false} />, scratch);
+			expect(findDOMNode(helper)).to.be.null;
+		});
+
+		// NOTE: React.render() returning false or null has the component pointing
+		// 			to no DOM Node, in contrast, Preact always render an empty Text DOM Node.
+		xit('should return null if render returns null', () => {
+			let scratch = document.createElement('div');
+			(document.body || document.documentElement).appendChild(scratch);
+			const helper = React.render(<Helper something={null} />, scratch);
+			expect(findDOMNode(helper)).to.be.null;
 		});
 	});
 

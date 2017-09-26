@@ -395,7 +395,7 @@ function shallowDiffers(a, b) {
 
 
 function findDOMNode(component) {
-	return component && component.base || component;
+	return component && component.base || null;
 }
 
 
