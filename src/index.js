@@ -218,7 +218,7 @@ let currentComponent;
 
 
 function createFactory(type) {
-	return createElement.bind(null, type);
+	return (...args) => createElement(type, ...args);
 }
 
 
