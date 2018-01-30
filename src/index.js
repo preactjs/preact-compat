@@ -72,7 +72,7 @@ options.vnode = vnode => {
 		vnode.preactCompatUpgraded = true;
 
 		let tag = vnode.nodeName,
-			attrs = vnode.attributes = extend({}, vnode.attributes);
+			attrs = vnode.attributes = vnode.attributes==null ? {} : extend({}, vnode.attributes);
 
 		if (typeof tag==='function') {
 			if (tag[COMPONENT_WRAPPER_KEY]===true || (tag.prototype && 'isReactComponent' in tag.prototype)) {
