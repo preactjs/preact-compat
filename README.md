@@ -106,7 +106,6 @@ All you have to do is tell babel to process jsx with 'h' and add an alias for `r
 {
     // ...
     "plugins": [
-        ["transform-react-jsx", { "pragma":"h" }],
         ["module-resolver", {
         "root": ["."],
         "alias": {
