@@ -116,6 +116,22 @@ describe('components', () => {
 		});
 	});
 
+	it('should support array[object] children', () => {
+		let children;
+
+		class Foo extends React.Component {
+			render() {
+				children = this.props.children;
+				return <div />;
+			}
+		}
+
+		const data = [{a: ''}];
+		React.render(<Foo>{ data }</Foo>, scratch);
+
+		expect(children).to.exist.and.deep.equal(data);
+	});
+
 	describe('getInitialState', () => {
 		it('should be invoked for new components', () => {
 			class Foo extends React.Component {
@@ -173,13 +189,13 @@ describe('components', () => {
 	});
 
 	describe('propTypes', () => {
-		function checkPropTypes(Foo) {
+		function checkPropTypes(Foo, name = 'Foo') {
 			sinon.stub(console, 'error');
-
 			React.render(<Foo />, scratch);
-			expect(console.error).to.have.been.calledWithMatch({
-				message: 'Required prop `func` was not specified in `Foo`.'
-			});
+			expect(console.error).to.have.been.calledWithMatch(
+				'Warning: Failed prop type: The prop `func` is marked as required in `' + name + '`, but its value is `undefined`.'
+			);
+			expect(console.error).to.have.been.called;
 
 			console.error.reset();
 
@@ -187,9 +203,9 @@ describe('components', () => {
 			expect(console.error).not.to.have.been.called;
 
 			React.render(<Foo func={()=>{}} bool="one" />, scratch);
-			expect(console.error).to.have.been.calledWithMatch({
-				message: 'Invalid prop `bool` of type `string` supplied to `Foo`, expected `boolean`.'
-			});
+			expect(console.error).to.have.been.calledWithMatch(
+				'Warning: Failed prop type: Invalid prop `bool` of type `string` supplied to `' + name + '`, expected `boolean`.'
+			);
 
 			console.error.restore();
 		}
@@ -209,7 +225,7 @@ describe('components', () => {
 		});
 
 		it('should support propTypes for createClass components', () => {
-			const Foo = React.createClass({
+			const Bar = React.createClass({
 				propTypes: {
 					func: React.PropTypes.func.isRequired,
 					bool: React.PropTypes.bool
@@ -217,24 +233,24 @@ describe('components', () => {
 				render: () => <div />
 			});
 
-			checkPropTypes(Foo);
+			checkPropTypes(Bar, 'Bar');
 		});
 
 		it('should support propTypes for pure components', () => {
-			function Foo() { return <div />; }
-			Foo.propTypes = {
+			function Baz() { return <div />; }
+			Baz.propTypes = {
 				func: React.PropTypes.func.isRequired,
 				bool: React.PropTypes.bool
 			};
-			checkPropTypes(Foo);
+			checkPropTypes(Baz, 'Baz');
 
-			const Foo2 = () => <div />;
-			Foo2.displayName = 'Foo';
-			Foo2.propTypes = {
+			const Bip = () => <div />;
+			Bip.displayName = 'Bip';
+			Bip.propTypes = {
 				func: React.PropTypes.func.isRequired,
 				bool: React.PropTypes.bool
 			};
-			checkPropTypes(Foo2);
+			checkPropTypes(Bip, 'Bip');
 		});
 	});
 
@@ -276,7 +292,27 @@ describe('components', () => {
 				});
 			});
 
-			it('should throw an error for duplicate keys', () => {
+			it('should work with statics', () => {
+				const Foo = React.createClass({
+					statics: {
+						a: false
+					},
+					getDefaultProps() {
+						return { b: true, c: this.a };
+					},
+					render() {
+						return <div />;
+					}
+				});
+
+				expect(Foo.defaultProps).to.eql({
+					b: true,
+					c: false
+				});
+			});
+
+			// Disabled to save bytes
+			xit('should throw an error for duplicate keys', () => {
 				expect(() => {
 					const Foo = React.createClass({
 						mixins: [
@@ -317,7 +353,8 @@ describe('components', () => {
 				});
 			});
 
-			it('should throw an error for duplicate keys', () => {
+			// Disabled to save bytes
+			xit('should throw an error for duplicate keys', () => {
 				const Foo = React.createClass({
 					mixins: [
 						{ getInitialState: () => ({ a: true }) }

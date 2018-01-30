@@ -2,6 +2,7 @@
 
 [![NPM](http://img.shields.io/npm/v/preact-compat.svg?style=flat)](https://www.npmjs.org/package/preact-compat)
 [![travis-ci](https://travis-ci.org/developit/preact-compat.svg?branch=master)](https://travis-ci.org/developit/preact-compat)
+[![CDNJS](https://img.shields.io/cdnjs/v/preact-compat.svg)](https://cdnjs.com/libraries/preact-compat)
 
 
 This module is a compatibility layer that makes React-based modules work with [Preact], without any code changes.
@@ -60,7 +61,9 @@ All you have to do is add an alias for `react` and `react-dom`:
     resolve: {
         alias: {
             'react': 'preact-compat',
-            'react-dom': 'preact-compat'
+            'react-dom': 'preact-compat',
+            // Not necessary unless you consume a module using `createClass`
+            'create-react-class': 'preact-compat/lib/create-react-class'
         }
     }
     // ...
@@ -82,7 +85,9 @@ First, install it: `npm install --save-dev aliasify`
     "aliasify": {
         "aliases": {
             "react": "preact-compat",
-            "react-dom": "preact-compat"
+            "react-dom": "preact-compat",
+            // Not necessary unless you consume a module using `createClass`
+            "create-react-class": "preact-compat/lib/create-react-class"
         }
     }
     // ...
@@ -101,12 +106,13 @@ All you have to do is tell babel to process jsx with 'h' and add an alias for `r
 {
     // ...
     "plugins": [
-        ["transform-react-jsx", { "pragma":"h" }],
         ["module-resolver", {
         "root": ["."],
         "alias": {
             "react": "preact-compat",
-            "react-dom": "preact-compat"
+            "react-dom": "preact-compat",
+            // Not necessary unless you consume a module using `createClass`
+            "create-react-class": "preact-compat/lib/create-react-class"
         }
         }]
     ],
@@ -115,6 +121,24 @@ All you have to do is tell babel to process jsx with 'h' and add an alias for `r
     ]
     // ...
 }
+```
+
+## Usage with Brunch
+
+Using `preact-compat` with Brunch requires no extra plugins.
+
+In your `brunch-config.js` you can export an [`npm` object](http://brunch.io/docs/config#-npm-) to configure aliases:
+
+```js
+// ...
+exports.npm = {
+  enabled: true,
+  aliases: {
+    'react': 'preact-compat',
+    'react-dom': 'preact-compat'
+  }
+}
+// ...
 ```
 
 
@@ -147,11 +171,11 @@ render((
 
 ## Use Without Webpack/Browserify
 
-`preact-compat` and its single dependency [`proptypes`](https://git.io/proptypes) are both published as UMD modules as of `preact-compat` version `0.6`. This means you can use them via a `<script>` tag without issue:
+`preact-compat` and its single dependency [`prop-types`](https://github.com/reactjs/prop-types) are both published as UMD modules as of `preact-compat` version `0.6`. This means you can use them via a `<script>` tag without issue:
 
 ```html
 <script src="//unpkg.com/preact"></script>
-<script src="//unpkg.com/proptypes"></script>
+<script src="//unpkg.com/prop-types/prop-types.min.js"></script>
 <script src="//unpkg.com/preact-compat"></script>
 <script>
     var React = preactCompat,
@@ -168,7 +192,7 @@ You can see the above in action with this [JSFiddle Example](https://jsfiddle.ne
 
 ### PropTypes
 
-`preact-compat` adds support for validating PropTypes out of the box. This can be disabled the same way it is when using React, by defining a global `process.env.NODE_ENV='production'`.  PropType errors should work the same as in React - the [`proptypes`](https://git.io/proptypes) module used here is extracted verbatim from the React source into a standalone module.
+`preact-compat` adds support for validating PropTypes out of the box. This can be disabled the same way it is when using React, by defining a global `process.env.NODE_ENV='production'`.  PropType errors should work the same as in React - the [`prop-types`](https://github.com/reactjs/prop-types) module used here is published by the React team to replace PropTypes in React.
 
 <img src="http://i.imgur.com/tGT7Dvw.png" width="650" alt="PropType validation example output" />
 

@@ -1,4 +1,3 @@
-import path from 'path';
 import fs from 'fs';
 import memory from 'rollup-plugin-memory';
 import buble from 'rollup-plugin-buble';
@@ -9,25 +8,29 @@ let pkg = JSON.parse(fs.readFileSync('./package.json'));
 
 let external = Object.keys(pkg.peerDependencies || {}).concat(Object.keys(pkg.dependencies || {}));
 
+let format = process.env.FORMAT==='es' ? 'es' : 'umd';
+
 export default {
 	entry: 'src/index.js',
-	dest: pkg.main,
-	sourceMap: path.resolve(pkg.main),
+	sourceMap: true,
 	moduleName: pkg.amdName,
-	format: 'umd',
-	exports: 'default',
-	useStrict: false,
+	exports: format==='es' ? null : 'default',
+	dest: format==='es' ? pkg.module : pkg.main,
+	format,
 	external,
+	useStrict: false,
 	globals: {
-		'preact-svg': 'preactSvg'
+		'preact': 'preact',
+		'prop-types': 'PropTypes'
 	},
 	plugins: [
-		memory({
+		format==='umd' && memory({
 			path: 'src/index.js',
 			contents: "export { default } from './index';"
 		}),
 		buble({
-			objectAssign: 'extend'
+			objectAssign: 'extend',
+			namedFunctionExpressions: false
 		}),
 		nodeResolve({
 			jsnext: true,
@@ -38,5 +41,5 @@ export default {
 			include: 'node_modules/**',
 			exclude: '**/*.css'
 		})
-	]
+	].filter(Boolean)
 };

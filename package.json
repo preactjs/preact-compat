@@ -1,23 +1,24 @@
 {
   "name": "preact-compat",
   "amdName": "preactCompat",
-  "version": "3.11.0",
+  "version": "3.18.0",
   "description": "A React compatibility layer for Preact",
   "main": "dist/preact-compat.js",
   "minified:main": "dist/preact-compat.min.js",
-  "jsnext:main": "src/index.js",
-  "module": "src/index.js",
+  "jsnext:main": "dist/preact-compat.es.js",
+  "module": "dist/preact-compat.es.js",
   "scripts": {
-    "build": "npm-run-all transpile minify size",
-    "transpile": "rollup -c rollup.config.js",
-    "minify": "uglifyjs $npm_package_main -c dead_code,evaluate -m -o $npm_package_minified_main -p relative --in-source-map ${npm_package_main}.map --source-map ${npm_package_minified_main}.map",
-    "size": "echo \"gzip size: $(gzip-size $npm_package_minified_main | pretty-bytes)\"",
+    "build": "npm-run-all transpile:* minify size",
+    "transpile:umd": "rollup -c --environment FORMAT:umd",
+    "transpile:es": "rollup -c --environment FORMAT:es",
+    "minify": "cross-var cross-env uglifyjs $npm_package_main -c dead_code,evaluate -m -o $npm_package_minified_main -p relative --in-source-map ${npm_package_main}.map --source-map ${npm_package_minified_main}.map",
+    "size": "printf \"gzip size: \" && cross-var cross-env gzip-size $npm_package_minified_main | pretty-bytes",
     "test": "npm-run-all lint build test:karma",
-    "lint": "eslint {src,test}",
+    "lint": "eslint src test",
     "test:karma": "karma start --single-run",
     "test:watch": "karma start",
     "prepublish": "npm-run-all build test",
-    "release": "npm run -s build && git commit -am $npm_package_version && git tag $npm_package_version && git push && git push --tags && npm publish"
+    "release": "cross-var npm run -s build && git commit -am $npm_package_version && git tag $npm_package_version && git push --follow-tags && npm publish"
   },
   "keywords": [
     "preact",
@@ -43,6 +44,8 @@
     "babel-preset-react": "^6.11.1",
     "babel-preset-stage-0": "^6.5.0",
     "chai": "^3.5.0",
+    "cross-env": "^4.0.0",
+    "cross-var": "^1.0.3",
     "diff": "^3.0.0",
     "es5-shim": "^4.5.9",
     "eslint": "^3.4.0",
@@ -60,13 +63,13 @@
     "mocha": "^3.0.1",
     "npm-run-all": "^3.1.0",
     "phantomjs-prebuilt": "^2.1.10",
-    "preact": "^7.1.0",
+    "preact": "^8.1.0",
     "preact-jsx-chai": "^2.2.1",
     "pretty-bytes-cli": "^1.0.0",
     "rollup": "^0.41.1",
     "rollup-plugin-babel": "^2.6.1",
-    "rollup-plugin-buble": "^0.13.0",
-    "rollup-plugin-commonjs": "^4.1.0",
+    "rollup-plugin-buble": "^0.15.0",
+    "rollup-plugin-commonjs": "^7.0.0",
     "rollup-plugin-memory": "^2.0.0",
     "rollup-plugin-node-resolve": "^2.0.0",
     "sinon": "^1.17.5",
@@ -78,9 +81,10 @@
     "preact": ">=5"
   },
   "dependencies": {
-    "preact-render-to-string": "^3.2.1",
+    "immutability-helper": "^2.1.2",
+    "preact-render-to-string": "^3.6.0",
     "preact-transition-group": "^1.1.0",
-    "proptypes": "^0.14.3",
+    "prop-types": "^15.5.8",
     "standalone-react-addons-pure-render-mixin": "^0.1.1"
   }
 }
