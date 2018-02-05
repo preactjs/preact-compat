@@ -180,26 +180,113 @@ function unmountComponentAtNode(container) {
 	return false;
 }
 
+/**  Children Helpers **/
+
+const KEY_SEPARATOR = '.';
+const KEY_SUBSEPARATOR = ':';
+const ESCAPE_REGEX = /[=:]/g;
+const ESCAPER_LOOKUP = {
+	'=': '=0',
+	':': '=2'
+};
+const USER_KEY_ESCAPE_REGEX = /\/+/g;
+
+function escapeUserProvidedKey(text) {
+	return ('' + text).replace(USER_KEY_ESCAPE_REGEX, '$&/');
+}
+
+function getKey(component, i) {
+	if (typeof component === 'object' && component != null && component.key) {
+		return '$' + ('' + component.key).replace(ESCAPE_REGEX, (match) => ESCAPER_LOOKUP[match]);
+	}
+
+	return String(i);
+}
+
+function cloneAndReplaceKey(oldElement, newKey) {
+	return;
+}
+
+function iterateChildren(children, callback, name) {
+	let type = typeof children;
+
+	if (type === 'undefined' || type === 'boolean') {
+		children = null;
+	}
+
+	if (children === null || type === 'string' || type === 'number' || type === 'object' && children.$$typeof === REACT_ELEMENT_TYPE) {
+		return callback(children, name === '' ? KEY_SEPARATOR + getKey(children, 0) : name);
+	}
+
+	let child;
+	let nextName;
+	let nextNamePrefix = name === '' ? KEY_SEPARATOR : name + KEY_SUBSEPARATOR;
+
+	if (Array.isArray(children)) {
+		for (let i = 0; i < children.length; i++) {
+			child = children[i];
+			nextName = nextNamePrefix + getKey(child, i);
+			iterateChildren(child, callback, nextName);
+		}
+	}
+	else if (type === 'object'){
+		throw new Error('can not iterate over object children');
+	}
+}
 
 
-const ARR = [];
+function identity (el) {
+	return el;
+}
 
-// This API is completely unnecessary for Preact, so it's basically passthrough.
+function mapChildren (children, fn, result, prefix, count, ctx) {
+	if (children == null) {
+		return children;
+	}
+
+	iterateChildren(children, (child, childKey) => {
+		let mappedChild = fn.call(ctx, child, count++);
+
+		if (Array.isArray(mappedChild)) {
+			mapChildren(mappedChild, fn, result, childKey, count, ctx);
+		}
+		else if (mappedChild) {
+			if (isValidElement(mappedChild)) {
+				const newKey = prefix + (mappedChild.key && (!child || child.key !== mappedChild.key) ? escapeUserProvidedKey(mappedChild.key) + '/' : '') + childKey;
+				result.push(cloneElement(mappedChild, {key: newKey}));
+			}
+			else {
+				result.push(mappedChild);
+			}
+		}
+	}, prefix);
+}
+
+// This API is completely unnecessary for Preact,
+// but a lot of libraries rely on it to function properly.
 let Children = {
 	map(children, fn, ctx) {
-		if (children == null) return null;
-		children = Children.toArray(children);
-		if (ctx && ctx!==children) fn = fn.bind(ctx);
-		return children.map(fn);
+		let res = [];
+		if (children == null) {
+			return res;
+		}
+
+		mapChildren(children, fn, res, '', 0, ctx);
+
+		return res;
 	},
 	forEach(children, fn, ctx) {
-		if (children == null) return null;
-		children = Children.toArray(children);
-		if (ctx && ctx!==children) fn = fn.bind(ctx);
-		children.forEach(fn);
+		if (children == null) {
+			return children;
+		}
+		mapChildren(children, fn, [], '', 0, ctx);
 	},
 	count(children) {
-		return children && children.length || 0;
+		let count = 0;
+		Children.forEach(children, () => {
+			count++;
+		});
+		return count;
 	},
 	only(children) {
 		children = Children.toArray(children);
@@ -207,11 +294,13 @@ let Children = {
 		return children[0];
 	},
 	toArray(children) {
-		if (children == null) return [];
-		return ARR.concat(children);
+		let res = [];
+
+		mapChildren(children, identity, res, '', 0, null);
+
+		return res;
 	}
 };
-
 
 /** Track current render() component for ref assignment */
 let currentComponent;
@@ -450,6 +539,7 @@ function collateMixins(mixins) {
 	return keyed;
 }
 
+const ARR = [];
 
 // apply a mapping of Arrays of mixin methods to a component prototype
 function applyMixins(proto, mixins) {

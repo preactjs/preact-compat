@@ -64,9 +64,9 @@ describe('preact-compat', () => {
 
 			render(<div>dynamic content</div>, root);
 			expect(root)
-			.to.have.property('textContent')
-			.that.is.a('string')
-			.that.equals('dynamic content');
+			  .to.have.property('textContent')
+			  .that.is.a('string')
+			  .that.equals('dynamic content');
 		});
 
 		it('should support defaultValue', () => {
@@ -165,7 +165,7 @@ describe('preact-compat', () => {
 			expect(def.mixins[1].bar).to.have.been.calledOnce.and.calledAfter(def.mixins[0].bar);
 
 			let props = {},
-				state = {};
+				  state = {};
 			inst.componentWillMount(props, state);
 			expect(def.mixins[1].componentWillMount)
 				.to.have.been.calledOnce
@@ -190,7 +190,7 @@ describe('preact-compat', () => {
 		it('should normalize vnodes', () => {
 			let vnode = <div a="b"><a>t</a></div>;
 			// using typeof Symbol here injects a polyfill, which ruins the test. we'll hardcode the non-symbol value for now.
-			let $$typeof = 0xeac7;
+			  let $$typeof = 0xeac7;
 			expect(vnode).to.have.property('$$typeof', $$typeof);
 			expect(vnode).to.have.property('type', 'div');
 			expect(vnode).to.have.property('props').that.is.an('object');
