@@ -185,12 +185,26 @@ function unmountComponentAtNode(container) {
 const ARR = [];
 
 // This API is completely unnecessary for Preact, so it's basically passthrough.
+
 let Children = {
 	map(children, fn, ctx) {
 		if (children == null) return null;
 		children = Children.toArray(children);
 		if (ctx && ctx!==children) fn = fn.bind(ctx);
-		return children.map(fn);
+		const newChildren = [];
+
+		children.forEach((old, index) => {
+			if (old === void 0 || old === false || old === true) {
+				old = null;
+			}
+			const newChild = fn(old, index);
+			if (newChild == null) { // when the return value is null, ignore
+				return;
+			}
+			newChildren.push(newChild);
+		});
+
+		return newChildren;
 	},
 	forEach(children, fn, ctx) {
 		if (children == null) return null;
@@ -592,7 +606,7 @@ PureComponent.prototype.shouldComponentUpdate = function(props, state) {
 };
 
 function unstable_batchedUpdates(callback) {
-  callback();
+	callback();
 }
 
 export {
