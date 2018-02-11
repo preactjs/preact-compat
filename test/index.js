@@ -64,9 +64,9 @@ describe('preact-compat', () => {
 
 			render(<div>dynamic content</div>, root);
 			expect(root)
-			.to.have.property('textContent')
-			.that.is.a('string')
-			.that.equals('dynamic content');
+				.to.have.property('textContent')
+				.that.is.a('string')
+				.that.equals('dynamic content');
 		});
 
 		it('should support defaultValue', () => {
@@ -194,7 +194,7 @@ describe('preact-compat', () => {
 			expect(vnode).to.have.property('$$typeof', $$typeof);
 			expect(vnode).to.have.property('type', 'div');
 			expect(vnode).to.have.property('props').that.is.an('object');
-			expect(vnode).to.have.deep.property('props.children[0]');
+			expect(vnode.props).to.have.property('children');
 			expect(vnode.props.children[0]).to.have.property('$$typeof', $$typeof);
 			expect(vnode.props.children[0]).to.have.property('type', 'a');
 			expect(vnode.props.children[0]).to.have.property('props').that.is.an('object');

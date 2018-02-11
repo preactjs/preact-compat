@@ -592,7 +592,7 @@ PureComponent.prototype.shouldComponentUpdate = function(props, state) {
 };
 
 function unstable_batchedUpdates(callback) {
-  callback();
+	callback();
 }
 
 export {
