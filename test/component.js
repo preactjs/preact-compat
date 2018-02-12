@@ -90,7 +90,6 @@ describe('components', () => {
 				{ children }
 			</Foo>
 		), scratch);
-		console.log(foo);
 		expect(foo.props).to.exist.and.have.property('children').eql(children);
 	});
 
