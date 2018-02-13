@@ -90,8 +90,7 @@ describe('components', () => {
 				{ children }
 			</Foo>
 		), scratch);
-
-		expect(foo).to.exist.and.have.deep.property('props.children').eql(children);
+		expect(foo.props).to.exist.and.have.property('children').eql(children);
 	});
 
 	it('should single out children before componentWillReceiveProps', () => {

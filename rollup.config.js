@@ -11,18 +11,20 @@ let external = Object.keys(pkg.peerDependencies || {}).concat(Object.keys(pkg.de
 let format = process.env.FORMAT==='es' ? 'es' : 'umd';
 
 export default {
-	entry: 'src/index.js',
-	sourceMap: true,
-	moduleName: pkg.amdName,
-	exports: format==='es' ? null : 'default',
-	dest: format==='es' ? pkg.module : pkg.main,
-	format,
-	external,
-	useStrict: false,
-	globals: {
-		'preact': 'preact',
-		'prop-types': 'PropTypes'
+	input: 'src/index.js',
+	output: {
+		name: pkg.amdName,
+		exports: format==='es' ? null : 'default',
+		file: format==='es' ? pkg.module : pkg.main,
+		format,
+		globals: {
+			'preact': 'preact',
+			'prop-types': 'PropTypes'
+		},
+		sourcemap: true
 	},
+	external,
+	strict: false,
 	plugins: [
 		format==='umd' && memory({
 			path: 'src/index.js',
@@ -34,8 +36,7 @@ export default {
 		}),
 		nodeResolve({
 			jsnext: true,
-			main: true,
-			skip: external
+			main: true
 		}),
 		commonjs({
 			include: 'node_modules/**',
