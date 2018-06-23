@@ -218,9 +218,7 @@ let currentComponent;
 
 
 function createFactory(type) {
-	return function () {
-		return createElement.apply(type, arguments);
-	};
+	return (...args) => createElement(type, ...args);
 }
 
 
