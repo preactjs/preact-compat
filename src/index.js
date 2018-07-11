@@ -170,10 +170,8 @@ function renderSubtreeIntoContainer(parentComponent, vnode, container, callback)
 	return component;
 }
 
-class Portal {
-	render(props) {
-		renderSubtreeIntoContainer(this, props.vnode, props.container);
-	}
+function Portal(props) {
+	renderSubtreeIntoContainer(this, props.vnode, props.container);
 }
 
 function createPortal(vnode, container) {
