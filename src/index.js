@@ -170,6 +170,14 @@ function renderSubtreeIntoContainer(parentComponent, vnode, container, callback)
 	return component;
 }
 
+function Portal(props) {
+	renderSubtreeIntoContainer(this, props.vnode, props.container);
+}
+
+function createPortal(vnode, container) {
+	return h(Portal, { vnode, container });
+}
+
 
 function unmountComponentAtNode(container) {
 	let existing = container._preactCompatRendered && container._preactCompatRendered.base;
@@ -602,6 +610,7 @@ export {
 	Children,
 	render,
 	createClass,
+	createPortal,
 	createFactory,
 	createElement,
 	cloneElement,
@@ -622,6 +631,7 @@ export default {
 	Children,
 	render,
 	createClass,
+	createPortal,
 	createFactory,
 	createElement,
 	cloneElement,
