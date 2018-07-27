@@ -5,16 +5,16 @@ chai.use(assertJsx);
 describe('svg', () => {
 	let scratch;
 
-	before( () => {
+	before(() => {
 		scratch = document.createElement('div');
 		(document.body || document.documentElement).appendChild(scratch);
 	});
 
-	beforeEach( () => {
+	beforeEach(() => {
 		scratch.innerHTML = '';
 	});
 
-	after( () => {
+	after(() => {
 		scratch.parentNode.removeChild(scratch);
 		scratch = null;
 	});
@@ -49,5 +49,55 @@ describe('svg', () => {
 		), scratch);
 
 		expect(scratch.innerHTML).to.equal('<svg viewBox="0 0 100 100"><text text-anchor="mid">foo</text><path vector-effect="non-scaling-stroke" d="M0 0 L100 100"></path></svg>');
+	});
+
+	it("should render SVG to DOM with camelCased textLength", () => {
+		React.render(
+			<svg viewBox="0 0 100 100">
+				<text textAnchor="mid" textLength="100px">
+					foo
+				</text>
+			</svg>,
+			scratch
+		);
+
+		expect(scratch.innerHTML).to.equal(
+			'<svg viewBox="0 0 100 100"><text text-anchor="mid" textLength="100px">foo</text></svg>'
+		);
+	});
+
+	it("should render SVG to DOM with camelCased clipPathUnits", () => {
+		React.render(
+			<svg viewBox="0 0 100 100">
+				<clipPath id="myClip1" clipPathUnits="userSpaceOnUse" />
+			</svg>,
+			scratch
+		);
+
+		expect(scratch.innerHTML).to.equal(
+			'<svg viewBox="0 0 100 100"><clipPath id="myClip1" clipPathUnits="userSpaceOnUse"></clipPath></svg>'
+		);
+	});
+
+	it("should render SVG to DOM with camelCased marker attributes", () => {
+		React.render(
+			<svg viewBox="0 0 100 100">
+				<marker
+					id="arrow"
+					viewBox="0 0 10 10"
+					refX="5"
+					refY="5"
+					markerUnits="strokeWidth"
+					markerWidth="6"
+					markerHeight="6"
+					orient="auto-start-reverse"
+				/>
+			</svg>,
+			scratch
+		);
+
+		expect(scratch.innerHTML).to.equal(
+			'<svg viewBox="0 0 100 100"><marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerUnits="strokeWidth" markerWidth="6" markerHeight="6" orient="auto-start-reverse"></marker></svg>'
+		);
 	});
 });

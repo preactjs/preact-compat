@@ -5,9 +5,9 @@ const version = '15.1.0'; // trick libraries to think we are react
 
 const ELEMENTS = 'a abbr address area article aside audio b base bdi bdo big blockquote body br button canvas caption cite code col colgroup data datalist dd del details dfn dialog div dl dt em embed fieldset figcaption figure footer form h1 h2 h3 h4 h5 h6 head header hgroup hr html i iframe img input ins kbd keygen label legend li link main map mark menu menuitem meta meter nav noscript object ol optgroup option output p param picture pre progress q rp rt ruby s samp script section select small source span strong style sub summary sup table tbody td textarea tfoot th thead time title tr track u ul var video wbr circle clipPath defs ellipse g image line linearGradient mask path pattern polygon polyline radialGradient rect stop svg text tspan'.split(' ');
 
-const REACT_ELEMENT_TYPE = (typeof Symbol!=='undefined' && Symbol.for && Symbol.for('react.element')) || 0xeac7;
+const REACT_ELEMENT_TYPE = (typeof Symbol !== 'undefined' && Symbol.for && Symbol.for('react.element')) || 0xeac7;
 
-const COMPONENT_WRAPPER_KEY = (typeof Symbol!=='undefined' && Symbol.for) ? Symbol.for('__preactCompatWrapper') : '__preactCompatWrapper';
+const COMPONENT_WRAPPER_KEY = (typeof Symbol !== 'undefined' && Symbol.for) ? Symbol.for('__preactCompatWrapper') : '__preactCompatWrapper';
 
 // don't autobind these methods since they already have guaranteed context.
 const AUTOBIND_BLACKLIST = {
@@ -24,13 +24,12 @@ const AUTOBIND_BLACKLIST = {
 };
 
 
-const CAMEL_PROPS = /^(?:accent|alignment|arabic|baseline|cap|clip|color|fill|flood|font|glyph|horiz|marker|overline|paint|stop|strikethrough|stroke|text|underline|unicode|units|v|vector|vert|word|writing|x)[A-Z]/;
-
+const CAMEL_PROPS = /^(?:accent|alignment|arabic|baseline|cap|clip(?!(PathUnits)$)|color|fill|flood|font|glyph(?!(Ref)$)|horiz|marker(?!(Height|Units|Width)$)|overline|paint|stop|strikethrough|stroke|text(?!(Length)$)|underline|unicode|units|v|vector|vert|word|writing|x(?!(ChannelSelector)$))[A-Z]/;
 
 const BYPASS_HOOK = {};
 
 /*global process*/
-const DEV = typeof process !== 'undefined' && process.env && process.env.NODE_ENV!=='production';
+const DEV = typeof process !== 'undefined' && process.env && process.env.NODE_ENV !== 'production';
 
 // a component that renders nothing. Used to replace components for unmountComponentAtNode.
 function EmptyComponent() { return null; }
@@ -46,13 +45,13 @@ VNode.prototype.preactCompatNormalized = false;
 Object.defineProperty(VNode.prototype, 'type', {
 	get() { return this.nodeName; },
 	set(v) { this.nodeName = v; },
-	configurable:true
+	configurable: true
 });
 
 Object.defineProperty(VNode.prototype, 'props', {
 	get() { return this.attributes; },
 	set(v) { this.attributes = v; },
-	configurable:true
+	configurable: true
 });
 
 
@@ -72,11 +71,11 @@ options.vnode = vnode => {
 		vnode.preactCompatUpgraded = true;
 
 		let tag = vnode.nodeName,
-			attrs = vnode.attributes = vnode.attributes==null ? {} : extend({}, vnode.attributes);
+			attrs = vnode.attributes = vnode.attributes == null ? {} : extend({}, vnode.attributes);
 
-		if (typeof tag==='function') {
-			if (tag[COMPONENT_WRAPPER_KEY]===true || (tag.prototype && 'isReactComponent' in tag.prototype)) {
-				if (vnode.children && String(vnode.children)==='') vnode.children = undefined;
+		if (typeof tag === 'function') {
+			if (tag[COMPONENT_WRAPPER_KEY] === true || (tag.prototype && 'isReactComponent' in tag.prototype)) {
+				if (vnode.children && String(vnode.children) === '') vnode.children = undefined;
 				if (vnode.children) attrs.children = vnode.children;
 
 				if (!vnode.preactCompatNormalized) {
@@ -86,11 +85,11 @@ options.vnode = vnode => {
 			}
 		}
 		else {
-			if (vnode.children && String(vnode.children)==='') vnode.children = undefined;
+			if (vnode.children && String(vnode.children) === '') vnode.children = undefined;
 			if (vnode.children) attrs.children = vnode.children;
 
 			if (attrs.defaultValue) {
-				if (!attrs.value && attrs.value!==0) {
+				if (!attrs.value && attrs.value !== 0) {
 					attrs.value = attrs.defaultValue;
 				}
 				delete attrs.defaultValue;
@@ -120,7 +119,7 @@ function handleElementVNode(vnode, a) {
 			attrs = vnode.attributes = {};
 			for (i in a) {
 				if (a.hasOwnProperty(i)) {
-					attrs[ CAMEL_PROPS.test(i) ? i.replace(/([A-Z0-9])/, '-$1').toLowerCase() : i ] = a[i];
+					attrs[CAMEL_PROPS.test(i) ? i.replace(/([A-Z0-9])/, '-$1').toLowerCase() : i] = a[i];
 				}
 			}
 		}
@@ -134,21 +133,21 @@ function render(vnode, parent, callback) {
 	let prev = parent && parent._preactCompatRendered && parent._preactCompatRendered.base;
 
 	// ignore impossible previous renders
-	if (prev && prev.parentNode!==parent) prev = null;
+	if (prev && prev.parentNode !== parent) prev = null;
 
 	// default to first Element child
 	if (!prev && parent) prev = parent.firstElementChild;
 
 	// remove unaffected siblings
-	for (let i=parent.childNodes.length; i--; ) {
-		if (parent.childNodes[i]!==prev) {
+	for (let i = parent.childNodes.length; i--;) {
+		if (parent.childNodes[i] !== prev) {
 			parent.removeChild(parent.childNodes[i]);
 		}
 	}
 
 	let out = preactRender(vnode, parent, prev);
 	if (parent) parent._preactCompatRendered = out && (out._component || { base: out });
-	if (typeof callback==='function') callback();
+	if (typeof callback === 'function') callback();
 	return out && out._component || out;
 }
 
@@ -181,7 +180,7 @@ function createPortal(vnode, container) {
 
 function unmountComponentAtNode(container) {
 	let existing = container._preactCompatRendered && container._preactCompatRendered.base;
-	if (existing && existing.parentNode===container) {
+	if (existing && existing.parentNode === container) {
 		preactRender(h(EmptyComponent), container, existing);
 		return true;
 	}
@@ -197,13 +196,13 @@ let Children = {
 	map(children, fn, ctx) {
 		if (children == null) return null;
 		children = Children.toArray(children);
-		if (ctx && ctx!==children) fn = fn.bind(ctx);
+		if (ctx && ctx !== children) fn = fn.bind(ctx);
 		return children.map(fn);
 	},
 	forEach(children, fn, ctx) {
 		if (children == null) return null;
 		children = Children.toArray(children);
-		if (ctx && ctx!==children) fn = fn.bind(ctx);
+		if (ctx && ctx !== children) fn = fn.bind(ctx);
 		children.forEach(fn);
 	},
 	count(children) {
@@ -211,7 +210,7 @@ let Children = {
 	},
 	only(children) {
 		children = Children.toArray(children);
-		if (children.length!==1) throw new Error('Children.only() expects only one child.');
+		if (children.length !== 1) throw new Error('Children.only() expects only one child.');
 		return children[0];
 	},
 	toArray(children) {
@@ -231,24 +230,24 @@ function createFactory(type) {
 
 
 let DOM = {};
-for (let i=ELEMENTS.length; i--; ) {
+for (let i = ELEMENTS.length; i--;) {
 	DOM[ELEMENTS[i]] = createFactory(ELEMENTS[i]);
 }
 
 function upgradeToVNodes(arr, offset) {
-	for (let i=offset || 0; i<arr.length; i++) {
+	for (let i = offset || 0; i < arr.length; i++) {
 		let obj = arr[i];
 		if (Array.isArray(obj)) {
 			upgradeToVNodes(obj);
 		}
-		else if (obj && typeof obj==='object' && !isValidElement(obj) && ((obj.props && obj.type) || (obj.attributes && obj.nodeName) || obj.children)) {
+		else if (obj && typeof obj === 'object' && !isValidElement(obj) && ((obj.props && obj.type) || (obj.attributes && obj.nodeName) || obj.children)) {
 			arr[i] = createElement(obj.type || obj.nodeName, obj.props || obj.attributes, obj.children);
 		}
 	}
 }
 
 function isStatelessComponent(c) {
-	return typeof c==='function' && !(c.prototype && c.prototype.render);
+	return typeof c === 'function' && !(c.prototype && c.prototype.render);
 }
 
 
@@ -265,16 +264,16 @@ function wrapStatelessComponent(WrappedComponent) {
 
 function statelessComponentHook(Ctor) {
 	let Wrapped = Ctor[COMPONENT_WRAPPER_KEY];
-	if (Wrapped) return Wrapped===true ? Ctor : Wrapped;
+	if (Wrapped) return Wrapped === true ? Ctor : Wrapped;
 
 	Wrapped = wrapStatelessComponent(Ctor);
 
-	Object.defineProperty(Wrapped, COMPONENT_WRAPPER_KEY, { configurable:true, value:true });
+	Object.defineProperty(Wrapped, COMPONENT_WRAPPER_KEY, { configurable: true, value: true });
 	Wrapped.displayName = Ctor.displayName;
 	Wrapped.propTypes = Ctor.propTypes;
 	Wrapped.defaultProps = Ctor.defaultProps;
 
-	Object.defineProperty(Ctor, COMPONENT_WRAPPER_KEY, { configurable:true, value:Wrapped });
+	Object.defineProperty(Ctor, COMPONENT_WRAPPER_KEY, { configurable: true, value: Wrapped });
 
 	return Wrapped;
 }
@@ -297,7 +296,7 @@ function normalizeVNode(vnode) {
 
 	let ref = vnode.attributes.ref,
 		type = ref && typeof ref;
-	if (currentComponent && (type==='string' || type==='number')) {
+	if (currentComponent && (type === 'string' || type === 'number')) {
 		vnode.attributes.ref = createStringRefProxy(ref, currentComponent);
 	}
 
@@ -329,7 +328,7 @@ function cloneElement(element, props, ...children) {
 
 
 function isValidElement(element) {
-	return element && ((element instanceof VNode) || element.$$typeof===REACT_ELEMENT_TYPE);
+	return element && ((element instanceof VNode) || element.$$typeof === REACT_ELEMENT_TYPE);
 }
 
 
@@ -337,7 +336,7 @@ function createStringRefProxy(name, component) {
 	return component._refProxies[name] || (component._refProxies[name] = resolved => {
 		if (component && component.refs) {
 			component.refs[name] = resolved;
-			if (resolved===null) {
+			if (resolved === null) {
 				delete component._refProxies[name];
 				component = null;
 			}
@@ -347,7 +346,7 @@ function createStringRefProxy(name, component) {
 
 
 function applyEventNormalization({ nodeName, attributes }) {
-	if (!attributes || typeof nodeName!=='string') return;
+	if (!attributes || typeof nodeName !== 'string') return;
 	let props = {};
 	for (let i in attributes) {
 		props[i.toLowerCase()] = i;
@@ -357,7 +356,7 @@ function applyEventNormalization({ nodeName, attributes }) {
 		delete attributes[props.ondoubleclick];
 	}
 	// for *textual inputs* (incl textarea), normalize `onChange` -> `onInput`:
-	if (props.onchange && (nodeName==='textarea' || (nodeName.toLowerCase()==='input' && !/^fil|che|rad/i.test(attributes.type)))) {
+	if (props.onchange && (nodeName === 'textarea' || (nodeName.toLowerCase() === 'input' && !/^fil|che|rad/i.test(attributes.type)))) {
 		let normalized = props.oninput || 'oninput';
 		if (!attributes[normalized]) {
 			attributes[normalized] = multihook([attributes[normalized], attributes[props.onchange]]);
@@ -382,7 +381,7 @@ let classNameDescriptor = {
 };
 
 function extend(base, props) {
-	for (let i=1, obj; i<arguments.length; i++) {
+	for (let i = 1, obj; i < arguments.length; i++) {
 		if ((obj = arguments[i])) {
 			for (let key in obj) {
 				if (obj.hasOwnProperty(key)) {
@@ -397,7 +396,7 @@ function extend(base, props) {
 
 function shallowDiffers(a, b) {
 	for (let i in a) if (!(i in b)) return true;
-	for (let i in b) if (a[i]!==b[i]) return true;
+	for (let i in b) if (a[i] !== b[i]) return true;
 	return false;
 }
 
@@ -407,7 +406,7 @@ function findDOMNode(component) {
 }
 
 
-function F(){}
+function F() { }
 
 function createClass(obj) {
 	function cl(props, context) {
@@ -447,11 +446,11 @@ function createClass(obj) {
 // Flatten an Array of mixins to a map of method name to mixin implementations
 function collateMixins(mixins) {
 	let keyed = {};
-	for (let i=0; i<mixins.length; i++) {
+	for (let i = 0; i < mixins.length; i++) {
 		let mixin = mixins[i];
 		for (let key in mixin) {
-			if (mixin.hasOwnProperty(key) && typeof mixin[key]==='function') {
-				(keyed[key] || (keyed[key]=[])).push(mixin[key]);
+			if (mixin.hasOwnProperty(key) && typeof mixin[key] === 'function') {
+				(keyed[key] || (keyed[key] = [])).push(mixin[key]);
 			}
 		}
 	}
@@ -464,7 +463,7 @@ function applyMixins(proto, mixins) {
 	for (let key in mixins) if (mixins.hasOwnProperty(key)) {
 		proto[key] = multihook(
 			mixins[key].concat(proto[key] || ARR),
-			key==='getDefaultProps' || key==='getInitialState' || key==='getChildContext'
+			key === 'getDefaultProps' || key === 'getInitialState' || key === 'getChildContext'
 		);
 	}
 }
@@ -473,7 +472,7 @@ function applyMixins(proto, mixins) {
 function bindAll(ctx) {
 	for (let i in ctx) {
 		let v = ctx[i];
-		if (typeof v==='function' && !v.__bound && !AUTOBIND_BLACKLIST.hasOwnProperty(i)) {
+		if (typeof v === 'function' && !v.__bound && !AUTOBIND_BLACKLIST.hasOwnProperty(i)) {
 			(ctx[i] = v.bind(ctx)).__bound = true;
 		}
 	}
@@ -481,27 +480,27 @@ function bindAll(ctx) {
 
 
 function callMethod(ctx, m, args) {
-	if (typeof m==='string') {
+	if (typeof m === 'string') {
 		m = ctx.constructor.prototype[m];
 	}
-	if (typeof m==='function') {
+	if (typeof m === 'function') {
 		return m.apply(ctx, args);
 	}
 }
 
 function multihook(hooks, skipDuplicates) {
-	return function() {
+	return function () {
 		let ret;
-		for (let i=0; i<hooks.length; i++) {
+		for (let i = 0; i < hooks.length; i++) {
 			let r = callMethod(this, hooks[i], arguments);
 
-			if (skipDuplicates && r!=null) {
+			if (skipDuplicates && r != null) {
 				if (!ret) ret = {};
 				for (let key in r) if (r.hasOwnProperty(key)) {
 					ret[key] = r[key];
 				}
 			}
-			else if (typeof r!=='undefined') ret = r;
+			else if (typeof r !== 'undefined') ret = r;
 		}
 		return ret;
 	};
@@ -520,11 +519,11 @@ function propsHook(props, context) {
 
 	// React annoyingly special-cases single children, and some react components are ridiculously strict about this.
 	let c = props.children;
-	if (c && Array.isArray(c) && c.length===1 && (typeof c[0]==='string' || typeof c[0]==='function' || c[0] instanceof VNode)) {
+	if (c && Array.isArray(c) && c.length === 1 && (typeof c[0] === 'string' || typeof c[0] === 'function' || c[0] instanceof VNode)) {
 		props.children = c[0];
 
 		// but its totally still going to be an Array.
-		if (props.children && typeof props.children==='object') {
+		if (props.children && typeof props.children === 'object') {
 			props.children.length = 1;
 			props.children[0] = props.children;
 		}
@@ -532,7 +531,7 @@ function propsHook(props, context) {
 
 	// add proptype checking
 	if (DEV) {
-		let ctor = typeof this==='function' ? this : this.constructor,
+		let ctor = typeof this === 'function' ? this : this.constructor,
 			propTypes = this.propTypes || ctor.propTypes;
 		const displayName = this.displayName || ctor.name;
 
@@ -548,7 +547,7 @@ function beforeRender(props) {
 }
 
 function afterRender() {
-	if (currentComponent===this) {
+	if (currentComponent === this) {
 		currentComponent = null;
 	}
 }
@@ -560,7 +559,7 @@ function Component(props, context, opts) {
 	this.state = this.getInitialState ? this.getInitialState() : {};
 	this.refs = {};
 	this._refProxies = {};
-	if (opts!==BYPASS_HOOK) {
+	if (opts !== BYPASS_HOOK) {
 		newComponentHook.call(this, props, context);
 	}
 }
@@ -595,7 +594,7 @@ function PureComponent(props, context) {
 F.prototype = Component.prototype;
 PureComponent.prototype = new F();
 PureComponent.prototype.isPureReactComponent = true;
-PureComponent.prototype.shouldComponentUpdate = function(props, state) {
+PureComponent.prototype.shouldComponentUpdate = function (props, state) {
 	return shallowDiffers(this.props, props) || shallowDiffers(this.state, state);
 };
 
