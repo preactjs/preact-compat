@@ -82,7 +82,7 @@
   },
   "dependencies": {
     "immutability-helper": "^2.1.2",
-    "preact-render-to-string": "^3.7.1",
+    "preact-render-to-string": "^3.7.2",
     "preact-transition-group": "^1.1.0",
     "prop-types": "^15.5.8",
     "standalone-react-addons-pure-render-mixin": "^0.1.1"
