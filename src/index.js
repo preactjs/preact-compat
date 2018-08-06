@@ -30,7 +30,7 @@ const CAMEL_PROPS = /^(?:accent|alignment|arabic|baseline|cap|clip|color|fill|fl
 const BYPASS_HOOK = {};
 
 /*global process*/
-const DEV = typeof process==='undefined' || !process.env || process.env.NODE_ENV!=='production';
+const DEV = typeof process !== 'undefined' && process.env && process.env.NODE_ENV!=='production';
 
 // a component that renders nothing. Used to replace components for unmountComponentAtNode.
 function EmptyComponent() { return null; }
@@ -168,6 +168,14 @@ function renderSubtreeIntoContainer(parentComponent, vnode, container, callback)
 	let component = renderContainer._component || renderContainer.base;
 	if (callback) callback.call(component, renderContainer);
 	return component;
+}
+
+function Portal(props) {
+	renderSubtreeIntoContainer(this, props.vnode, props.container);
+}
+
+function createPortal(vnode, container) {
+	return h(Portal, { vnode, container });
 }
 
 
@@ -602,6 +610,7 @@ export {
 	Children,
 	render,
 	createClass,
+	createPortal,
 	createFactory,
 	createElement,
 	cloneElement,
@@ -622,6 +631,7 @@ export default {
 	Children,
 	render,
 	createClass,
+	createPortal,
 	createFactory,
 	createElement,
 	cloneElement,
