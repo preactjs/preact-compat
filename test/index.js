@@ -189,8 +189,15 @@ describe('preact-compat', () => {
 
 		it('should normalize vnodes', () => {
 			let vnode = <div a="b"><a>t</a></div>;
-			// eslint-disable-next-line
-			let $$typeof = eval('Symbol.'+'for("react.element")') || 0xeac7;
+			let $$typeof = 0xeac7;
+			try {
+				// eslint-disable-next-line
+				if (Function.prototype.toString.call(eval('Sym'+'bol.for')).match(/\[native code\]/)) {
+					// eslint-disable-next-line
+					$$typeof = eval('Sym'+'bol.for("react.element")');
+				}
+			}
+			catch (e) {}
 			expect(vnode).to.have.property('$$typeof', $$typeof);
 			expect(vnode).to.have.property('type', 'div');
 			expect(vnode).to.have.property('props').that.is.an('object');
