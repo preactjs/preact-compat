@@ -53,6 +53,7 @@
     "karma": "^2.0.0",
     "karma-chai": "^0.1.0",
     "karma-chai-sinon": "^0.1.5",
+    "karma-chrome-launcher": "^2.2.0",
     "karma-mocha": "^1.1.1",
     "karma-mocha-reporter": "^2.2.5",
     "karma-phantomjs-launcher": "^1.0.4",
@@ -82,7 +83,6 @@
   },
   "dependencies": {
     "immutability-helper": "^2.7.1",
-    "karma-chrome-launcher": "^2.2.0",
     "preact-render-to-string": "^3.8.2",
     "preact-transition-group": "^1.1.1",
     "prop-types": "^15.6.2",
