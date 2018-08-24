@@ -2,8 +2,8 @@ import ReactTransitionEvents from '../../lib/ReactTransitionEvents';
 
 describe('ReactTransitionEvents', () => {
 	it('should export add and remove functions', () => {
-		expect(ReactTransitionEvents).to.have.property('addEndEventListener').that.is.a.function;
-		expect(ReactTransitionEvents).to.have.property('removeEndEventListener').that.is.a.function;
+		expect(ReactTransitionEvents).to.have.property('addEndEventListener').that.is.a('function');
+		expect(ReactTransitionEvents).to.have.property('removeEndEventListener').that.is.a('function');
 	});
 
 	it('should support transition events', done => {

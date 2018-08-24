@@ -403,7 +403,7 @@ function shallowDiffers(a, b) {
 
 
 function findDOMNode(component) {
-	return component && component.base || null;
+	return component && (component.base || component.nodeType === 1 && component) || null;
 }
 
 

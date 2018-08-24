@@ -3,7 +3,7 @@ import ReactFragment from '../../lib/ReactFragment';
 
 describe('ReactFragment', () => {
 	it('should export .create', () => {
-		expect(ReactFragment).to.have.property('create').that.is.a.function;
+		expect(ReactFragment).to.have.property('create').that.is.a('function');
 	});
 
 	it('should create .children from a keyed object', () => {

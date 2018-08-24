@@ -189,8 +189,15 @@ describe('preact-compat', () => {
 
 		it('should normalize vnodes', () => {
 			let vnode = <div a="b"><a>t</a></div>;
-			// using typeof Symbol here injects a polyfill, which ruins the test. we'll hardcode the non-symbol value for now.
 			let $$typeof = 0xeac7;
+			try {
+				// eslint-disable-next-line
+				if (Function.prototype.toString.call(eval('Sym'+'bol.for')).match(/\[native code\]/)) {
+					// eslint-disable-next-line
+					$$typeof = eval('Sym'+'bol.for("react.element")');
+				}
+			}
+			catch (e) {}
 			expect(vnode).to.have.property('$$typeof', $$typeof);
 			expect(vnode).to.have.property('type', 'div');
 			expect(vnode).to.have.property('props').that.is.an('object');
@@ -300,6 +307,15 @@ describe('preact-compat', () => {
 			const helper = React.render(<Helper />, scratch);
 			expect(findDOMNode(helper)).to.be.instanceof(Node);
 		});
+
+		it('should return null if given null', () => {
+			expect(findDOMNode(null)).to.be.null;
+		}),
+
+		it('should return a regular DOM Element if given a regular DOM Element', () => {
+			let scratch = document.createElement('div');
+			expect(findDOMNode(scratch)).to.equal(scratch);
+		}),
 
 		// NOTE: React.render() returning false or null has the component pointing
 		// 			to no DOM Node, in contrast, Preact always render an empty Text DOM Node.
