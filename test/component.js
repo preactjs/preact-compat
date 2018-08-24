@@ -166,7 +166,7 @@ describe('components', () => {
 			React.render(<Foo />, scratch);
 			expect(render).to.have.been.calledWithMatch(Foo.defaultProps);
 
-			render.reset();
+			render.resetHistory();
 			React.render(<Foo bar="bar" />, scratch);
 			expect(render).to.have.been.calledWithMatch({ foo:'default foo', bar:'bar' });
 		});
@@ -181,7 +181,7 @@ describe('components', () => {
 			React.render(<Foo />, scratch);
 			expect(Foo).to.have.been.calledWithMatch(Foo.defaultProps);
 
-			Foo.reset();
+			Foo.resetHistory();
 			React.render(<Foo bar="bar" />, scratch);
 			expect(Foo).to.have.been.calledWithMatch({ foo:'default foo', bar:'bar' });
 		});
@@ -196,7 +196,7 @@ describe('components', () => {
 			);
 			expect(console.error).to.have.been.called;
 
-			console.error.reset();
+			console.error.resetHistory();
 
 			React.render(<Foo func={()=>{}} />, scratch);
 			expect(console.error).not.to.have.been.called;
@@ -410,7 +410,7 @@ describe('components', () => {
 			React.render(<Foo />, scratch);
 
 			expect(inst).to.exist;
-			expect(inst.refs).to.be.an.object;
+			expect(inst.refs).to.be.an('object');
 
 			expect(inst.refs).to.have.property('top', scratch.firstChild);
 			expect(inst.refs).to.have.property('h1', scratch.querySelector('h1'));
@@ -515,7 +515,7 @@ describe('components', () => {
 
 			let inst = React.render(<C />, scratch);
 			expect(spy).to.have.been.calledOnce;
-			spy.reset();
+			spy.resetHistory();
 
 			inst = React.render(<C />, scratch);
 			expect(spy).not.to.have.been.called;
@@ -523,7 +523,7 @@ describe('components', () => {
 			let b = { foo: 'bar' };
 			inst = React.render(<C a="a" b={b} />, scratch);
 			expect(spy).to.have.been.calledOnce;
-			spy.reset();
+			spy.resetHistory();
 
 			inst = React.render(<C a="a" b={b} />, scratch);
 			expect(spy).not.to.have.been.called;
@@ -535,7 +535,7 @@ describe('components', () => {
 			inst.setState({ a:'a', b });
 			rerender();
 			expect(spy).to.have.been.calledOnce;
-			spy.reset();
+			spy.resetHistory();
 
 			inst.setState({ a:'a', b });
 			rerender();

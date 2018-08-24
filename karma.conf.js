@@ -28,6 +28,7 @@ module.exports = function(config) {
 						exclude: /node_modules/,
 						loader: 'babel',
 						query: {
+							babelrc: false,
 							sourceMap: 'inline',
 							presets: [
 								['es2015', { loose:true }],
