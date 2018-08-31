@@ -98,6 +98,32 @@ First, install it: `npm install --save-dev aliasify`
 }
 ```
 
+## Usage with Rollup
+
+Using `preact-compat` with rollup requires [rollup-plugin-alias](http://npm.im/rollup-plugin-alias)
+
+First, install it: `npm install --save-dev rollup-plugin-alias`
+
+... then in your `rollup.config.js`, configure the alias plugin to point to `react`, `react-dom`, and optionally `create-react-class`, along with the rest of the plugins:
+
+```js
+import path from "path";
+import alias from "rollup-plugin-alias";
+// ...
+
+export default {
+    // ...
+    plugins: [
+        // ...
+        alias({
+            "react": path.resolve(__dirname, "node_modules", "preact-compat", "dist", "preact-compat.es.js"),
+            "react-dom": path.resolve(__dirname, "node_modules", "preact-compat", "dist", "preact-compat.es.js"),
+            "create-react-class": path.resolve(__dirname, "node_modules", "preact-compat", "lib", "create-react-class.js")
+        }),
+    // ...
+}
+```
+
 ## Usage with Babel
 
 Using `preact-compat` with Babel is easy.
