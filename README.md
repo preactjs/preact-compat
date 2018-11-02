@@ -98,6 +98,18 @@ First, install it: `npm install --save-dev aliasify`
 }
 ```
 
+If you want to use a package that has a peer dependency of React and want it to point to preact-compat you’ll need to set Aliasify to be a global transform. [This is not achievable by editing package.json](https://github.com/browserify/browserify#btransformtr-opts), you’ll need to use the Browserify api and include the global option there:
+
+```
+b.transform(aliasify, {
+  global: true,
+  aliases: {
+    'react': 'preact-compat',
+    'react-dom': 'preact-compat'
+  }
+});
+```
+
 ## Usage with Babel
 
 Using `preact-compat` with Babel is easy.
@@ -118,7 +130,7 @@ All you have to do is tell babel to process jsx with 'h' and add an alias for `r
             // Not necessary unless you consume a module using `createClass`
             "create-react-class": "preact-compat/lib/create-react-class",
             // Not necessary unless you consume a module requiring `react-dom-factories`
-            "react-dom-factories" "preact-compat/lib/react-dom-factories"
+            "react-dom-factories": "preact-compat/lib/react-dom-factories"
         }
         }]
     ],
