@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { render as preactRender, cloneElement as preactCloneElement, h, Component as PreactComponent, options } from 'preact';
+import { render as preactRender, cloneElement as preactCloneElement, createRef, h, Component as PreactComponent, options } from 'preact';
 
 const version = '15.1.0'; // trick libraries to think we are react
 
@@ -618,6 +618,7 @@ export {
 	createFactory,
 	createElement,
 	cloneElement,
+	createRef,
 	isValidElement,
 	findDOMNode,
 	unmountComponentAtNode,
@@ -639,6 +640,7 @@ export default {
 	createFactory,
 	createElement,
 	cloneElement,
+	createRef,
 	isValidElement,
 	findDOMNode,
 	unmountComponentAtNode,
