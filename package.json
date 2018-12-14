@@ -7,10 +7,12 @@
   "minified:main": "dist/preact-compat.min.js",
   "jsnext:main": "dist/preact-compat.es.js",
   "module": "dist/preact-compat.es.js",
+  "typings": "dist/preact-compat.d.ts",
   "scripts": {
-    "build": "npm-run-all transpile:* minify size",
+    "build": "npm-run-all transpile:* copy-typescript-definition minify size",
     "transpile:umd": "rollup -c --environment FORMAT:umd",
     "transpile:es": "rollup -c --environment FORMAT:es",
+    "copy-typescript-definition": "cp -vf src/preact-compat.d.ts dist",
     "minify": "cross-var cross-env uglifyjs $npm_package_main -c dead_code,evaluate -m -o $npm_package_minified_main --source-map filename=${npm_package_minified_main}.map,content=${npm_package_main}.map,includeSources",
     "size": "printf \"gzip size: \" && cross-var cross-env gzip-size $npm_package_minified_main --raw",
     "test": "npm-run-all lint build test:karma",
