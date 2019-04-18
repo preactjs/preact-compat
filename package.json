@@ -79,7 +79,7 @@
     "webpack": "^1.15.0"
   },
   "peerDependencies": {
-    "preact": ">=5"
+    "preact": "<10"
   },
   "dependencies": {
     "immutability-helper": "^2.7.1",
