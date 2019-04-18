@@ -15,6 +15,7 @@ It provides the same exports as `react` and `react-dom`, meaning you can use you
 >
 > **[preact-compat-example](https://github.com/developit/preact-compat-example)**
 
+_Note: This module is for Preact 8.x. For our upcoming Preact X release we moved compat into core. If you're trying out any of the alpha releases change `preact-compat` to `preact/compat` and uninstall `preact-compat`._
 
 ---
 
