@@ -542,4 +542,36 @@ describe('components', () => {
 			expect(spy).not.to.have.been.called;
 		});
 	});
+
+	describe('ReactChildren', () => {
+		it("should ignore when child return null", () => {
+			let zero = <div key="keyZero" />;
+			let one = null;
+			let two = <div key="keyTwo" />;
+			let three = null;
+			let four = <div key="keyFour" />;
+
+			let mapped = [
+				<div key="giraffe" />, // Key should be joined to obj key
+				null, // Key should be added even if we don't supply it!
+				<div />, // Key should be added even if not supplied!
+				<span />, // Map from null to something.
+				<div key="keyFour" />
+			];
+			let instance = (
+					<div>
+						{zero}
+						{one}
+						{two}
+						{three}
+						{four}
+					</div>
+			);
+			const mappedChildren = React.Children.map(instance.props.children, (kid, index) => mapped[index]);
+			expect(mappedChildren[0]).to.equal(<div key="giraffe" />);
+			expect(mappedChildren[1]).to.equal(<div/>);
+			expect(mappedChildren[2]).to.equal(<span/>);
+			expect(mappedChildren[3]).to.equal(<div key="keyFour" />);
+		});
+	});
 });
