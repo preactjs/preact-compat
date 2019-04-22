@@ -94,7 +94,7 @@ options.vnode = vnode => {
 			if (vnode.children) attrs.children = vnode.children;
 
 			if (attrs.defaultValue) {
-				if (!attrs.value && attrs.value!==0) {
+				if (attrs.value===undefined) {
 					attrs.value = attrs.defaultValue;
 				}
 				delete attrs.defaultValue;
