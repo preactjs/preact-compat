@@ -6,7 +6,7 @@ describe('jsx', () => {
 		let jsx = (
 			<div className="foo bar" data-foo="bar">
 				<span id="some_id">inner!</span>
-				{ ['a', 'b'] }
+				{['a', 'b']}
 			</div>
 		);
 

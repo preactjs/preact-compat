@@ -7,7 +7,7 @@ describe('update', () => {
 
 	it('should update arrays', () => {
 		const initialArray = [1, 2, 3];
-		const newArray = update(initialArray, {$push: [4]});
+		const newArray = update(initialArray, { $push: [4] });
 		expect(newArray).to.eql([1, 2, 3, 4]);
 	});
 });
