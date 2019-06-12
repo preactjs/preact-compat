@@ -1,5 +1,14 @@
 import PropTypes from 'prop-types';
-import { render as preactRender, cloneElement as preactCloneElement, createRef, h, Component as PreactComponent, options } from 'preact';
+import {
+	render as preactRender,
+	cloneElement as preactCloneElement,
+	createRef,
+	h,
+	Component as PreactComponent,
+	options
+} from 'preact';
+
+import { createContext } from 'preact-context';
 
 const version = '15.1.0'; // trick libraries to think we are react
 
@@ -615,6 +624,7 @@ export {
 	render,
 	render as hydrate,
 	createClass,
+	createContext,
 	createPortal,
 	createFactory,
 	createElement,
@@ -638,6 +648,7 @@ export default {
 	render,
 	hydrate: render,
 	createClass,
+	createContext,
 	createPortal,
 	createFactory,
 	createElement,

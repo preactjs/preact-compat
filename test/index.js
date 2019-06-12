@@ -1,6 +1,7 @@
 import React, {
 	render,
 	createClass,
+	createContext,
 	createElement,
 	cloneElement,
 	findDOMNode,
@@ -176,6 +177,22 @@ describe('preact-compat', () => {
 				.and.calledAfter(def.mixins[1].componentWillMount);
 
 			expect(inst.render(props, state)).to.equal(null);
+		});
+	});
+
+	describe('createContext()', () => {
+		it('should be exported', () => {
+			expect(React)
+				.to.have.property('createContext')
+				.that.is.a('function')
+				.that.equals(createContext);
+		});
+
+		it('should create a context with a Provider and Consumer', () => {
+			const Context = createContext();
+
+			expect(Context).to.have.property('Provider');
+			expect(Context).to.have.property('Consumer');
 		});
 	});
 
