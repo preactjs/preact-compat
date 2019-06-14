@@ -1,8 +1,11 @@
 # preact-compat
 
-[![NPM](http://img.shields.io/npm/v/preact-compat.svg?style=flat)](https://www.npmjs.org/package/preact-compat)
+[![NPM](https://img.shields.io/npm/v/preact-compat.svg?style=flat)](https://www.npmjs.org/package/preact-compat)
 [![travis-ci](https://travis-ci.org/developit/preact-compat.svg?branch=master)](https://travis-ci.org/developit/preact-compat)
 [![CDNJS](https://img.shields.io/cdnjs/v/preact-compat.svg)](https://cdnjs.com/libraries/preact-compat)
+
+> 🚨 **Note:** This module is for Preact 8.x and prior - Preact X includes compat by default.
+> For Preact X, please uninstall `preact-compat` and replace your aliases with `preact/compat`.
 
 
 This module is a compatibility layer that makes React-based modules work with [Preact], without any code changes.
@@ -14,8 +17,6 @@ It provides the same exports as `react` and `react-dom`, meaning you can use you
 > achieving more than 95% reduction in size:
 >
 > **[preact-compat-example](https://github.com/developit/preact-compat-example)**
-
-_Note: This module is for Preact 8.x. For our upcoming Preact X release we moved compat into core. If you're trying out any of the alpha releases change `preact-compat` to `preact/compat` and uninstall `preact-compat`._
 
 ---
 

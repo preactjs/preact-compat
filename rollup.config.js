@@ -11,7 +11,7 @@ let pkg = JSON.parse(fs.readFileSync('./package.json'));
  * in the client projects and flat bundling them is unnecessary extra code. However preact-context is very
  * new and people are less likely to be using it so we'll bundle it.
  */
-let external = Object.keys(pkg.peerDependencies || {}).concat(Object.keys(pkg.dependencies || {})).filter(x => x !== 'preact-context');
+let external = Object.keys(pkg.peerDependencies || {}).concat(Object.keys(pkg.dependencies || {}));
 
 let format = process.env.FORMAT === 'es' ? 'es' : 'umd';
 
