@@ -11,12 +11,12 @@ describe('ReactTransitionEvents', () => {
 		div.style.cssText = 'position:absolute; left:0; top:0; width:100px; height:100px; background:#000; transition:all 50ms ease;';
 		document.body.appendChild(div);
 
-		setTimeout( () => {
+		setTimeout(() => {
 			let onEnd = sinon.spy();
 			ReactTransitionEvents.addEndEventListener(div, onEnd);
 			div.style.left = '100px';
 
-			setTimeout( () => {
+			setTimeout(() => {
 				expect(onEnd).to.have.been.calledOnce;
 
 				document.body.removeChild(div);
@@ -46,12 +46,12 @@ describe('ReactTransitionEvents', () => {
 		`;
 		document.body.appendChild(div);
 
-		setTimeout( () => {
+		setTimeout(() => {
 			let onEnd = sinon.spy();
 			ReactTransitionEvents.addEndEventListener(div, onEnd);
 			div.className = 'slide';
 
-			setTimeout( () => {
+			setTimeout(() => {
 				expect(onEnd).to.have.been.calledOnce;
 
 				document.body.removeChild(div);

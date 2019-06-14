@@ -6,16 +6,21 @@ import commonjs from 'rollup-plugin-commonjs';
 
 let pkg = JSON.parse(fs.readFileSync('./package.json'));
 
-let external = Object.keys(pkg.peerDependencies || {}).concat(Object.keys(pkg.dependencies || {}));
+/**
+ * The rationale behind marking dependencies as external is because they're likely to already be installed
+ * in the client projects and flat bundling them is unnecessary extra code. However preact-context is very
+ * new and people are less likely to be using it so we'll bundle it.
+ */
+let external = Object.keys(pkg.peerDependencies || {}).concat(Object.keys(pkg.dependencies || {})).filter(x => x !== 'preact-context');
 
-let format = process.env.FORMAT==='es' ? 'es' : 'umd';
+let format = process.env.FORMAT === 'es' ? 'es' : 'umd';
 
 export default {
 	input: 'src/index.js',
 	output: {
 		name: pkg.amdName,
-		exports: format==='es' ? null : 'default',
-		file: format==='es' ? pkg.module : pkg.main,
+		exports: format === 'es' ? null : 'default',
+		file: format === 'es' ? pkg.module : pkg.main,
 		format,
 		globals: {
 			'preact': 'preact',
@@ -26,7 +31,7 @@ export default {
 	external,
 	strict: false,
 	plugins: [
-		format==='umd' && memory({
+		format === 'umd' && memory({
 			path: 'src/index.js',
 			contents: "export { default } from './index';"
 		}),

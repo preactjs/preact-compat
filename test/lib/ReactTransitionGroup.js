@@ -1,4 +1,3 @@
-import React from '../../';
 import ReactTransitionGroup from '../../lib/ReactTransitionGroup';
 
 describe('ReactFragment', () => {

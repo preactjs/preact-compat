@@ -5,16 +5,16 @@ chai.use(assertJsx);
 describe('svg', () => {
 	let scratch;
 
-	before( () => {
+	before(() => {
 		scratch = document.createElement('div');
 		(document.body || document.documentElement).appendChild(scratch);
 	});
 
-	beforeEach( () => {
+	beforeEach(() => {
 		scratch.innerHTML = '';
 	});
 
-	after( () => {
+	after(() => {
 		scratch.parentNode.removeChild(scratch);
 		scratch = null;
 	});
