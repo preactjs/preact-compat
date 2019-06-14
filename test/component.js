@@ -5,16 +5,16 @@ import React from '../src';
 describe('components', () => {
 	let scratch;
 
-	before( () => {
+	before(() => {
 		scratch = document.createElement('div');
 		(document.body || document.documentElement).appendChild(scratch);
 	});
 
-	beforeEach( () => {
+	beforeEach(() => {
 		scratch.innerHTML = '';
 	});
 
-	after( () => {
+	after(() => {
 		scratch.parentNode.removeChild(scratch);
 		scratch = null;
 	});
@@ -26,7 +26,7 @@ describe('components', () => {
 			render() {
 				let { a, b } = this.props;
 				props = this.props;
-				return <div id="demo">{ this.props.children }</div>;
+				return <div id="demo">{this.props.children}</div>;
 			}
 		}
 
@@ -53,19 +53,19 @@ describe('components', () => {
 		let render = sinon.spy(Demo.prototype, 'render'),
 			inst;
 
-		React.render(<Demo ref={ c => inst=c } />, scratch);
+		React.render(<Demo ref={c => inst = c} />, scratch);
 
-		inst.setState({ foo:'bar', baz:'bat' });
-		setTimeout( () => {
-			expect(inst.state).to.eql({ foo:'bar', baz:'bat' });
+		inst.setState({ foo: 'bar', baz: 'bat' });
+		setTimeout(() => {
+			expect(inst.state).to.eql({ foo: 'bar', baz: 'bat' });
 
 			let callbackState;
-			let callback = sinon.spy( () => {
+			let callback = sinon.spy(() => {
 				callbackState = inst.state;
 			});
 			inst.replaceState({}, callback);
 
-			setTimeout( () => {
+			setTimeout(() => {
 				expect(callback).to.have.been.calledOnce;
 				expect(callbackState).to.eql({});
 				expect(inst.state).to.eql({});
@@ -86,8 +86,8 @@ describe('components', () => {
 			foo;
 
 		React.render((
-			<Foo ref={ c => foo=c }>
-				{ children }
+			<Foo ref={c => foo = c}>
+				{children}
 			</Foo>
 		), scratch);
 		expect(foo.props).to.exist.and.have.property('children').eql(children);
@@ -107,7 +107,7 @@ describe('components', () => {
 			}
 		}
 
-		let a = React.render(<Parent/>, scratch);
+		let a = React.render(<Parent />, scratch);
 		a.forceUpdate();
 
 		expect(props).to.exist.and.deep.equal({
@@ -125,8 +125,8 @@ describe('components', () => {
 			}
 		}
 
-		const data = [{a: ''}];
-		React.render(<Foo>{ data }</Foo>, scratch);
+		const data = [{ a: '' }];
+		React.render(<Foo>{data}</Foo>, scratch);
 
 		expect(children).to.exist.and.deep.equal(data);
 	});
@@ -168,7 +168,7 @@ describe('components', () => {
 
 			render.resetHistory();
 			React.render(<Foo bar="bar" />, scratch);
-			expect(render).to.have.been.calledWithMatch({ foo:'default foo', bar:'bar' });
+			expect(render).to.have.been.calledWithMatch({ foo: 'default foo', bar: 'bar' });
 		});
 
 		it('should support defaultProps for pure components', () => {
@@ -183,7 +183,7 @@ describe('components', () => {
 
 			Foo.resetHistory();
 			React.render(<Foo bar="bar" />, scratch);
-			expect(Foo).to.have.been.calledWithMatch({ foo:'default foo', bar:'bar' });
+			expect(Foo).to.have.been.calledWithMatch({ foo: 'default foo', bar: 'bar' });
 		});
 	});
 
@@ -198,10 +198,10 @@ describe('components', () => {
 
 			console.error.resetHistory();
 
-			React.render(<Foo func={()=>{}} />, scratch);
+			React.render(<Foo func={() => { }} />, scratch);
 			expect(console.error).not.to.have.been.called;
 
-			React.render(<Foo func={()=>{}} bool="one" />, scratch);
+			React.render(<Foo func={() => { }} bool="one" />, scratch);
 			expect(console.error).to.have.been.calledWithMatch(
 				'Warning: Failed prop type: Invalid prop `bool` of type `string` supplied to `' + name + '`, expected `boolean`.'
 			);
@@ -473,8 +473,8 @@ describe('components', () => {
 					inner = this;
 					return (
 						<div>
-							{React.cloneElement(React.Children.only(this.props.children), { id:'one' })}
-							{React.cloneElement(React.Children.only(this.props.children), { id:'two', ref:'two' })}
+							{React.cloneElement(React.Children.only(this.props.children), { id: 'one' })}
+							{React.cloneElement(React.Children.only(this.props.children), { id: 'two', ref: 'two' })}
 						</div>
 					);
 				}
@@ -528,16 +528,16 @@ describe('components', () => {
 			inst = React.render(<C a="a" b={b} />, scratch);
 			expect(spy).not.to.have.been.called;
 
-			inst.setState({ });
+			inst.setState({});
 			rerender();
 			expect(spy).not.to.have.been.called;
 
-			inst.setState({ a:'a', b });
+			inst.setState({ a: 'a', b });
 			rerender();
 			expect(spy).to.have.been.calledOnce;
 			spy.resetHistory();
 
-			inst.setState({ a:'a', b });
+			inst.setState({ a: 'a', b });
 			rerender();
 			expect(spy).not.to.have.been.called;
 		});

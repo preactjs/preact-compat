@@ -1,6 +1,7 @@
 import React, {
 	render,
 	createClass,
+	createContext,
 	createElement,
 	cloneElement,
 	findDOMNode,
@@ -102,7 +103,7 @@ describe('preact-compat', () => {
 			expect(inst).to.have.property('state', specState);
 			expect(inst).to.have.property('method').that.is.a('function');
 			expect(inst).to.be.an.instanceof(Component);
-			inst.method('a','b');
+			inst.method('a', 'b');
 			expect(spec.method)
 				.to.have.been.calledOnce
 				.and.calledOn(inst)
@@ -110,7 +111,7 @@ describe('preact-compat', () => {
 		});
 
 		it('should not bind blacklisted methods', () => {
-			let constructor = () => {};
+			let constructor = () => { };
 			let render = () => null;
 			const C = createClass({
 				constructor,
@@ -125,7 +126,7 @@ describe('preact-compat', () => {
 			let def = {
 				statics: {
 					foo: 'bar',
-					baz() {}
+					baz() { }
 				}
 			};
 			let c = createClass(def);
@@ -179,6 +180,22 @@ describe('preact-compat', () => {
 		});
 	});
 
+	describe('createContext()', () => {
+		it('should be exported', () => {
+			expect(React)
+				.to.have.property('createContext')
+				.that.is.a('function')
+				.that.equals(createContext);
+		});
+
+		it('should create a context with a Provider and Consumer', () => {
+			const Context = createContext();
+
+			expect(Context).to.have.property('Provider');
+			expect(Context).to.have.property('Consumer');
+		});
+	});
+
 	describe('createElement()', () => {
 		it('should be exported', () => {
 			expect(React)
@@ -192,12 +209,12 @@ describe('preact-compat', () => {
 			let $$typeof = 0xeac7;
 			try {
 				// eslint-disable-next-line
-				if (Function.prototype.toString.call(eval('Sym'+'bol.for')).match(/\[native code\]/)) {
+				if (Function.prototype.toString.call(eval('Sym' + 'bol.for')).match(/\[native code\]/)) {
 					// eslint-disable-next-line
-					$$typeof = eval('Sym'+'bol.for("react.element")');
+					$$typeof = eval('Sym' + 'bol.for("react.element")');
 				}
 			}
-			catch (e) {}
+			catch (e) { }
 			expect(vnode).to.have.property('$$typeof', $$typeof);
 			expect(vnode).to.have.property('type', 'div');
 			expect(vnode).to.have.property('props').that.is.an('object');
@@ -205,18 +222,18 @@ describe('preact-compat', () => {
 			expect(vnode.props.children[0]).to.have.property('$$typeof', $$typeof);
 			expect(vnode.props.children[0]).to.have.property('type', 'a');
 			expect(vnode.props.children[0]).to.have.property('props').that.is.an('object');
-			expect(vnode.props.children[0].props).to.eql({ children:['t'] });
+			expect(vnode.props.children[0].props).to.eql({ children: ['t'] });
 		});
 
 		it('should normalize onChange', () => {
-			let props = { onChange(){} };
+			let props = { onChange() { } };
 
 			function expectToBeNormalized(vnode, desc) {
 				expect(vnode, desc).to.have.property('props').with.all.keys(['oninput'].concat(vnode.props.type ? 'type' : [])).and.property('oninput').that.is.a('function');
 			}
 
 			function expectToBeUnmodified(vnode, desc) {
-				expect(vnode, desc).to.have.property('props').eql({ ...props, ...(vnode.props.type ? { type:vnode.props.type } : {}) });
+				expect(vnode, desc).to.have.property('props').eql({ ...props, ...(vnode.props.type ? { type: vnode.props.type } : {}) });
 			}
 
 			expectToBeUnmodified(<div {...props} />, '<div>');
@@ -294,7 +311,7 @@ describe('preact-compat', () => {
 
 	describe('findDOMNode()', () => {
 		class Helper extends React.Component {
-			render({something}) {
+			render({ something }) {
 				if (something == null) return null;
 				if (something === false) return null;
 				return <div></div>;
@@ -356,11 +373,11 @@ describe('preact-compat', () => {
 				}
 				renderInner() {
 					const wrapper = document.createElement('div');
-					this.inner = unstable_renderSubtreeIntoContainer(this, <Inner/>, wrapper);
+					this.inner = unstable_renderSubtreeIntoContainer(this, <Inner />, wrapper);
 				}
 			}
 			const root = document.createElement('div');
-			const app = render(<App/>, root);
+			const app = render(<App />, root);
 			expect(typeof app.inner.getNode === 'function').to.equal(true);
 		});
 
@@ -375,13 +392,13 @@ describe('preact-compat', () => {
 				renderInner() {
 					const wrapper = document.createElement('div');
 					const self = this;
-					unstable_renderSubtreeIntoContainer(this, <Inner/>, wrapper, function() {
+					unstable_renderSubtreeIntoContainer(this, <Inner />, wrapper, function () {
 						self.inner = this;
 					});
 				}
 			}
 			const root = document.createElement('div');
-			const app = render(<App/>, root);
+			const app = render(<App />, root);
 			expect(typeof app.inner.getNode === 'function').to.equal(true);
 		});
 	});
@@ -389,9 +406,9 @@ describe('preact-compat', () => {
 	describe('Unsupported hidden internal __spread API', () => {
 		it('should work with multiple objects', () => {
 			const start = {};
-			const result = React.__spread(start, {one: 1, two: 3}, {two: 2});
+			const result = React.__spread(start, { one: 1, two: 3 }, { two: 2 });
 			expect(result).to.equal(start);
-			expect(start).to.deep.equal({ one: 1, two: 2});
+			expect(start).to.deep.equal({ one: 1, two: 2 });
 		});
 
 		it('should be exported on default and as __spread', () => {
