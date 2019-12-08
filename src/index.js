@@ -5,7 +5,7 @@ import {
 	createRef,
 	h,
 	Component as PreactComponent,
-	options,
+	options
 } from 'preact';
 
 import { createContext } from 'preact-context';
