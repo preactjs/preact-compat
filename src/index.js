@@ -6,7 +6,6 @@ import {
 	h,
 	Component as PreactComponent,
 	options,
-	createContext as nativeCreateContext
 } from 'preact';
 
 import { createContext } from 'preact-context';
@@ -47,7 +46,7 @@ try {
 }
 catch (e) { }
 
-if (DEV && nativeCreateContext) {
+if (DEV && (h("div", null).type === "div")) {
 	throw new Error('You are using Preact 10, you should be aliassing to "preact/compat" instead of "preact-compat".');
 }
 
