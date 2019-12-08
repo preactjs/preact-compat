@@ -46,7 +46,7 @@ try {
 }
 catch (e) { }
 
-if (DEV && (h("div", null).type === "div")) {
+if (DEV && (h("div", null).nodeName === undefined)) {
 	throw new Error('You are using Preact 10, you should be aliassing to "preact/compat" instead of "preact-compat".');
 }
 
