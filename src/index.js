@@ -5,7 +5,8 @@ import {
 	createRef,
 	h,
 	Component as PreactComponent,
-	options
+	options,
+	createContext as nativeCreateContext
 } from 'preact';
 
 import { createContext } from 'preact-context';
@@ -45,6 +46,10 @@ try {
 	DEV = process.env.NODE_ENV !== 'production';
 }
 catch (e) { }
+
+if (DEV && nativeCreateContext) {
+	throw new Error('You are using Preact 10, you should be aliassing to "preact/compat" instead of "preact-compat".');
+}
 
 // a component that renders nothing. Used to replace components for unmountComponentAtNode.
 function EmptyComponent() {
