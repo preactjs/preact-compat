@@ -46,6 +46,10 @@ try {
 }
 catch (e) { }
 
+if (DEV && (h("div", null).nodeName === undefined)) {
+	throw new Error('You are using Preact 10, you should be aliasing to "preact/compat" instead of "preact-compat".');
+}
+
 // a component that renders nothing. Used to replace components for unmountComponentAtNode.
 function EmptyComponent() {
 	return null;
