@@ -57,6 +57,7 @@ function EmptyComponent() {
 
 // make react think we're react.
 let VNode = h('a', null).constructor;
+VNode = VNode || function constructor() {};
 VNode.prototype.$$typeof = REACT_ELEMENT_TYPE;
 VNode.prototype.preactCompatUpgraded = false;
 VNode.prototype.preactCompatNormalized = false;
