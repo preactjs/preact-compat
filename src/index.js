@@ -22,7 +22,7 @@ const COMPONENT_WRAPPER_KEY =
 	typeof Symbol !== 'undefined' && Symbol.for ? Symbol.for('__preactCompatWrapper') : '__preactCompatWrapper';
 
 // don't autobind these methods since they already have guaranteed context.
-const AUTOBIND_BLACKLIST = {
+const AUTOBIND_DENYLIST = {
 	constructor: 1,
 	render: 1,
 	shouldComponentUpdate: 1,
@@ -487,7 +487,7 @@ function applyMixins(proto, mixins) {
 function bindAll(ctx) {
 	for (let i in ctx) {
 		let v = ctx[i];
-		if (typeof v === 'function' && !v.__bound && !AUTOBIND_BLACKLIST.hasOwnProperty(i)) {
+		if (typeof v === 'function' && !v.__bound && !AUTOBIND_DENYLIST.hasOwnProperty(i)) {
 			(ctx[i] = v.bind(ctx)).__bound = true;
 		}
 	}
