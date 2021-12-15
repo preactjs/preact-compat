@@ -1,4 +1,6 @@
-# preact-compat
+# ATTENTION: preact-compat has moved to the [main repo](https://github.com/preactjs/preact/tree/master/compat).
+
+The code here is only meant for the older Preact 8.x release line. If you're still on Preact 8.x we highly recommend upgrading to the 10.x release line as it includes significant improvements and a much more stable React compatibility layer.
 
 [![NPM](https://img.shields.io/npm/v/preact-compat.svg?style=flat)](https://www.npmjs.org/package/preact-compat)
 [![travis-ci](https://travis-ci.org/developit/preact-compat.svg?branch=master)](https://travis-ci.org/developit/preact-compat)
